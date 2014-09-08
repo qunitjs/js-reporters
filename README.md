@@ -24,6 +24,8 @@ Would _you_ be interested in discussing this with us further?  Please join in!
 
 ### Cross-Reference Issues
 
+#### Unit Testing Frameworks
+
  - https://github.com/jquery/qunit/issues/531  (original discussion)
  - https://github.com/visionmedia/mocha/issues/1326
  - https://github.com/pivotal/jasmine/issues/659
@@ -31,6 +33,9 @@ Would _you_ be interested in discussing this with us further?  Please join in!
  - https://github.com/busterjs/buster/issues/419
  - https://github.com/caolan/nodeunit/issues/276
  - https://github.com/flatiron/vows/issues/313
+
+#### Consuming Services
+
  - https://github.com/browserstack/browserstack-runner/issues/92
  - https://github.com/axemclion/grunt-saucelabs/issues/164
  - https://github.com/karma-runner/karma/issues/1183
