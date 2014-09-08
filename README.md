@@ -2,6 +2,9 @@
 
 The Common Reporter Interface (CRI) for JavaScript Unit Testing Frameworks
 
+## Centralized Discussions
+
+https://github.com/js-reporters/js-reporters/issues/
 
 ## Background
 
@@ -18,9 +21,9 @@ This would most likely come in the form of:
 
 Would _you_ be interested in discussing this with us further?  Please join in!
 
-**Centralized Discussions:** https://github.com/js-reporters/js-reporters/issues/
 
-Cross-reference issues:
+### Cross-Reference Issues
+
  - https://github.com/jquery/qunit/issues/531  (original discussion)
  - https://github.com/visionmedia/mocha/issues/1326
  - https://github.com/pivotal/jasmine/issues/659
