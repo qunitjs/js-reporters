@@ -28,7 +28,7 @@ Would _you_ be interested in discussing this with us further?  Please join in!
 
 ### Event Names
 
-Based on the discussion in [#1](https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874), this is a suggested set of event names to be triggered by a testing framework, to be consumed by reporters or other testing tools.
+Based on the discussion in [#1](https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874), this is the suggested _minimum_ set of event names to be triggered by a testing framework, to be consumed by reporters or other testing tools.
 
  - `runStart`: Indicates the beginning of a testsuite, triggered just once.
  - `suiteStart`: Triggered at the start of each group of tests within a testsuite.
