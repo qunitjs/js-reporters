@@ -2,6 +2,10 @@
 
 The Common Reporter Interface (CRI) for JavaScript Unit Testing Frameworks
 
+| Avoid this:                | Do this:                         |
+|----------------------------|----------------------------------|
+| ![](img/situation-now.png) | ![](img/situation-expected.png)  |
+
 
 ## Centralized Discussions
 
