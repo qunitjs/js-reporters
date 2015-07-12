@@ -11,6 +11,8 @@ QUnit.module("group b");
 QUnit.test("baz", function (assert) {
     assert.ok(true);
 });
+
 QUnit.skip("skipped test", function (assert) {
     assert.ok(true)
 });
+    /**/

@@ -79,12 +79,15 @@
             return EventEmitter;
         })();
 
-        var Test = function Test(name, status, runtime) {
+        var Test = function Test(testName, suiteName, status, runtime, errors, skipped) {
             _classCallCheck(this, Test);
 
-            this.name = name;
+            this.testName = testName;
+            this.suiteName = suiteName;
             this.status = status;
             this.runtime = runtime;
+            this.errors = errors;
+            this.skipped = skipped;
         };
 
         var Suite = (function () {
@@ -143,6 +146,20 @@
             return Suite;
         })();
 
+        //TODO: good idea?
+        //Mocha just passes the exception thrown by the assertion library
+        /*
+        export class Error {
+            constructor(name, message, stack, expected, actual){
+                this.name = name;
+                this.message = message;
+                this.stack = stack;
+                this.expected = expected;
+                this.actual = actual;
+            }
+        }
+        /**/
+
         var foo = new Test('foo', 'passed', 42);
         var bar = new Test('bar goes wrong', 'failed', 42);
         var baz = new Test('baz', 'passed', 42);
@@ -161,6 +178,8 @@
                 QUnit.done(this.onDone.bind(this));
                 QUnit.testDone(this.onTestDone.bind(this));
                 QUnit.moduleDone(this.onModuleDone.bind(this));
+                QUnit.log(this.onLog.bind(this));
+                QUnit.testStart(this.onTestStart.bind(this));
 
                 this.tests = {};
                 this.suites = [];
@@ -169,6 +188,18 @@
             _inherits(QUnitAdapter, _EventEmitter);
 
             _createClass(QUnitAdapter, [{
+                key: 'onTestStart',
+                value: function onTestStart() {
+                    this.errors = [];
+                }
+            }, {
+                key: 'onLog',
+                value: function onLog(details) {
+                    if (details.result != true) {
+                        this.errors.push(details);
+                    }
+                }
+            }, {
                 key: 'onTestDone',
                 value: function onTestDone(details) {
                     var status;
@@ -177,7 +208,8 @@
                     } else {
                         status = 'passed';
                     }
-                    var test = new Test(details.name, status, details.runtime);
+
+                    var test = new Test(details.name, details.module, status, details.runtime, this.errors, details.skipped);
                     this.tests[details.testId] = test;
                     this.emit('testEnd', test);
                 }
@@ -227,7 +259,7 @@
 
                     try {
                         for (var _iterator3 = details.tests[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                            var test = _step3.value;
+                            test = _step3.value;
 
                             testArray.push(this.tests[test.testId]);
                             delete this.tests[test.testId];
@@ -272,9 +304,9 @@
                 value: function onTestEnd(test) {
                     this.count++;
                     if (test.status == 'failed') {
-                        console.log('not ok ' + this.count + ' ' + test.name);
+                        console.log('not ok ' + this.count + ' ' + test.testName);
                     } else {
-                        console.log('ok ' + this.count + ' ' + test.name);
+                        console.log('ok ' + this.count + ' ' + test.testName);
                     }
                 }
             }, {
