@@ -9,9 +9,7 @@
 
     <script>
         var adapter = new JsReporters.QUnitAdapter();
-
-
-        var tapReporter = new JsReporters.TapReporter(adapter);
+        JsReporters.TapReporter.init(adapter);
 
         adapter.on("runEnd", function (globalSuite) {
             console.debug("runEnd", globalSuite, globalSuite.getTotal());
