@@ -15,4 +15,3 @@ QUnit.test("baz", function (assert) {
 QUnit.skip("skipped test", function (assert) {
     assert.ok(true)
 });
-    /**/

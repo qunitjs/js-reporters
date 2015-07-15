@@ -8,26 +8,20 @@
     <script src="tests.js"></script>
 
     <script>
-        var adapter = new JsReporters.QUnitAdapter();
-        JsReporters.TapReporter.init(adapter);
+        var runner = new JsReporters.QUnitAdapter();
+        JsReporters.TapReporter.init(runner);
 
-        adapter.on("runEnd", function (globalSuite) {
+        runner.on("runEnd", function (globalSuite) {
             console.debug("runEnd", globalSuite, globalSuite.getTotal());
         });
 
-        adapter.on("suiteEnd", function (suite) {
+        runner.on("suiteEnd", function (suite) {
             console.debug("suiteEnd", suite);
         });
 
-        adapter.on("testEnd", function (test) {
+        runner.on("testEnd", function (test) {
             console.debug("testEnd", test);
         });
-
-        /*
-        QUnit.testDone(function (details) {
-            console.log(details);
-        });
-        /**/
 
     </script>
 
