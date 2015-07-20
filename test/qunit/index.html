@@ -2,26 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <script src="../../dist/js-reporters.js"></script>
-    <link href="../../node_modules/qunitjs/qunit/qunit.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="../../node_modules/qunitjs/qunit/qunit.css" />
     <script src="../../node_modules/qunitjs/qunit/qunit.js"></script>
+    <script src="../../dist/js-reporters.js"></script>
     <script src="tests.js"></script>
-
     <script>
+
         var runner = new JsReporters.QUnitAdapter();
-        JsReporters.TapReporter.init(runner);
 
-        runner.on("runEnd", function (globalSuite) {
-            console.debug("runEnd", globalSuite, globalSuite.getTotal());
-        });
-
-        runner.on("suiteEnd", function (suite) {
-            console.debug("suiteEnd", suite);
-        });
-
-        runner.on("testEnd", function (test) {
-            console.debug("testEnd", test);
-        });
+        //JsReporters.TapReporter.init(runner);
+        JsReporters.ConsoleReporter.init(runner);
 
     </script>
 
