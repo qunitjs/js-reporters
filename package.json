@@ -21,7 +21,9 @@
       "modules": true
     },
     "rules": {
-      "no-console": 0
+      "no-console": 0,
+      "brace-style": 1,
+      "space-before-blocks": 1
     },
     "globals": {
       "console": false
