@@ -9,19 +9,9 @@
 
     <script>
         var runner = new JsReporters.QUnitAdapter();
-        JsReporters.TapReporter.init(runner);
 
-        runner.on("runEnd", function (globalSuite) {
-            console.debug("runEnd", globalSuite, globalSuite.getTotal());
-        });
-
-        runner.on("suiteEnd", function (suite) {
-            console.debug("suiteEnd", suite);
-        });
-
-        runner.on("testEnd", function (test) {
-            console.debug("testEnd", test);
-        });
+        //JsReporters.TapReporter.init(runner);
+        JsReporters.ConsoleReporter.init(runner);
 
     </script>
 
