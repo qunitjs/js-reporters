@@ -7,11 +7,13 @@
     <script src="../../node_modules/qunitjs/qunit/qunit.js"></script>
     <script src="tests.js"></script>
     <script>
+        QUnit.config.reorder = false;
 
         var runner = new JsReporters.QUnitAdapter();
 
         //JsReporters.TapReporter.init(runner);
-        JsReporters.ConsoleReporter.init(runner);
+        //JsReporters.ConsoleReporter.init(runner);
+        JsReporters.TestReporter.init(runner,JsReporters.qunit);
 
     </script>
 

@@ -12,7 +12,8 @@
 
         var runner = new JsReporters.JasmineAdapter();
         //JsReporters.TapReporter.init(runner);
-        JsReporters.ConsoleReporter.init(runner);
+        //JsReporters.ConsoleReporter.init(runner);
+        JsReporters.TestReporter.init(runner,JsReporters.jasmine);
 
     </script>
 
