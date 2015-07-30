@@ -19,7 +19,7 @@ describe("group b", function () {
 
 });
 describe("group with subgroup", function () {
-    describe("subgroup ", function () {
+    describe("subgroup", function () {
         it("subtest", function () {
             expect(true).toBeTruthy();
         });
