@@ -1,4 +1,3 @@
-require("babel/polyfill"); // Travis runs an old version of node.
 var Jasmine = require('jasmine');
 var JsReporters = require('../dist/js-reporters.js');
 
