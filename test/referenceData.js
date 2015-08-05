@@ -14,9 +14,9 @@ var groupB = new Suite("group b", [], [baz, skipped]);
 var subgroup = new Suite("subgroup", [], [subtest]);
 var parent = new Suite("group with subgroup", [subgroup], []);
 
-// Globale Suite for QUnit
+// Global Suite for QUnit
 var globalSuiteNoNesting = new Suite("", [groupA, groupB], []);
-// Globale Suite for Jasmine
+// Global Suite for Jasmine
 var globalSuiteNesting = new Suite("", [groupA, groupB, parent], []);
 
 var runGroupA = [

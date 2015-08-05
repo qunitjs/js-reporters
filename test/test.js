@@ -14,7 +14,4 @@ var runner =  new JsReporters.JasmineAdapter(jasmine);
 var testReporter = new JsReporters.TestReporter(runner, referenceData.Jasmine);
 
 jasmine.execute();
-if (!testReporter.ok){
-    process.exit(1);
-}
-
+process.exit(testReporter.ok ? 0 : 1);
