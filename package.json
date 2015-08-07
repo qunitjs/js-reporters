@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "mkdirp dist/ && esperanto -b -i lib/index.js -t umd --name JsReporters | babel -o dist/js-reporters.js --blacklist strict -m umd",
-    "lint": "eslint lib/",
+    "lint": "eslint lib/ test/",
     "test": "node test/test.js"
   },
   "devDependencies": {
@@ -18,7 +18,8 @@
   },
   "eslintConfig": {
     "env": {
-      "es6": true
+      "es6": true,
+      "node": true
     },
     "ecmaFeatures": {
       "modules": true

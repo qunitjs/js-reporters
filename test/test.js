@@ -1,6 +1,7 @@
-var Jasmine = require('jasmine');
-var JsReporters = require('../dist/js-reporters.js');
-var referenceData = require('./referenceData.js');
+/* eslint camelcase:0 */
+var Jasmine = require("jasmine");
+var JsReporters = require("../dist/js-reporters.js");
+var referenceData = require("./referenceData.js");
 
 var jasmine = new Jasmine();
 jasmine.loadConfig({
@@ -10,8 +11,11 @@ jasmine.loadConfig({
     ]
 });
 
-var runner =  new JsReporters.JasmineAdapter(jasmine);
+var runner = new JsReporters.JasmineAdapter(jasmine.env);
+jasmine.addReporter({}); // Suppress the default reporter
 var testReporter = new JsReporters.TestReporter(runner, referenceData.Jasmine);
 
 jasmine.execute();
-process.exit(testReporter.ok ? 0 : 1);
+if (!testReporter.ok) {
+    throw new Error("Tests for JasmineAdapter failed!");
+}

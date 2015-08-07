@@ -1,11 +1,10 @@
-var JsReporters = require('../dist/js-reporters.js');
+var JsReporters = require("../dist/js-reporters.js");
 var Test = JsReporters.Test;
 var Suite = JsReporters.Suite;
 
-
 var foo = new Test("foo", "group a", "passed", 1, []);
 var bar = new Test("bar goes wrong", "group a", "failed", 1, [{}]);
-var baz = new Test("baz", "group b", "passed", 1, [], false);
+var baz = new Test("baz", "group b", "passed", 1, []);
 var skipped = new Test("skipped test", "group b", "skipped", 1, []);
 var subtest = new Test("subtest", "group with subgroup subgroup", "passed", 1, []);
 
@@ -19,35 +18,59 @@ var globalSuiteNoNesting = new Suite("", [groupA, groupB], []);
 // Global Suite for Jasmine
 var globalSuiteNesting = new Suite("", [groupA, groupB, parent], []);
 
+function toStartTest(test) {
+    var status;
+    if (test.status === "skipped") {
+        status = "skipped";
+    } else {
+        status = undefined;
+    }
+    return new Test(
+        test.testName,
+        test.suiteName,
+        status,
+        undefined,
+        undefined
+    );
+}
+
+function toStartSuite(suite) {
+    return new Suite(
+        suite.name,
+        suite.childSuites.map(toStartSuite),
+        suite.tests.map(toStartTest)
+    );
+}
+
 var runGroupA = [
-    //["suiteStart", groupA],
-    //["testStart", foo],
+    ["suiteStart", toStartSuite(groupA)],
+    ["testStart", toStartTest(foo)],
     ["testEnd", foo],
-    //["testStart", bar],
+    ["testStart", toStartTest(bar)],
     ["testEnd", bar],
     ["suiteEnd", groupA]
 ];
 
 var runGroupB = [
-    //["suiteStart", groupB],
-    //["testStart", baz],
+    ["suiteStart", toStartSuite(groupB)],
+    ["testStart", toStartTest(baz)],
     ["testEnd", baz],
-    //["testStart", skipped],
+    ["testStart", toStartTest(skipped)],
     ["testEnd", skipped],
     ["suiteEnd", groupB]
 ];
 
 var runParent = [
-    //["suiteStart", parent],
-    //["suiteStart", subgroup],
-    //["testStart", subtest],
+    ["suiteStart", toStartSuite(parent)],
+    ["suiteStart", toStartSuite(subgroup)],
+    ["testStart", toStartTest(subtest)],
     ["testEnd", subtest],
     ["suiteEnd", subgroup],
     ["suiteEnd", parent]
 ];
 
 exports.Jasmine = [].concat(
-    //[["runStart", globalSuiteNesting]],
+    [["runStart", toStartSuite(globalSuiteNesting)]],
     runGroupA,
     runGroupB,
     runParent,
@@ -55,7 +78,7 @@ exports.Jasmine = [].concat(
 );
 
 exports.QUnit = [].concat(
-    //[["runStart", globalSuiteNoNesting]],
+    //[["runStart", convertSuite(globalSuiteNoNesting)]],
     runGroupA,
     runGroupB,
     [["runEnd", globalSuiteNoNesting]]
