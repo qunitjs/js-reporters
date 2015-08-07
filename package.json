@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "scripts": {
     "build": "mkdirp dist/ && esperanto -b -i lib/index.js -t umd --name JsReporters | babel -o dist/js-reporters.js --blacklist strict -m umd",
-    "lint": "eslint lib/"
+    "lint": "eslint lib/",
+    "test": "node test/test.js"
   },
   "devDependencies": {
     "babel": "^5.6.14",
+    "commitplease": "^2.2.3",
     "eslint": "^0.24.1",
     "esperanto": "^0.7.3",
+    "jasmine": "^2.3.1",
     "jasmine-core": "^2.3.4",
     "mkdirp": "^0.5.1",
     "qunitjs": "^1.18.0"

@@ -4,29 +4,25 @@ describe("group a", function () {
         expect(1 / 0).toBe(Infinity);
     });
 
-    describe("subgroup ", function () {
-        it("subtest", function () {
-            expect(true).toBeTruthy();
-        });
-    });
-
     it("bar goes wrong", function () {
         expect(5).toBe("5");
     });
 });
+
 describe("group b", function () {
     it("baz", function () {
         expect(true).toBeTruthy();
     });
-});
-
-describe("group c", function () {
-    xit("skipped", function () {
+    xit("skipped test", function () {
         expect(true).toBeTruthy();
     });
-    it ("notSkipped", function (){
-        expect(42).toBe(42);
-    })
-});
 
+});
+describe("group with subgroup", function () {
+    describe("subgroup", function () {
+        it("subtest", function () {
+            expect(true).toBeTruthy();
+        });
+    });
+});
 

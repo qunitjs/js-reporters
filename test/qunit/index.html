@@ -3,10 +3,12 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../node_modules/qunitjs/qunit/qunit.css" />
-    <script src="../../node_modules/qunitjs/qunit/qunit.js"></script>
+    <!-- Make sure to include js-reporters.js before qunit, see https://github.com/js-reporters/js-reporters/pull/22 -->
     <script src="../../dist/js-reporters.js"></script>
+    <script src="../../node_modules/qunitjs/qunit/qunit.js"></script>
     <script src="tests.js"></script>
     <script>
+        QUnit.config.reorder = false;
 
         var runner = new JsReporters.QUnitAdapter();
 
