@@ -1,6 +1,6 @@
-/* eslint camelcase:0 */
+/* eslint camelcase:0, no-process-exit:0 */
 var Jasmine = require("jasmine");
-QUnit = require("qunitjs");
+var QUnit = require("qunitjs");
 var JsReporters = require("../dist/js-reporters.js");
 var referenceData = require("./referenceData.js");
 
@@ -22,10 +22,22 @@ if (!jasmineTestReporter.ok) {
     throw new Error("Tests for JasmineAdapter failed!");
 }
 
-QUnit.config.autorun = false;
+//TODO: Use a proper test framework?
+var done = new Promise(function (resolve) {
+    QUnit.done(function () {
+        resolve();
+    });
+});
 
-require("./qunit/tests.js");
 var qunitRunner = new JsReporters.QUnitAdapter();
 var qunitTestReporter = new JsReporters.TestReporter(qunitRunner, referenceData.QUnit);
 
+QUnit.config.autorun = false;
+
+require("./qunit/tests.js");
+
 QUnit.load();
+
+done.then(function () {
+    process.exit(qunitTestReporter.ok ? 0 : 1);
+});

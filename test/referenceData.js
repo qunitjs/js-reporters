@@ -19,16 +19,10 @@ var globalSuiteNoNesting = new Suite("", [groupA, groupB], []);
 var globalSuiteNesting = new Suite("", [groupA, groupB, parent], []);
 
 function toStartTest(test) {
-    var status;
-    if (test.status === "skipped") {
-        status = "skipped";
-    } else {
-        status = undefined;
-    }
     return new Test(
         test.testName,
         test.suiteName,
-        status,
+        undefined,
         undefined,
         undefined
     );
@@ -78,7 +72,7 @@ exports.Jasmine = [].concat(
 );
 
 exports.QUnit = [].concat(
-    //[["runStart", convertSuite(globalSuiteNoNesting)]],
+    [["runStart", toStartSuite(globalSuiteNoNesting)]],
     runGroupA,
     runGroupB,
     [["runEnd", globalSuiteNoNesting]]
