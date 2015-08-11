@@ -14,17 +14,14 @@ var subgroup = new Suite("subgroup", [], [subtest]);
 var parent = new Suite("group with subgroup", [subgroup], []);
 
 // Global Suite for QUnit
-var globalSuiteNoNesting = new Suite("", [groupA, groupB], []);
+var globalSuiteNoNesting = new Suite(undefined, [groupA, groupB], []);
 // Global Suite for Jasmine
-var globalSuiteNesting = new Suite("", [groupA, groupB, parent], []);
+var globalSuiteNesting = new Suite(undefined, [groupA, groupB, parent], []);
 
 function toStartTest(test) {
     return new Test(
         test.testName,
-        test.suiteName,
-        undefined,
-        undefined,
-        undefined
+        test.suiteName
     );
 }
 
