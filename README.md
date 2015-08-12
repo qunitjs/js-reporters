@@ -51,6 +51,26 @@ The criteria for picking these event names included:
  - It uses names that are valid JavaScript identifiers, which allows using those as keys in JSON and avoids the need to quote keys in regular JS objects or function calls.
  - It doesn't overlap with any known existing events, so introducing these could be done in parallel to the existing API in each framework, optionally deprecating and eventually removing the previous API.
 
+### Event Data
+
+Based on the discussion in [#12](https://github.com/js-reporters/js-reporters/issues/12#issuecomment-120483356), there are two basic data structures:
+ - **Test**: A test holds basic information on a single test. It has the following set of required attributes
+   - `testName`: name of the test
+   - `suiteName`: name of the suite the test belongs to
+   - `status`: result of the test. Can `passed`, `failed` or `skipped`
+   - `runtime`: execution time in milliseconds
+   - `errors`: array containing all errors. Depending on the framework, this is a single exception or a list of failed assertions.
+ - **Suite**: A suite is a collection of tests and potentially other suites.
+   - `name`: name of the suite
+   - `childSuites`: array with all direct subsuites
+   - `tests`: array containing all tests that directly belong to the suite (but not to a child suite)
+   - `runtime`: execution time of the whole suite in milliseconds (including child suites)
+   - `status`: summarized status of the suite
+      - `failed`, if at least one test failed
+      - `skipped`, if all tests in the suite are skipped (and there is at least one skipped test)
+      - `passed`, otherwise (the suite may contain skipped tests, but no failed tests) 
+ 
+For `testStart` and `testEnd`, the corresponding test object is passed to the reporter.  The same applies to `suiteStart` and `suiteEnd` where the matching suite object is passed to the reporter. For `runStart` and `runEnd` a "global" suite object is passed to the reporter, which contains all top-level suites as child suites.
 
 ## Cross-Reference Issues
 
