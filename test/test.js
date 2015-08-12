@@ -22,12 +22,12 @@ if (!jasmineTestReporter.ok) {
     process.exit(1);
 }
 
+var qunitRunner = new JsReporters.QUnitAdapter(QUnit);
+var qunitTestReporter = new JsReporters.TestReporter(qunitRunner, referenceData.QUnit);
+
 QUnit.done(function () {
     process.exit(qunitTestReporter.ok ? 0 : 1);
 });
-
-var qunitRunner = new JsReporters.QUnitAdapter(QUnit);
-var qunitTestReporter = new JsReporters.TestReporter(qunitRunner, referenceData.QUnit);
 
 QUnit.config.autorun = false;
 
