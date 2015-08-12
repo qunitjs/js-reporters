@@ -19,27 +19,18 @@ var jasmineTestReporter = new JsReporters.TestReporter(jasmineRunner, referenceD
 
 jasmine.execute();
 if (!jasmineTestReporter.ok) {
-    throw new Error("Tests for JasmineAdapter failed!");
+    process.exit(1);
 }
 
-//TODO: Use a proper test framework?
-var done = new Promise(function (resolve) {
-    QUnit.done(function () {
-        resolve();
-    });
+QUnit.done(function () {
+    process.exit(qunitTestReporter.ok ? 0 : 1);
 });
 
 var qunitRunner = new JsReporters.QUnitAdapter(QUnit);
 var qunitTestReporter = new JsReporters.TestReporter(qunitRunner, referenceData.QUnit);
 
 QUnit.config.autorun = false;
-QUnit.config.reorder = false;
 
 require("./qunit/tests.js");
 
 QUnit.load();
-
-done.then(function () {
-    // This is async, throwing an error doesn't change the exit code.
-    process.exit(qunitTestReporter.ok ? 0 : 1);
-});
