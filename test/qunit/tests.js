@@ -1,3 +1,4 @@
+/*global QUnit*/
 QUnit.module("group a");
 QUnit.test("foo", function (assert) {
     assert.equal(5, "5");
@@ -12,5 +13,5 @@ QUnit.test("baz", function (assert) {
     assert.ok(true);
 });
 QUnit.skip("skipped test", function (assert) {
-    assert.ok(true)
+    assert.ok(true);
 });

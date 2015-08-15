@@ -1,3 +1,4 @@
+/*global describe, it, expect, xit*/
 describe("group a", function () {
     it("foo", function () {
         expect(5).toBe(5);
