@@ -27,7 +27,14 @@
     "rules": {
       "no-console": 0,
       "brace-style": 1,
-      "space-before-blocks": 1
+      "space-before-blocks": 1,
+      "lines-around-comment": [
+        1,
+        {
+          "beforeBlockComment": true,
+          "beforeLineComment": true
+        }
+      ]
     },
     "globals": {
       "console": false
