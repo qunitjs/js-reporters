@@ -14,7 +14,11 @@ https://github.com/js-reporters/js-reporters/issues/
 
 ## Background
 
-We on the [QUnit](http://qunitjs.com/) team have been [discussing](https://github.com/jquery/qunit/issues/531) the possibility of working with other JS test frameworks, especially those that can be run client-side (e.g. Mocha, Jasmine, Intern, Buster, etc.), to agree upon a "Common Reporter Interface" so that we could hopefully share Reporter plugins between testing frameworks. This would also benefit high-level consumers of the frameworks such as Karma, BrowserStack, SauceLabs, Testling, etc.
+We on the [QUnit](http://qunitjs.com/) team have been [discussing](https://github.com/jquery/qunit/issues/531) the
+possibility of working with other JS test frameworks, especially those that can be run client-side (e.g. Mocha, Jasmine,
+Intern, Buster, etc.), to agree upon a "Common Reporter Interface" so that we could hopefully share Reporter plugins
+between testing frameworks. This would also benefit high-level consumers of the frameworks such as Karma, BrowserStack,
+SauceLabs, Testling, etc.
 
 This would most likely come in the form of:
  - a common Reporter API/Interface, e.g.
@@ -32,7 +36,9 @@ Would _you_ be interested in discussing this with us further?  Please join in!
 
 ### Event Names
 
-Based on the discussion in [#1](https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874), this is the suggested _minimum_ set of event names to be triggered by a testing framework, to be consumed by reporters or other testing tools.
+Based on the discussion in [#1](https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874), this is
+the suggested _minimum_ set of event names to be triggered by a testing framework, to be consumed by reporters or other
+testing tools.
 
  - `runStart`: Indicates the beginning of a testsuite, triggered just once.
  - `suiteStart`: Triggered at the start of each group of tests within a testsuite.
@@ -41,25 +47,34 @@ Based on the discussion in [#1](https://github.com/js-reporters/js-reporters/iss
  - `suiteEnd`:  Triggered at the end of each group of tests within a testsuite.
  - `runEnd`:  Indicates the end of a testsuite, triggered just once.
 
-These only define event names, not the data associated with each event. The data still needs to be specified via further discussion in [#1](https://github.com/js-reporters/js-reporters/issues/1).
+These only define event names, not the data associated with each event. The data still needs to be specified via further
+discussion in [#1](https://github.com/js-reporters/js-reporters/issues/1).
 
 #### Selection Criteria
 
 The criteria for picking these event names included:
 
- - These use the most common terms across a selection of frameworks, as gathered in [#1](https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874)
- - It uses names that are valid JavaScript identifiers, which allows using those as keys in JSON and avoids the need to quote keys in regular JS objects or function calls.
- - It doesn't overlap with any known existing events, so introducing these could be done in parallel to the existing API in each framework, optionally deprecating and eventually removing the previous API.
+ - These use the most common terms across a selection of frameworks, as gathered in
+   [#1](https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874)
+ - It uses names that are valid JavaScript identifiers, which allows using those as keys in JSON and avoids the need to
+   quote keys in regular JS objects or function calls.
+ - It doesn't overlap with any known existing events, so introducing these could be done in parallel to the existing API
+   in each framework, optionally deprecating and eventually removing the previous API.
 
 ### Event Data
 
-Based on the discussion in [#12](https://github.com/js-reporters/js-reporters/issues/12#issuecomment-120483356), there are two basic data structures:
- - **Test**: A test holds basic information on a single test. It has the following set of required attributes
+Based on the discussion in [#12](https://github.com/js-reporters/js-reporters/issues/12#issuecomment-120483356), there
+are two basic data structures: Suites and Tests. A test represents an atomic test/spec/"`it()`". A suite contains tests
+and optionally other suites. This can represent both flat structures like used by QUnit as well as nested suites like
+used by Jasmine or Mocha. The data structures are defined as follows:
+
+ - **Test**: A test holds basic information on a single test/spec. It has the following set of required attributes
    - `testName`: name of the test
    - `suiteName`: name of the suite the test belongs to
    - `status`: result of the test. Can `passed`, `failed` or `skipped`
    - `runtime`: execution time in milliseconds
-   - `errors`: array containing all errors. Depending on the framework, this is a single exception or a list of failed assertions.
+   - `errors`: array containing all errors. Depending on the framework, this is a single exception or a list of failed
+     assertions. Will be empty for statuses other than failed.
  - **Suite**: A suite is a collection of tests and potentially other suites.
    - `name`: name of the suite
    - `childSuites`: array with all direct subsuites
@@ -68,9 +83,15 @@ Based on the discussion in [#12](https://github.com/js-reporters/js-reporters/is
    - `status`: summarized status of the suite
       - `failed`, if at least one test failed
       - `skipped`, if all tests in the suite are skipped (and there is at least one skipped test)
-      - `passed`, otherwise (the suite may contain skipped tests, but no failed tests) 
+      - `passed`, if there is at least one passed test and all other tests are skipped or if there are no tests in the
+        suite.
  
-For `testStart` and `testEnd`, the corresponding test object is passed to the reporter.  The same applies to `suiteStart` and `suiteEnd` where the matching suite object is passed to the reporter. For `runStart` and `runEnd` a "global" suite object is passed to the reporter, which contains all top-level suites as child suites.
+For `testStart` and `testEnd`, the corresponding test object is passed to the reporter.  The same applies to
+`suiteStart` and `suiteEnd` where the matching suite object is passed to the reporter. For `runStart` and `runEnd` a
+"global" suite object is passed to the reporter, which contains all top-level suites as child suites.
+
+When `runStart`, `suiteStart` and `testStart` are emitted, the `status`, `runtime` and `errors` attributes are
+`undefined`.
 
 ## Cross-Reference Issues
 
