@@ -14,7 +14,8 @@
     "jasmine-core": "^2.3.4",
     "mkdirp": "^0.5.1",
     "qunitjs": "^1.18.0",
-    "rollup": "^0.19.1"
+    "rollup": "^0.19.1",
+    "mocha": "^2.2.5"
   },
   "eslintConfig": {
     "env": {
