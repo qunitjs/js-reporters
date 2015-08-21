@@ -9,8 +9,7 @@
     <script src="tests.js"></script>
     <script>
         QUnit.config.reorder = false;
-
-        var runner = new JsReporters.QUnitAdapter();
+        var runner = new JsReporters.QUnitAdapter(QUnit);
 
         //JsReporters.TapReporter.init(runner);
         JsReporters.ConsoleReporter.init(runner);
