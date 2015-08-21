@@ -1,6 +1,8 @@
 /* eslint camelcase:0, no-process-exit:0 */
 var Jasmine = require("jasmine");
 var QUnit = require("qunitjs");
+var Mocha = require("mocha");
+var path = require("path");
 var JsReporters = require("../dist/js-reporters.js");
 var referenceData = require("./referenceData.js");
 
@@ -22,11 +24,14 @@ if (!jasmineTestReporter.ok) {
     process.exit(1);
 }
 
+
 var qunitRunner = new JsReporters.QUnitAdapter(QUnit);
 var qunitTestReporter = new JsReporters.TestReporter(qunitRunner, referenceData.QUnit);
 
 QUnit.done(function () {
-    process.exit(qunitTestReporter.ok ? 0 : 1);
+    if (!qunitTestReporter.ok) {
+        process.exit(1);
+    }
 });
 
 QUnit.config.autorun = false;
@@ -34,3 +39,18 @@ QUnit.config.autorun = false;
 require("./qunit/tests.js");
 
 QUnit.load();
+
+
+var mocha = new Mocha();
+var mochaRunner = new JsReporters.MochaAdapter(mocha);
+var mochaTestReporter = new JsReporters.TestReporter(mochaRunner, referenceData.Mocha);
+
+mocha.addFile(
+    path.join(__dirname, "mocha/tests.js")
+);
+
+mocha.run(function () {
+    if (!mochaTestReporter.ok) {
+        process.exit(1);
+    }
+});
