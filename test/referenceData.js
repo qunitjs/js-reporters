@@ -75,3 +75,5 @@ exports.QUnit = [].concat(
     runGroupB,
     [["runEnd", globalSuiteNoNesting]]
 );
+
+exports.Mocha = exports.Jasmine;
