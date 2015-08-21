@@ -2,7 +2,7 @@
   "name": "js-reporters",
   "version": "1.0.0",
   "scripts": {
-    "build": "mkdirp dist/ && esperanto -b -i lib/index.js -t umd --name JsReporters | babel -o dist/js-reporters.js --blacklist strict -m umd",
+    "build": "node build.js",
     "lint": "eslint lib/ test/",
     "test": "node test/test.js"
   },
