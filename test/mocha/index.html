@@ -5,11 +5,6 @@
     <link rel="stylesheet" href="../../node_modules/mocha/mocha.css">
     <script src="../../node_modules/mocha/mocha.js"></script>
     <script>mocha.setup('bdd')</script>
-    <script>
-        function assert(expr, msg) {
-            if (!expr) throw new Error(msg || 'failed');
-        }
-    </script>
     <script src="../../dist/js-reporters.js"></script>
     <script src="tests.js"></script>
     <script>

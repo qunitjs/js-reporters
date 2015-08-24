@@ -1,11 +1,14 @@
+/*global describe, it, xit*/
 function assert(expr, msg) {
-    if (!expr) throw new Error(msg || 'failed');
+    if (!expr) {
+        throw new Error(msg || "failed");
+    }
 }
 
 describe("group a", function () {
     it("foo", function () {
-        assert(5 == 5);
-        assert(1 / 0 == Infinity);
+        assert(5 === 5);
+        assert(1 / 0 === Infinity);
     });
 
     it("bar goes wrong", function () {
