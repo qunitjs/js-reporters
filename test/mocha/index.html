@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../node_modules/mocha/mocha.css">
+    <script src="../../node_modules/mocha/mocha.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script src="../../dist/js-reporters.js"></script>
+    <script src="tests.js"></script>
+    <script>
+        window.onload = function () {
+            var runner = new JsReporters.MochaAdapter(mocha);
+            //JsReporters.TapReporter.init(runner);
+            JsReporters.ConsoleReporter.init(runner);
+
+            mocha.run();
+
+        }
+    </script>
+
+</head>
+<body>
+<div id="mocha"></div>
+</body>
+</html>
