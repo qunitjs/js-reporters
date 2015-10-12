@@ -1,17 +1,17 @@
 var mkdirp = require("mkdirp");
-var esperanto = require("esperanto");
+var rollup = require("rollup");
 var fs = require("fs");
 var babel = require("babel");
 var pkg = require("./package.json");
 
 mkdirp.sync("dist");
 
-esperanto.bundle({
-    base: "lib",
-    entry: "index.js"
+rollup.rollup({
+    entry: "lib/index.js"
 }).then(function (bundle) {
-    var umd = bundle.toUmd({
-        name: "JsReporters"
+    var umd = bundle.generate({
+        format: "umd",
+        moduleName: "JsReporters"
     });
 
     var transformed = babel.transform(umd.code, {

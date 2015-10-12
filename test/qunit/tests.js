@@ -1,4 +1,10 @@
-/*global QUnit*/
+/*eslint-disable no-use-before-define*/
+if(typeof QUnit === "undefined") {
+	var QUnit = require("qunitjs");
+}
+
+/*eslint-enable no-use-before-define*/
+
 QUnit.module("group a");
 QUnit.test("foo", function (assert) {
     assert.equal(5, "5");
