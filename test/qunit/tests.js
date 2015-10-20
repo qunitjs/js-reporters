@@ -1,6 +1,6 @@
 /*eslint-disable no-use-before-define*/
-if(typeof QUnit === "undefined") {
-	var QUnit = require("qunitjs");
+if (typeof QUnit === "undefined") {
+    var QUnit = require("qunitjs");
 }
 
 /*eslint-enable no-use-before-define*/

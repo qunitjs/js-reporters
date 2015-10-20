@@ -28,6 +28,7 @@
       "no-console": 0,
       "brace-style": 1,
       "space-before-blocks": 1,
+      "space-after-keywords": 1,
       "lines-around-comment": [
         1,
         {
