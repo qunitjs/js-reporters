@@ -1,4 +1,4 @@
-/*global describe, it, xit*/
+/*global describe, it*/
 function assert(expr, msg) {
     if (!expr) {
         throw new Error(msg || "failed");
@@ -20,7 +20,7 @@ describe("group b", function () {
     it("baz", function () {
         assert(true);
     });
-    xit("skipped test", function () {
+    it.skip("skipped test", function () {
         assert(true);
     });
 
