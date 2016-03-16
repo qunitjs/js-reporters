@@ -1,13 +1,13 @@
 {
   "name": "js-reporters",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "build": "node build.js",
     "lint": "eslint lib/ test/",
     "test": "node test/test.js"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
+    "babel-core": "^6.7.2",
     "babel-eslint": "^5.0.0",
     "commitplease": "^2.2.3",
     "eslint": "~2.2.0",
