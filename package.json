@@ -1,22 +1,29 @@
 {
   "name": "js-reporters",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "node build.js",
     "lint": "eslint lib/ test/",
     "test": "node test/test.js"
   },
   "devDependencies": {
-    "babel": "^5.6.14",
+    "babel": "^6.5.2",
+    "babel-eslint": "^5.0.0",
     "commitplease": "^2.2.3",
-    "eslint": "^0.24.1",
+    "eslint": "~2.2.0",
     "jasmine": "^2.3.1",
     "jasmine-core": "^2.3.4",
     "mkdirp": "^0.5.1",
     "qunitjs": "^1.18.0",
     "rollup": "^0.19.1"
   },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
   "eslintConfig": {
+    "parser": "babel-eslint",
     "env": {
       "es6": true,
       "node": true
@@ -27,8 +34,8 @@
     "rules": {
       "no-console": 0,
       "brace-style": 1,
+      "key-spacing": 1,
       "space-before-blocks": 1,
-      "space-after-keywords": 1,
       "lines-around-comment": [
         1,
         {
