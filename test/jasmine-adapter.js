@@ -14,6 +14,7 @@ var collectedData = {};
  * Event handler.
  */
 function _collectOutput(eventName, done, eventData) {
+
   // Assume now (for simplicity) that there is only one event per type.
   collectedData[eventName] = eventData;
   done();
@@ -58,13 +59,13 @@ function _getJasmineAdapterOutput(done) {
 }
 
 describe('Jasmine Adapter', function() {
+
   // Run Jasmine to obtain it's output.
   before(function(done) {
     _getJasmineAdapterOutput(done);
   });
 
   // Now we can do assertions on the obtained output.
-
   describe('Global suite', function() {
     it('should have no name', function() {
       expect(referenceData[0][1].name).to.be.
