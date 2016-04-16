@@ -5,7 +5,7 @@
     "build": "node build.js",
     "lint": "eslint lib/ test/",
     "test": "node test/test.js",
-    "test-jasmine": "mocha test/jasmine-adapter.js"
+    "test-integration": "mocha test/integration/adapters.js"
   },
   "devDependencies": {
     "babel-core": "^6.7.2",
