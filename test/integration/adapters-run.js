@@ -1,4 +1,5 @@
 var Jasmine = require('jasmine');
+var QUnit = require('qunitjs');
 var JsReporters = require('../../dist/js-reporters.js');
 
 /**
@@ -23,5 +24,17 @@ module.exports = {
     attachListeners(jasmineRunner);
 
     jasmine.execute();
+  },
+
+  QUnit: function(attachListeners) {
+    var qunitRunner = new JsReporters.QUnitAdapter(QUnit);
+
+    attachListeners(qunitRunner);
+
+    QUnit.config.autorun = false;
+
+    require('../qunit/tests.js');
+
+    QUnit.load();
   }
 };

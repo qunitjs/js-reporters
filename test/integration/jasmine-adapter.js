@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var referenceData = require('../referenceData').Jasmine;
+var data = require('../referenceData');
 var runAdapters = require('./adapters-run.js');
 
 /**
@@ -13,7 +13,7 @@ var collectedData = {};
  * @type {Array}
  * @const
  */
-const adapters = ['Jasmine'];
+const adapters = ['Jasmine', 'QUnit'];
 
 /**
  * Event handler.
@@ -45,6 +45,8 @@ describe('Adapters integration', function() {
   adapters.forEach(function(adapter) {
 
     describe(adapter + ' adapter', function() {
+      var referenceData = data[adapter];
+
       before(function(done) {
         collectedData = {};
         runAdapters[adapter](_attachListeners.bind(null, done));
