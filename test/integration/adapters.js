@@ -63,13 +63,6 @@ describe('Adapters integration', function() {
             lengthOf(collectedData.runStart.childSuites.length);
         });
       });
-
-      describe('Nested suites with test passing', function() {
-        it('should have one passing test', function() {
-          expect(referenceData[16][1].status).to.be.
-            equal(collectedData.testEnd.status);
-        });
-      })
     });
   });
 });
