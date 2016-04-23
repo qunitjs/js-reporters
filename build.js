@@ -3,11 +3,19 @@ var rollup = require("rollup");
 var fs = require("fs");
 var babel = require("babel-core");
 var pkg = require("./package.json");
+var nodeResolve = require('rollup-plugin-node-resolve');
+var commonjs = require('rollup-plugin-commonjs');
 
 mkdirp.sync("dist");
 
 rollup.rollup({
-    entry: "lib/index.js"
+    entry: "lib/index.js",
+    plugins: [
+      nodeResolve({
+        preferBuiltins: false
+      }),
+      commonjs()
+    ]
 }).then(function (bundle) {
     var umd = bundle.generate({
         format: "umd",
