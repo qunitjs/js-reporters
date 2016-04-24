@@ -20,11 +20,6 @@
     "rollup": "^0.26.0",
     "rollup-plugin-babel": "^2.4.0"
   },
-  "babel": {
-    "presets": [
-      "es2015-rollup"
-    ]
-  },
   "eslintConfig": {
     "parser": "babel-eslint",
     "env": {
