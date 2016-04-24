@@ -4,7 +4,7 @@ var pkg = require('./package.json');
 
 var licenseHeader = fs.readFileSync('license-header', {encoding: 'utf8'})
       .replace('@VERSION', pkg.version)
-      .replace('@DATE', (new Date()).toISOString().replace(/:\d+\.\d+Z$/, "Z"));
+      .replace('@DATE', (new Date()).toDateString());
 
 module.exports = {
   entry: 'lib/index.js',
