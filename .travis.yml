@@ -1,7 +1,8 @@
 language: node_js
 node_js:
-  - "0.12"
-before_script: "npm run build"
+  - '0.12' # Legacy
+  - '4' # LTS
+  - 'stable'
 script:
+  - "npm run build"
   - "npm test"
-  - "npm run lint"
