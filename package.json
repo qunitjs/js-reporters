@@ -4,7 +4,7 @@
   "scripts": {
     "build": "rollup -c",
     "lint": "eslint lib/ test/",
-    "test": "node test/test.js",
+    "test": "npm run lint && node test/test.js && npm run test-integration",
     "test-integration": "mocha test/integration/adapters.js"
   },
   "devDependencies": {
