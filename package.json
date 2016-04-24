@@ -19,7 +19,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^2.4.5",
     "qunitjs": "^1.18.0",
-    "rollup": "^0.19.1"
+    "rollup": "^0.26.0"
   },
   "babel": {
     "presets": [
