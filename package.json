@@ -3,47 +3,20 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
-    "lint": "eslint lib/ test/",
+    "lint": "standard",
     "test": "npm run lint && node test/test.js && npm run test-integration",
     "test-integration": "mocha test/integration/adapters.js"
   },
   "devDependencies": {
-    "babel-eslint": "^5.0.0",
     "babel-preset-es2015-rollup": "^1.1.1",
     "chai": "^3.5.0",
     "commitplease": "^2.2.3",
-    "eslint": "~2.2.0",
     "jasmine": "^2.3.1",
     "jasmine-core": "^2.3.4",
     "mocha": "^2.4.5",
     "qunitjs": "^1.18.0",
     "rollup": "^0.26.0",
-    "rollup-plugin-babel": "^2.4.0"
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "env": {
-      "es6": true,
-      "node": true
-    },
-    "ecmaFeatures": {
-      "modules": true
-    },
-    "rules": {
-      "no-console": 0,
-      "brace-style": 1,
-      "key-spacing": 1,
-      "space-before-blocks": 1,
-      "lines-around-comment": [
-        1,
-        {
-          "beforeBlockComment": true,
-          "beforeLineComment": true
-        }
-      ]
-    },
-    "globals": {
-      "console": false
-    }
+    "rollup-plugin-babel": "^2.4.0",
+    "standard": "^6.0.8"
   }
 }
