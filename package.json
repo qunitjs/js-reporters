@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
-    "lint": "standard",
-    "test": "npm run lint && node test/test.js && npm run test-integration",
+    "test": "standard && node test/test.js && npm run test-integration",
     "test-integration": "mocha test/integration/adapters.js"
   },
   "devDependencies": {
