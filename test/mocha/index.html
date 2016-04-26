@@ -9,12 +9,11 @@
     <script src="tests.js"></script>
     <script>
         window.onload = function () {
-            // var runner = new JsReporters.MochaAdapter(mocha);
-            //JsReporters.TapReporter.init(runner);
-            // JsReporters.ConsoleReporter.init(runner);
-
             mocha.run();
 
+            var runner = new JsReporters.MochaAdapter(mocha);
+            JsReporters.ConsoleReporter.init(runner);
+            mocha.run();
         }
     </script>
 
