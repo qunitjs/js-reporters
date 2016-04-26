@@ -70,10 +70,10 @@ exports.Jasmine = [].concat(
 )
 
 exports.QUnit = [].concat(
-    [["runStart", toStartSuite(globalSuiteNoNesting)]],
-    runGroupA,
-    runGroupB,
-    [["runEnd", globalSuiteNoNesting]]
+  [['runStart', toStartSuite(globalSuiteNoNesting)]],
+  runGroupA,
+  runGroupB,
+  [['runEnd', globalSuiteNoNesting]]
 )
 
-exports.Mocha = exports.Jasmine;
+exports.Mocha = exports.Jasmine
