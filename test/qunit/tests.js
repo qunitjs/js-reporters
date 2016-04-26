@@ -1,23 +1,24 @@
-/*eslint-disable no-use-before-define*/
-if (typeof QUnit === "undefined") {
-    var QUnit = require("qunitjs");
+/* eslint-disable no-use-before-define */
+
+if (typeof QUnit === 'undefined') {
+  var QUnit = require('qunitjs')
 }
 
-/*eslint-enable no-use-before-define*/
+/* eslint-enable no-use-before-define */
 
-QUnit.module("group a");
-QUnit.test("foo", function (assert) {
-    assert.equal(5, "5");
-    assert.equal(1 / 0, Infinity);
-});
-QUnit.test("bar goes wrong", function (assert) {
-    assert.deepEqual(5, "5");
-});
+QUnit.module('group a')
+QUnit.test('foo', function (assert) {
+  assert.equal(5, '5')
+  assert.equal(1 / 0, Infinity)
+})
+QUnit.test('bar goes wrong', function (assert) {
+  assert.deepEqual(5, '5')
+})
 
-QUnit.module("group b");
-QUnit.test("baz", function (assert) {
-    assert.ok(true);
-});
-QUnit.skip("skipped test", function (assert) {
-    assert.ok(true);
-});
+QUnit.module('group b')
+QUnit.test('baz', function (assert) {
+  assert.ok(true)
+})
+QUnit.skip('skipped test', function (assert) {
+  assert.ok(true)
+})
