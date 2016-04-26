@@ -7,7 +7,7 @@ function assert (expr, msg) {
 
 describe('group a', function () {
   it('foo', function () {
-    assert(5 === 5)
+    assert(true)
     assert(1 / 0 === Infinity)
   })
 
