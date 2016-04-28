@@ -15,7 +15,7 @@ var collectedData = {}
  * @type {Array}
  * @const
  */
-const adapters = ['Jasmine', 'QUnit']
+const adapters = ['Jasmine', 'QUnit', 'Mocha']
 
 /**
  * Event handler.

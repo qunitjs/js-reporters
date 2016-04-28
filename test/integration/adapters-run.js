@@ -1,5 +1,6 @@
 var Jasmine = require('jasmine')
 var QUnit = require('qunitjs')
+var Mocha = require('mocha')
 var JsReporters = require('../../dist/js-reporters.js')
 
 /**
@@ -36,5 +37,18 @@ module.exports = {
     require('../qunit/tests.js')
 
     QUnit.load()
+  },
+
+  Mocha: function (attachListeners) {
+    var mocha = new Mocha()
+    var mochaRunner
+
+    mocha.addFile('test/mocha/tests.js')
+
+    mochaRunner = new JsReporters.MochaAdapter(mocha)
+
+    attachListeners(mochaRunner)
+
+    mocha.run()
   }
 }
