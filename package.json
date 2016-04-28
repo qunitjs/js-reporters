@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
+    "pretest": "npm run build",
     "test": "standard && node test/test.js && npm run test-integration",
     "test-integration": "mocha test/integration/adapters.js"
   },
