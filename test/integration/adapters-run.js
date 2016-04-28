@@ -27,7 +27,6 @@ module.exports = {
     var jasmine = new Jasmine()
     var jasmineRunner
 
-
     jasmine.loadConfig({
       spec_dir: 'test/jasmine',
       spec_files: [testFile]
@@ -48,7 +47,7 @@ module.exports = {
 
     QUnit.config.autorun = false
 
-    require(path.join(testDir, 'qunit', testFile));
+    require(path.join(testDir, 'qunit', testFile))
 
     QUnit.load()
   },
