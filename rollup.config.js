@@ -9,7 +9,7 @@ var licenseHeader = fs.readFileSync('license-header', {encoding: 'utf8'})
   .replace('@DATE', (new Date()).toDateString())
 
 module.exports = {
-  entry: 'lib/index.js',
+  entry: 'index.js',
   dest: 'dist/js-reporters.js',
   format: 'umd',
   moduleName: 'JsReporters',
