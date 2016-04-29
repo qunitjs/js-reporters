@@ -4,31 +4,16 @@ var expect = require('chai').expect
 var data = require('../referenceData')
 var runAdapters = require('./adapters-run.js')
 
-/**
- * Object collecting the Adapter's output.
- *
- * @type {Object}
- */
+// Collecting the adapter's output.
 var collectedData = {}
 
-/**
- * @type {Array}
- * @const
- */
-const adapters = ['Jasmine', 'QUnit', 'Mocha']
-
-/**
- * Event handler.
- */
 function _collectOutput (eventName, done, eventData) {
   // Assume now (for simplicity) that there is only one event per type.
   collectedData[eventName] = eventData
   done()
 }
 
-/**
- * Attaches the event handler for the Jasmine runner events.
- */
+// Attaches the event handler for the runner events.
 function _attachListeners (done, runner) {
   var dummyFunc = function () {}
 
@@ -43,7 +28,7 @@ function _attachListeners (done, runner) {
 }
 
 describe('Adapters integration', function () {
-  adapters.forEach(function (adapter) {
+  Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
       var referenceData = data[adapter]
 

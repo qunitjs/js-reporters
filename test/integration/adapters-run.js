@@ -4,18 +4,7 @@ var Mocha = require('mocha')
 var JsReporters = require('../../dist/js-reporters.js')
 var path = require('path')
 
-/**
- * @type {String}
- * @const
- * @default
- */
 var testDir = path.join(__dirname, '..')
-
-/**
- * @type {String}
- * @const
- * @default
- */
 var testFile = 'tests.js'
 
 /**
