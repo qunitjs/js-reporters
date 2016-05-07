@@ -15,7 +15,7 @@
     "jasmine": "^2.3.1",
     "jasmine-core": "^2.3.4",
     "mocha": "^2.4.5",
-    "qunitjs": "^1.18.0",
+    "qunitjs": "^2.0.0-rc1",
     "rollup": "^0.26.0",
     "rollup-plugin-babel": "^2.4.0",
     "rollup-plugin-commonjs": "^2.2.1",
