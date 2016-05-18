@@ -1,15 +1,14 @@
 /* eslint-env mocha */
 
 var expect = require('chai').expect
-var data = require('../referenceData')
+var refData = require('./reference-data.js')
 var runAdapters = require('./adapters-run.js')
 
 // Collecting the adapter's output.
-var collectedData = {}
+var collectedData
 
 function _collectOutput (eventName, done, eventData) {
-  // Assume now (for simplicity) that there is only one event per type.
-  collectedData[eventName] = eventData
+  collectedData.push([eventName, eventData])
   done()
 }
 
@@ -30,20 +29,19 @@ function _attachListeners (done, runner) {
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
-      var referenceData = data[adapter]
+      var testDescription
 
       before(function (done) {
-        collectedData = {}
+        collectedData = []
         runAdapters[adapter](_attachListeners.bind(null, done))
       })
 
-      describe('Global suite', function () {
-        it('should have no name', function () {
-          expect(referenceData[0][1].name).to.be.equal(collectedData.runStart.name)
-        })
+      refData.forEach(function (value, index) {
+        testDescription = value[2]
 
-        it('should have all the other suites as childSuites', function () {
-          expect(referenceData[0][1].childSuites).to.have.lengthOf(collectedData.runStart.childSuites.length)
+        it(testDescription, function () {
+          expect(collectedData[index][0]).equal(value[0])
+          expect(collectedData[index][1]).to.be.deep.equal(value[1])
         })
       })
     })

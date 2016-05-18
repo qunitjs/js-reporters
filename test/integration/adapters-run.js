@@ -4,8 +4,7 @@ var Mocha = require('mocha')
 var JsReporters = require('../../dist/js-reporters.js')
 var path = require('path')
 
-var testDir = path.join(__dirname, '..')
-var testFile = 'tests.js'
+var testDir = path.join(__dirname, '../fixtures')
 
 /**
  * Exports a function for each adapter that will run
@@ -17,8 +16,8 @@ module.exports = {
     var jasmineRunner
 
     jasmine.loadConfig({
-      spec_dir: 'test/jasmine',
-      spec_files: [testFile]
+      spec_dir: 'test/fixtures',
+      spec_files: ['jasmine.js']
     })
 
     jasmineRunner = new JsReporters.JasmineAdapter(jasmine.env)
@@ -36,7 +35,7 @@ module.exports = {
 
     QUnit.config.autorun = false
 
-    require(path.join(testDir, 'qunit', testFile))
+    require(path.join(testDir, 'qunit.js'))
 
     QUnit.load()
   },
@@ -45,7 +44,7 @@ module.exports = {
     var mocha = new Mocha()
     var mochaRunner
 
-    mocha.addFile(path.join(testDir, 'mocha', testFile))
+    mocha.addFile(path.join(testDir, 'mocha.js'))
 
     mochaRunner = new JsReporters.MochaAdapter(mocha)
 
