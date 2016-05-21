@@ -36,13 +36,13 @@ var failingTestStart2 = new Test('should fail', 'suite with tests',
 var failingTestEnd2 = new Test('should fail', 'suite with tests', 'failed',
     0, [new Error('error')])
 
-var innerTestStart = new Test('inner test', 'Inner suite',
+var innerTestStart = new Test('inner test', 'inner suite',
     undefined, undefined, undefined)
-var innerTestEnd = new Test('inner test', 'Inner suite', 'passed', 0, [])
+var innerTestEnd = new Test('inner test', 'inner suite', 'passed', 0, [])
 
-var outterTestStart = new Test('outter test', 'Outter suite',
+var outterTestStart = new Test('outter test', 'outter suite',
     undefined, undefined, undefined)
-var outterTestEnd = new Test('outter test', 'Outter suite', 'passed', 0, [])
+var outterTestEnd = new Test('outter test', 'outter suite', 'passed', 0, [])
 
 var passingSuiteStart = new Suite('suite with passing test', [],
     [passingTestStart1])
