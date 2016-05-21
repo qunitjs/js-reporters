@@ -11,7 +11,7 @@ var testDir = path.join(__dirname, '../fixtures')
  * against a default test fixture.
  */
 module.exports = {
-  Jasmine: function (attachListeners) {
+  /*Jasmine: function (attachListeners) {
     var jasmine = new Jasmine()
     var jasmineRunner
 
@@ -26,7 +26,7 @@ module.exports = {
     attachListeners(jasmineRunner)
 
     jasmine.execute()
-  },
+  }
 
   QUnit: function (attachListeners) {
     var qunitRunner = new JsReporters.QUnitAdapter(QUnit)
@@ -38,7 +38,7 @@ module.exports = {
     require(path.join(testDir, 'qunit.js'))
 
     QUnit.load()
-  },
+  },*/
 
   Mocha: function (attachListeners) {
     var mocha = new Mocha()

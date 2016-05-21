@@ -28,7 +28,7 @@ function _attachListeners (done, runner) {
 
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
-    describe.skip(adapter + ' adapter', function () {
+    describe(adapter + ' adapter', function () {
       var testDescription
 
       before(function (done) {
