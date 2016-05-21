@@ -1,5 +1,5 @@
-var Jasmine = require('jasmine')
-var QUnit = require('qunitjs')
+// var Jasmine = require('jasmine')
+// var QUnit = require('qunitjs')
 var Mocha = require('mocha')
 var JsReporters = require('../../dist/js-reporters.js')
 var path = require('path')
@@ -11,7 +11,7 @@ var testDir = path.join(__dirname, '../fixtures')
  * against a default test fixture.
  */
 module.exports = {
-  /*Jasmine: function (attachListeners) {
+  /* Jasmine: function (attachListeners) {
     var jasmine = new Jasmine()
     var jasmineRunner
 
@@ -38,7 +38,7 @@ module.exports = {
     require(path.join(testDir, 'qunit.js'))
 
     QUnit.load()
-  },*/
+  }, */
 
   Mocha: function (attachListeners) {
     var mocha = new Mocha()
