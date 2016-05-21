@@ -36,9 +36,10 @@ var failingTestStart2 = new Test('should fail', 'suite with tests',
 var failingTestEnd2 = new Test('should fail', 'suite with tests', 'failed',
     0, [new Error('error')])
 
-var innerTestStart = new Test('inner test', 'inner suite',
+var innerTestStart = new Test('inner test', 'outter suite inner suite',
     undefined, undefined, undefined)
-var innerTestEnd = new Test('inner test', 'inner suite', 'passed', 0, [])
+var innerTestEnd = new Test('inner test', 'outter suite inner suite',
+    'passed', 0, [])
 
 var outterTestStart = new Test('outter test', 'outter suite',
     undefined, undefined, undefined)
