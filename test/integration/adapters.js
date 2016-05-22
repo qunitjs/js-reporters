@@ -36,10 +36,24 @@ describe('Adapters integration', function () {
         runAdapters[adapter](_attachListeners.bind(null, done))
       })
 
+      it('tests runtime should be between 0 and 1 ms', function () {
+        collectedData.forEach(function (value) {
+          if (value[0] === 'testEnd' && value[1].status !== 'skipped') {
+            expect(value[1].runtime).to.be.within(0, 1)
+          }
+        })
+      })
+
       refData.forEach(function (value, index) {
         testDescription = value[2]
 
         it(testDescription, function () {
+          // Set tests runtime to 0 to match the reference tests runtime.
+          if (collectedData[index][0] === 'testEnd' &&
+              collectedData[index][1].status !== 'skipped') {
+            collectedData[index][1].runtime = 0
+          }
+
           expect(collectedData[index][0]).equal(value[0])
           expect(collectedData[index][1]).to.be.deep.equal(value[1])
         })
