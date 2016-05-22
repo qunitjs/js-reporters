@@ -26,6 +26,19 @@ function _attachListeners (done, runner) {
   runner.on('runEnd', _collectOutput.bind(null, 'runEnd', done))
 }
 
+// Recursively iterate over each suite and set their tests runtime to 0ms.
+function _setSuiteTestsRuntime (suite) {
+  suite.tests.forEach(function (test) {
+    if (test.status !== 'skipped') {
+      test.runtime = 0
+    }
+  })
+
+  suite.childSuites.forEach(function (childSuite) {
+    _setSuiteTestsRuntime(childSuite)
+  })
+}
+
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe.skip(adapter + ' adapter', function () {
@@ -52,6 +65,12 @@ describe('Adapters integration', function () {
           if (collectedData[index][0] === 'testEnd' &&
               collectedData[index][1].status !== 'skipped') {
             collectedData[index][1].runtime = 0
+          }
+
+          // Set suite tests runtime to 0, also for the globalSuite.
+          if (collectedData[index][0] === 'suiteEnd' ||
+              collectedData[index][0] === 'runEnd') {
+            _setSuiteTestsRuntime(collectedData[index][1])
           }
 
           expect(collectedData[index][0]).equal(value[0])
