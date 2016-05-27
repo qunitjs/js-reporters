@@ -1,5 +1,5 @@
 // var Jasmine = require('jasmine')
-// var QUnit = require('qunitjs')
+var QUnit = require('qunitjs')
 var Mocha = require('mocha')
 var JsReporters = require('../../dist/js-reporters.js')
 var path = require('path')
@@ -26,7 +26,7 @@ module.exports = {
     attachListeners(jasmineRunner)
 
     jasmine.execute()
-  }
+  }*/
 
   QUnit: function (attachListeners) {
     var qunitRunner = new JsReporters.QUnitAdapter(QUnit)
@@ -38,7 +38,7 @@ module.exports = {
     require(path.join(testDir, 'qunit.js'))
 
     QUnit.load()
-  }, */
+  },
 
   Mocha: function (attachListeners) {
     var mocha = new Mocha()
