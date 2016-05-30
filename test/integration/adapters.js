@@ -59,8 +59,6 @@ describe('Adapters integration', function () {
 
       if (adapter === 'QUnit') {
         it('tests errors should be QUnit errors like', function () {
-          var suiteName
-
           collectedData.forEach(function (value) {
             if (value[0] === 'testEnd' && value[1].status === 'failed') {
               var error = {
@@ -70,7 +68,7 @@ describe('Adapters integration', function () {
                 name: value[1].testName,
                 result: false,
                 runtime: value[1].runtime,
-                source: "Error: error",
+                source: 'Error: error',
                 testId: value[1].errors[0].testId
               }
 
@@ -98,9 +96,9 @@ describe('Adapters integration', function () {
 
           // Overwrite QUnit error of failed tests with standard error.
           if (adapter === 'QUnit' &&
-            collectedData[index][0] === 'testEnd' &&
-            collectedData[index][1].status === 'failed') {
-              collectedData[index][1].errors = [new Error()]
+              collectedData[index][0] === 'testEnd' &&
+              collectedData[index][1].status === 'failed') {
+            collectedData[index][1].errors = [new Error()]
           }
 
           expect(collectedData[index][0]).equal(value[0])
