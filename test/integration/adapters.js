@@ -57,6 +57,29 @@ describe('Adapters integration', function () {
         })
       })
 
+      if (adapter === 'QUnit') {
+        it('tests errors should be QUnit errors like', function () {
+          var suiteName
+
+          collectedData.forEach(function (value) {
+            if (value[0] === 'testEnd' && value[1].status === 'failed') {
+              var error = {
+                actual: null,
+                message: value[1].errors[0].message,
+                module: value[1].suiteName,
+                name: value[1].testName,
+                result: false,
+                runtime: value[1].runtime,
+                source: "Error: error",
+                testId: value[1].errors[0].testId
+              }
+
+              expect(value[1].errors).to.be.deep.equal([error])
+            }
+          })
+        })
+      }
+
       refData.forEach(function (value, index) {
         testDescription = value[2]
 
@@ -71,6 +94,13 @@ describe('Adapters integration', function () {
           if (collectedData[index][0] === 'suiteEnd' ||
               collectedData[index][0] === 'runEnd') {
             _setSuiteTestsRuntime(collectedData[index][1])
+          }
+
+          // Overwrite QUnit error of failed tests with standard error.
+          if (adapter === 'QUnit' &&
+            collectedData[index][0] === 'testEnd' &&
+            collectedData[index][1].status === 'failed') {
+              collectedData[index][1].errors = [new Error()]
           }
 
           expect(collectedData[index][0]).equal(value[0])
