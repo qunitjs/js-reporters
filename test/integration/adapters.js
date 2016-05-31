@@ -39,6 +39,19 @@ function _setSuiteTestsRuntime (suite) {
   })
 }
 
+// Recursively iterate over each suite and overwrite its errors.
+function _overWriteTestsErrors (suite) {
+  suite.tests.forEach(function (test) {
+    if (test.status === 'failed') {
+      test.errors = [new Error('error')]
+    }
+  })
+
+  suite.childSuites.forEach(function (childSuite) {
+    _setSuiteTestsRuntime(childSuite)
+  })
+}
+
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
@@ -99,6 +112,13 @@ describe('Adapters integration', function () {
               collectedData[index][0] === 'testEnd' &&
               collectedData[index][1].status === 'failed') {
             collectedData[index][1].errors = [new Error()]
+          }
+
+          // Overwrite suite QUnit errors with standard errors.
+          if (adapter === 'QUnit' &&
+              (collectedData[index][0] === 'suiteEnd' ||
+              collectedData[index][0] === 'runEnd')) {
+            _overWriteTestsErrors(collectedData[index][1])
           }
 
           expect(collectedData[index][0]).equal(value[0])
