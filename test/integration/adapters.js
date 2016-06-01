@@ -74,13 +74,16 @@ describe('Adapters integration', function () {
         it('tests errors should be QUnit errors like', function () {
           collectedData.forEach(function (value) {
             if (value[0] === 'testEnd' && value[1].status === 'failed') {
+              // The runtime must be the one from the error not from the test,
+              // @see http://api.qunitjs.com/QUnit.log/ and
+              // http://api.qunitjs.com/QUnit.testDone/.
               var error = {
                 actual: null,
                 message: value[1].errors[0].message,
                 module: value[1].suiteName,
                 name: value[1].testName,
                 result: false,
-                runtime: value[1].runtime,
+                runtime: value[1].errors[0].runtime,
                 source: 'Error: error',
                 testId: value[1].errors[0].testId
               }
