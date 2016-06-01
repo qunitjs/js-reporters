@@ -48,7 +48,7 @@ function _overWriteTestsErrors (suite) {
   })
 
   suite.childSuites.forEach(function (childSuite) {
-    _setSuiteTestsRuntime(childSuite)
+    _overWriteTestsErrors(childSuite)
   })
 }
 
