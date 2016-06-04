@@ -63,3 +63,82 @@ Execution flow:
 
 This is the execution of the above test fixture, as you can see the `d suite` is not executed.
 
+## QUnit
+
+[QUnit](http://qunitjs.com/) is a testing framework with builtin assertion, so it is checking tests for at least one assertion, if it does not find one, the test will fail with an error thrown by QUnit itself.
+
+Tests are grouped in modules, which can be also nested from [1.20.0 version](https://github.com/jquery/qunit/blob/master/History.md#1200--2015-10-27). Tests can be placed outside a module, we call them also *global tests*.
+
+Internally QUnit has a global module, where global tests are putted, but it does not wrap the other modules into it. To emit a global suite on our *runStart/runEnd* events we must access QUnit internals, *QUnit.config.modules* which is a linear array that will contain all modules, even the nested ones.
+
+An interesting fact of *QUnit.config.modules* is that it will not contain the *global module* if it does not have at least
+one test, but it will contain all other modules, even if they do not have a test. 
+
+Test particularities:
+  * skipped tests have a numeric value for their runtime
+
+Modules particularities:
+  * the start and end of a module, even the global one, are emitted only if the suite itself contains at least one test
+  * nested modules have a concatenated name, from the outer most suite to the inner most
+
+Nested modules execution is done the following way:
+  * take in order the modules inside the top level module
+  * than execute them from the inner most module to the outer most
+
+Respecting the rules above the tests in the top level suite will be the lasts that will execute.
+
+Example:
+
+```js
+module('a', function() {
+	module('b', function() {
+    test('bb', function(assert) {
+      assert.ok(true);
+    });
+  });
+  
+  module('c', function() {
+  	module('ca', function() {
+      test('cc', function(assert) {
+        assert.ok(true);
+      });
+  	});
+  });
+  
+  module('d', function() {
+  
+  });
+  
+  test('aa', function(assert) {
+  	assert.ok(true);
+  });
+});
+```
+Execution flow:
+  * module  *a > b*  starts
+  * test  *bb*  starts
+  * test  *bb*  ends
+  * module  *a > b*  ends
+  * module  *a > c > ca*  starts
+  * test  *cc*  starts
+  * test  *cc*  ends
+  * module  *a > c > ca*  ends
+  * module  *a*  starts
+  * test  *aa*  starts
+  * test  *aa*  ends
+  * module  *a*  ends
+
+As you can see neither the module *a > c* is not emitted for its start and end, because it does not contain a test itself.  
+
+The *QUnit.config.modules* will contain 5 modules:
+  0. module *a*
+  1. module *a > b*
+  2. module *a > c*
+  3. module *a > c > a*
+  4. module *a > d*
+ 
+**The above execution flow is the default one**, QUnit has also 2 options that randomizes tests execution:
+  1. the [reorder](http://api.qunitjs.com/QUnit.config/) option that on a rerun, runs firstly the failed tests, it is activated by default 
+  2. the [seed](http://api.qunitjs.com/QUnit.config/) option that randomizes tests execution, it is disabled by default
+  
+**The QUnit.config.modules will always contain the suites in the same order!**
