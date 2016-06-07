@@ -62,10 +62,10 @@ describe('Adapters integration', function () {
         runAdapters[adapter](_attachListeners.bind(null, done))
       })
 
-      it('tests runtime should be between 0 and 1 ms', function () {
+      it('tests runtime should be between 0 and 2 ms', function () {
         collectedData.forEach(function (value) {
           if (value[0] === 'testEnd' && value[1].status !== 'skipped') {
-            expect(value[1].runtime).to.be.within(0, 1)
+            expect(value[1].runtime).to.be.within(0, 2)
           }
         })
       })
