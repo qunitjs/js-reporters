@@ -94,6 +94,25 @@ describe('Adapters integration', function () {
         })
       }
 
+      if (adapter === 'Jasmine') {
+        it('tests errors should be Jasmine errors like', function () {
+          collectedData.forEach(function (value) {
+            if (value[0] === 'testEnd' && value[1].status === 'failed') {
+              var error = {
+                matcherName: '',
+                message: 'Error: error',
+                stack: value[1].errors[0].stack,
+                passed: false,
+                expected: '',
+                actual: ''
+              }
+
+              expect(value[1].errors).to.be.deep.equal([error])
+            }
+          })
+        })
+      }
+
       refData.forEach(function (value, index) {
         testDescription = value[2]
 
