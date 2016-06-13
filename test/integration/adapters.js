@@ -110,15 +110,15 @@ describe('Adapters integration', function () {
             _setSuiteTestsRuntime(collectedData[index][1])
           }
 
-          // Overwrite QUnit error of failed tests with standard error.
-          if (adapter === 'QUnit' &&
+          // Overwrite QUnit/Jasmine error of failed tests with standard error.
+          if ((adapter === 'QUnit' || adapter === 'Jasmine') &&
               collectedData[index][0] === 'testEnd' &&
               collectedData[index][1].status === 'failed') {
             collectedData[index][1].errors = [new Error()]
           }
 
-          // Overwrite suite QUnit errors with standard errors.
-          if (adapter === 'QUnit' &&
+          // Overwrite suite QUnit/Jasmine errors with standard errors.
+          if ((adapter === 'QUnit' || adapter === 'Jasmine') &&
               (collectedData[index][0] === 'suiteEnd' ||
               collectedData[index][0] === 'runEnd')) {
             _overWriteTestsErrors(collectedData[index][1])
