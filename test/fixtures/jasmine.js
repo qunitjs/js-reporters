@@ -37,13 +37,13 @@ describe('suite with tests', function () {
 })
 
 describe('outter suite', function () {
+  it('outter test', function () {
+
+  })
+
   describe('inner suite', function () {
     it('inner test', function () {
 
     })
-  })
-
-  it('outter test', function () {
-
   })
 })
