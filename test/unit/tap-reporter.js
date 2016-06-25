@@ -14,7 +14,7 @@ describe('Tap reporter', function () {
 
   before(function () {
     emitter = new EventEmitter()
-    var reporter = new JsReporters.TapReporter(emitter)
+    JsReporters.TapReporter.init(emitter)
   })
 
   it('should output the TAP header', function () {
