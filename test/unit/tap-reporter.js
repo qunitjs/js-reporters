@@ -17,47 +17,43 @@ describe('Tap reporter', function () {
     JsReporters.TapReporter.init(emitter)
   })
 
-  it('should output the TAP header', function () {
-    var spy = sinon.stub(console, 'log')
+  it('should output the TAP header', sinon.test(function () {
+    var spy = this.stub(console, 'log')
 
     emitter.emit('runStart', {})
-    console.log.restore()
 
     expect(spy).to.have.been.calledOnce
-  })
+  }))
 
-  it('should output ok for a passing test', function () {
-    var spy = sinon.stub(console, 'log')
+  it('should output ok for a passing test', sinon.test(function () {
+    var spy = this.stub(console, 'log')
     var expected = 'ok 1 ' + data.passingTest.testName
 
     emitter.emit('testEnd', data.passingTest)
-    console.log.restore()
 
     expect(spy).to.have.been.calledWith(expected)
-  })
+  }))
 
-  it('should output ok for a skipped test', function () {
-    var spy = sinon.stub(console, 'log')
+  it('should output ok for a skipped test', sinon.test(function () {
+    var spy = this.stub(console, 'log')
     var expected = 'ok 2 ' + data.skippedTest.testName + ' # SKIP'
 
     emitter.emit('testEnd', data.skippedTest)
-    console.log.restore()
 
     expect(spy).to.have.been.calledWith(expected)
-  })
+  }))
 
-  it('should output not ok for a failing test', function () {
-    var spy = sinon.stub(console, 'log')
+  it('should output not ok for a failing test', sinon.test(function () {
+    var spy = this.stub(console, 'log')
     var expected = 'not ok 3 ' + data.failingTest.testName
 
     emitter.emit('testEnd', data.failingTest)
-    console.log.restore()
 
     expect(spy).to.have.been.calledWith(expected)
-  })
+  }))
 
-  it('should output all errors for a failing test', function () {
-    var spy = sinon.stub(console, 'log')
+  it('should output all errors for a failing test', sinon.test(function () {
+    var spy = this.stub(console, 'log')
     var expected = []
 
     data.failingTest.errors.forEach(function (error) {
@@ -68,20 +64,18 @@ describe('Tap reporter', function () {
     })
 
     emitter.emit('testEnd', data.failingTest)
-    console.log.restore()
 
     for (var i = 0; i < expected.length; i++) {
       expect(spy).to.have.been.calledWith(expected[i])
     }
-  })
+  }))
 
-  it('should output the total number of tests', function () {
-    var spy = sinon.stub(console, 'log')
+  it('should output the total number of tests', sinon.test(function () {
+    var spy = this.stub(console, 'log')
     var expected = '1..4'
 
     emitter.emit('runEnd', {})
-    console.log.restore()
 
     expect(spy).to.have.been.calledWith(expected)
-  })
+  }))
 })
