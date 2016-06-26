@@ -145,6 +145,18 @@ describe('Adapters integration', function () {
 
           expect(collectedData[index][0]).equal(value[0])
           expect(collectedData[index][1]).to.be.deep.equal(value[1])
+
+          // Verify the dynamic props.
+          if (value[0] === 'suiteStart' || value[0] === 'runStart') {
+            expect(collectedData[index][1].status).to.be.undefined
+            expect(collectedData[index][1].runtime).to.be.undefined
+          }
+
+          // Verify the dynamic props.
+          if (value[0] === 'suiteEnd' || value[0] === 'runEnd') {
+            expect(collectedData[index][1].status).to.be.equal(value[3])
+            expect(collectedData[index][1].runtime).to.be.a('number')
+          }
         })
       })
     })
