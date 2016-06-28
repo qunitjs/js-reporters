@@ -155,7 +155,12 @@ describe('Adapters integration', function () {
           // Verify the dynamic props.
           if (value[0] === 'suiteEnd' || value[0] === 'runEnd') {
             expect(collectedData[index][1].status).to.be.equal(value[3])
-            expect(collectedData[index][1].runtime).to.be.a('number')
+
+            if (collectedData[index][1].status !== 'skipped') {
+              expect(collectedData[index][1].runtime).to.be.a('number')
+            } else {
+              expect(collectedData[index][1].runtime).to.be.undefined
+            }
           }
         })
       })
