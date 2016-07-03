@@ -38,6 +38,8 @@ frameworks.forEach(function (framework) {
     }
   })
 
+  module.exports[framework.toLowerCase()] = notWorkingVersions
+
   console.log()
   console.log(chalk.green('Working: ' + workingVersions.join(', ') + ';'))
   console.log(chalk.red('Not working: ' + notWorkingVersions.join(', ') + ';'))

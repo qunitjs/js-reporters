@@ -7,7 +7,7 @@
     "test": "standard && node test/test.js && npm run test-integration && npm run test-unit",
     "test-unit": "mocha --recursive test/unit/",
     "test-integration": "mocha test/integration/adapters.js",
-    "test-versions": "node test/versions.js"
+    "test-versions": "mocha test/versions/versions.js"
   },
   "devDependencies": {
     "babel-preset-es2015-rollup": "^1.1.1",
