@@ -2,7 +2,8 @@
  * Here is a brief list with the known issues.
  *
  * Jasmine 2.3.0: the Jasmine adapter is working, something happens during
- * testing, Mocha's is receiving SIGINT and aborts the runner.
+ * testing with our testing framework Mocha, which is receiving SIGINT and aborts its runner,
+ * it may be a problem with the testing not with the adapter itself.
  *
  * Mocha 2.5.0: is not working because of a missing dependency, this is Mocha's
  * fault @see
