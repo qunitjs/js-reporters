@@ -1,3 +1,14 @@
+/**
+ * Here is a brief list with the known issues.
+ *
+ * Jasmine 2.3.0: the Jasmine adapter is working, something happens during
+ * testing, Mocha's is receiving SIGINT and aborts the runner.
+ *
+ * Mocha 2.5.0: is not working because of a missing dependency, this is Mocha's
+ * fault @see
+ * https://github.com/mochajs/mocha/blob/master/CHANGELOG.md#251--2016-05-23.
+ */
+
 module.exports = {
   'qunitjs': ['1.9.0', '1.10.0', '1.11.0', '1.12.0-pre', '1.12.0', '1.13.0',
     '1.14.0', '1.15.0', '1.16.0', '1.17.0', '1.17.1', '1.18.0', '1.19.0'],
