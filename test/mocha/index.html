@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../node_modules/mocha/mocha.css">
     <script src="../../node_modules/mocha/mocha.js"></script>
@@ -8,23 +8,16 @@
     <script src="../../dist/js-reporters.js"></script>
     <script src="tests.js"></script>
     <script>
-        window.onload = function () {
-            /**
-             * Run Mocha with its default html reporter.
-             */
-            mocha.run();
+      window.onload = function () {
+        var runner = new JsReporters.MochaAdapter(mocha);
 
-            /**
-             * Run Mocha with the reporter overwritten by our adapter.
-             */
-            var runner = new JsReporters.MochaAdapter(mocha);
-            JsReporters.ConsoleReporter.init(runner);
-            mocha.run();
-        }
+        JsReporters.ConsoleReporter.init(runner);
+
+        mocha.run();
+      }
     </script>
-
-</head>
-<body>
-<div id="mocha"></div>
-</body>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
 </html>
