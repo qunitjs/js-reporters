@@ -42,6 +42,7 @@ module.exports = {
 
   Mocha: function (attachListeners) {
     var mocha = new Mocha()
+    var origWrite = process.stdout.write
     var mochaRunner
 
     mocha.addFile(path.join(testDir, 'mocha.js'))
@@ -50,6 +51,13 @@ module.exports = {
 
     attachListeners(mochaRunner)
 
-    mocha.run()
+    // Surpress output, so that Mocha's default reporter output will not be
+    // displayed during testing.
+    process.stdout.write = function () {}
+
+    mocha.run(function () {
+      // Restore output.
+      process.stdout.write = origWrite
+    })
   }
 }
