@@ -84,14 +84,14 @@ var outterSuiteStart = new Suite('outter suite', ['outter suite'],
 var outterSuiteEnd = new Suite('outter suite', ['outter suite'],
     [innerSuiteEnd], [outterTestEnd])
 
-var globalSuiteStart = new Suite(undefined, [undefined], [
+var globalSuiteStart = new Suite(undefined, [], [
   passingSuiteStart,
   skippedSuiteStart,
   failingSuiteStart,
   testSuiteStart,
   outterSuiteStart
 ], [globalTestStart])
-var globalSuiteEnd = new Suite(undefined, [undefined], [
+var globalSuiteEnd = new Suite(undefined, [], [
   passingSuiteEnd,
   skippedSuiteEnd,
   failingSuiteEnd,
