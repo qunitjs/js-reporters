@@ -39,16 +39,32 @@ function _setSuiteTestsRuntime (suite) {
   })
 }
 
-// Recursively iterate over each suite and overwrite its errors.
-function _overWriteTestsErrors (suite) {
+function _overWriteTestNormalizedAssertions (test) {
+  var errors = test.errors
+  var assertions = test.assertions
+
+  errors.forEach(function (error) {
+    error.actual = undefined
+    error.expected = undefined
+    error.message = undefined
+    error.stack = undefined
+  })
+
+  assertions.forEach(function (assertion) {
+    assertion.actual = undefined
+    assertion.expected = undefined
+    assertion.message = undefined
+    assertion.stack = undefined
+  })
+}
+
+function _overWriteSuitesNormalizedAssertions (suite) {
   suite.tests.forEach(function (test) {
-    if (test.status === 'failed') {
-      test.errors = [new Error('error')]
-    }
+    _overWriteTestNormalizedAssertions(test)
   })
 
   suite.childSuites.forEach(function (childSuite) {
-    _overWriteTestsErrors(childSuite)
+    _overWriteSuitesNormalizedAssertions(childSuite)
   })
 }
 
@@ -56,6 +72,7 @@ describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
       var testDescription
+      var keys = ['success', 'actual', 'expected', 'message', 'stack']
 
       before(function (done) {
         collectedData = []
@@ -70,48 +87,75 @@ describe('Adapters integration', function () {
         })
       })
 
-      if (adapter === 'QUnit') {
-        it('tests errors should be QUnit errors like', function () {
-          collectedData.forEach(function (value) {
-            if (value[0] === 'testEnd' && value[1].status === 'failed') {
-              // The runtime must be the one from the error not from the test,
-              // @see http://api.qunitjs.com/QUnit.log/ and
-              // http://api.qunitjs.com/QUnit.testDone/.
-              var error = {
-                actual: null,
-                message: value[1].errors[0].message,
-                module: value[1].suiteName,
-                name: value[1].testName,
-                result: false,
-                runtime: value[1].errors[0].runtime,
-                source: 'Error: error',
-                testId: value[1].errors[0].testId
-              }
+      it('testing tests errors prop', function () {
+        var refTestsEnd = refData.filter(function (value) {
+          return value[0] === 'testEnd'
+        })
 
-              expect(value[1].errors).to.be.deep.equal([error])
-            }
+        var testsEnd = collectedData.filter(function (value) {
+          return value[0] === 'testEnd'
+        })
+
+        refTestsEnd.forEach(function (value, index) {
+          var refTest = value[1]
+          var test = testsEnd[index][1]
+
+          if (refTest.status === 'passed' || refTest.status === 'skipped') {
+            expect(test.errors).to.be.deep.equal(refTest.errors)
+          } else {
+            expect(test.errors).to.have.lengthOf(refTest.errors.length)
+
+            test.errors.forEach(function (error) {
+              expect(error).to.have.all.keys(keys)
+
+              expect(error.success).to.be.false
+              expect(error.message).to.be.a('string')
+              expect(error.stack).to.be.a('string')
+            })
+          }
+        })
+      })
+
+      it('testing tests assertions prop', function () {
+        var refTestsEnd = refData.filter(function (value) {
+          return value[0] === 'testEnd'
+        })
+
+        var testsEnd = collectedData.filter(function (value) {
+          return value[0] === 'testEnd'
+        })
+
+        refTestsEnd.forEach(function (value, index) {
+          var refTest = value[1]
+          var test = testsEnd[index][1]
+
+          expect(test.assertions).to.have.lengthOf(refTest.assertions.length)
+
+          var passedAssertions = test.assertions.filter(function (assertion) {
+            return assertion.success
+          })
+
+          var failedAssertions = test.assertions.filter(function (assertion) {
+            return !assertion.success
+          })
+
+          passedAssertions.forEach(function (assertion) {
+            expect(assertion).to.have.all.keys(keys)
+
+            expect(assertion.success).to.be.true
+            expect(assertion.message).to.be.a('string')
+            expect(assertion.stack).to.be.undefined
+          })
+
+          failedAssertions.forEach(function (assertion) {
+            expect(assertion).to.have.all.keys(keys)
+
+            expect(assertion.success).to.be.false
+            expect(assertion.message).to.be.a('string')
+            expect(assertion.stack).to.be.a('string')
           })
         })
-      }
-
-      if (adapter === 'Jasmine') {
-        it('tests errors should be Jasmine errors like', function () {
-          collectedData.forEach(function (value) {
-            if (value[0] === 'testEnd' && value[1].status === 'failed') {
-              var error = {
-                matcherName: '',
-                message: 'Error: error',
-                stack: value[1].errors[0].stack,
-                passed: false,
-                expected: '',
-                actual: ''
-              }
-
-              expect(value[1].errors).to.be.deep.equal([error])
-            }
-          })
-        })
-      }
+      })
 
       refData.forEach(function (value, index) {
         testDescription = value[2]
@@ -129,18 +173,13 @@ describe('Adapters integration', function () {
             _setSuiteTestsRuntime(collectedData[index][1])
           }
 
-          // Overwrite QUnit/Jasmine error of failed tests with standard error.
-          if ((adapter === 'QUnit' || adapter === 'Jasmine') &&
-              collectedData[index][0] === 'testEnd' &&
-              collectedData[index][1].status === 'failed') {
-            collectedData[index][1].errors = [new Error()]
+          if (collectedData[index][0] === 'testEnd') {
+            _overWriteTestNormalizedAssertions(collectedData[index][1])
           }
 
-          // Overwrite suite QUnit/Jasmine errors with standard errors.
-          if ((adapter === 'QUnit' || adapter === 'Jasmine') &&
-              (collectedData[index][0] === 'suiteEnd' ||
-              collectedData[index][0] === 'runEnd')) {
-            _overWriteTestsErrors(collectedData[index][1])
+          if (collectedData[index][0] === 'suiteEnd' ||
+              collectedData[index][0] === 'runEnd') {
+            _overWriteSuitesNormalizedAssertions(collectedData[index][1])
           }
 
           expect(collectedData[index][0]).equal(value[0])
