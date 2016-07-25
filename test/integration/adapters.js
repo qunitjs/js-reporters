@@ -68,6 +68,28 @@ function _overWriteSuitesNormalizedAssertions (suite) {
   })
 }
 
+function _fillTestAssertions (refTest, test) {
+  refTest.assertions.forEach(function (assertion) {
+    test.assertions.push(assertion)
+  })
+
+  test.errors = []
+
+  refTest.errors.forEach(function (error) {
+    test.errors.push(error)
+  })
+}
+
+function _fillSuiteAssertions (refSuite, suite) {
+  refSuite.tests.forEach(function (refTest, index) {
+    _fillTestAssertions(refTest, suite.tests[index])
+  })
+
+  refSuite.childSuites.forEach(function (childSuite, index) {
+    _fillSuiteAssertions(childSuite, suite.childSuites[index])
+  })
+}
+
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
@@ -125,6 +147,16 @@ describe('Adapters integration', function () {
           return value[0] === 'testEnd'
         })
 
+        if (adapter === 'Mocha') {
+          refTestsEnd.forEach(function (value, index) {
+            var test = testsEnd[index][1]
+
+            expect(test.assertions).to.be.deep.equal([])
+          })
+
+          return
+        }
+
         refTestsEnd.forEach(function (value, index) {
           var refTest = value[1]
           var test = testsEnd[index][1]
@@ -159,8 +191,15 @@ describe('Adapters integration', function () {
 
       refData.forEach(function (value, index) {
         testDescription = value[2]
+        //  var refEvent = value[0]
+        // var refTestItem = value[1]
+        // var event = collectedData[index][0]
+        // var testItem = collectedData[index][1]
 
         it(testDescription, function () {
+          var refTestItem = value[1]
+          var testItem = collectedData[index][1]
+
           // Set tests runtime to 0 to match the reference tests runtime.
           if (collectedData[index][0] === 'testEnd' &&
               collectedData[index][1].status !== 'skipped') {
@@ -174,12 +213,20 @@ describe('Adapters integration', function () {
           }
 
           if (collectedData[index][0] === 'testEnd') {
-            _overWriteTestNormalizedAssertions(collectedData[index][1])
+            if (adapter === 'Mocha') {
+              _fillTestAssertions(refTestItem, testItem)
+            } else {
+              _overWriteTestNormalizedAssertions(collectedData[index][1])
+            }
           }
 
           if (collectedData[index][0] === 'suiteEnd' ||
               collectedData[index][0] === 'runEnd') {
-            _overWriteSuitesNormalizedAssertions(collectedData[index][1])
+            if (adapter === 'Mocha') {
+              _fillSuiteAssertions(refTestItem, testItem)
+            } else {
+              _overWriteSuitesNormalizedAssertions(collectedData[index][1])
+            }
           }
 
           expect(collectedData[index][0]).equal(value[0])
