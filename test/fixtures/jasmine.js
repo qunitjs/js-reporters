@@ -1,12 +1,12 @@
-/* global describe, it, xit */
+/* global describe, it, xit, expect */
 
 it('global test', function () {
-
+  expect(true).toBeTruthy()
 })
 
 describe('suite with passing test', function () {
   it('should pass', function () {
-
+    expect(true).toBeTruthy()
   })
 })
 
@@ -24,7 +24,7 @@ describe('suite with failing test', function () {
 
 describe('suite with tests', function () {
   it('should pass', function () {
-
+    expect(true).toBeTruthy()
   })
 
   xit('should skip', function () {
@@ -38,12 +38,12 @@ describe('suite with tests', function () {
 
 describe('outter suite', function () {
   it('outter test', function () {
-
+    expect(true).toBeTruthy()
   })
 
   describe('inner suite', function () {
     it('inner test', function () {
-
+      expect(true).toBeTruthy()
     })
   })
 })
