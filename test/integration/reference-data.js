@@ -6,7 +6,7 @@ var noErrors = []
 var noAssertions = []
 
 var errors = [{
-  success: false,
+  passed: false,
   actual: undefined,
   expected: undefined,
   message: undefined,
@@ -14,7 +14,7 @@ var errors = [{
 }]
 
 var failedAssertions = [{
-  success: false,
+  passed: false,
   actual: undefined,
   expected: undefined,
   message: undefined,
@@ -22,7 +22,7 @@ var failedAssertions = [{
 }]
 
 var passedAssertions = [{
-  success: true,
+  passed: true,
   actual: undefined,
   expected: undefined,
   message: undefined,

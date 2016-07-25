@@ -72,7 +72,7 @@ describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
       var testDescription
-      var keys = ['success', 'actual', 'expected', 'message', 'stack']
+      var keys = ['passed', 'actual', 'expected', 'message', 'stack']
 
       before(function (done) {
         collectedData = []
@@ -108,7 +108,7 @@ describe('Adapters integration', function () {
             test.errors.forEach(function (error) {
               expect(error).to.have.all.keys(keys)
 
-              expect(error.success).to.be.false
+              expect(error.passed).to.be.false
               expect(error.message).to.be.a('string')
               expect(error.stack).to.be.a('string')
             })
@@ -132,17 +132,17 @@ describe('Adapters integration', function () {
           expect(test.assertions).to.have.lengthOf(refTest.assertions.length)
 
           var passedAssertions = test.assertions.filter(function (assertion) {
-            return assertion.success
+            return assertion.passed
           })
 
           var failedAssertions = test.assertions.filter(function (assertion) {
-            return !assertion.success
+            return !assertion.passed
           })
 
           passedAssertions.forEach(function (assertion) {
             expect(assertion).to.have.all.keys(keys)
 
-            expect(assertion.success).to.be.true
+            expect(assertion.passed).to.be.true
             expect(assertion.message).to.be.a('string')
             expect(assertion.stack).to.be.undefined
           })
@@ -150,7 +150,7 @@ describe('Adapters integration', function () {
           failedAssertions.forEach(function (assertion) {
             expect(assertion).to.have.all.keys(keys)
 
-            expect(assertion.success).to.be.false
+            expect(assertion.passed).to.be.false
             expect(assertion.message).to.be.a('string')
             expect(assertion.stack).to.be.a('string')
           })
