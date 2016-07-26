@@ -12,7 +12,9 @@ function _collectOutput (eventName, done, eventData) {
   done()
 }
 
-// Attaches the event handler for the runner events.
+/**
+ * Attaches the event handler for the runner events.
+ */
 function _attachListeners (done, runner) {
   var dummyFunc = function () {}
 
@@ -26,7 +28,9 @@ function _attachListeners (done, runner) {
   runner.on('runEnd', _collectOutput.bind(null, 'runEnd', done))
 }
 
-// Recursively iterate over each suite and set their tests runtime to 0ms.
+/**
+ * Recursively iterate over each suite and set their tests runtime to 0ms.
+ */
 function _setSuiteTestsRuntime (suite) {
   suite.tests.forEach(function (test) {
     if (test.status !== 'skipped') {
@@ -39,18 +43,19 @@ function _setSuiteTestsRuntime (suite) {
   })
 }
 
-function _overWriteTestNormalizedAssertions (test) {
-  var errors = test.errors
-  var assertions = test.assertions
-
-  errors.forEach(function (error) {
+/**
+ * Overwrite test assertions (for test frameworks that provide this) so that
+ * they will match match those from the refrence-data file.
+ */
+function _overWriteTestAssertions (test) {
+  test.errors.forEach(function (error) {
     error.actual = undefined
     error.expected = undefined
     error.message = undefined
     error.stack = undefined
   })
 
-  assertions.forEach(function (assertion) {
+  test.assertions.forEach(function (assertion) {
     assertion.actual = undefined
     assertion.expected = undefined
     assertion.message = undefined
@@ -58,16 +63,25 @@ function _overWriteTestNormalizedAssertions (test) {
   })
 }
 
-function _overWriteSuitesNormalizedAssertions (suite) {
+/**
+ * Recursively iterates over suites and overwrites tests assertions. Check
+ * also _overWriteTestNormalizedAssertions function.
+ */
+function _overWriteSuitesAssertions (suite) {
   suite.tests.forEach(function (test) {
-    _overWriteTestNormalizedAssertions(test)
+    _overWriteTestAssertions(test)
   })
 
   suite.childSuites.forEach(function (childSuite) {
-    _overWriteSuitesNormalizedAssertions(childSuite)
+    _overWriteSuitesAssertions(childSuite)
   })
 }
 
+/**
+ * Fills the assertions and error properties with assertions so that they will
+ * match with those from the data-refrence file, also as content as also as
+ * number of contained assertions.
+ */
 function _fillTestAssertions (refTest, test) {
   refTest.assertions.forEach(function (assertion) {
     test.assertions.push(assertion)
@@ -80,6 +94,10 @@ function _fillTestAssertions (refTest, test) {
   })
 }
 
+/**
+ * Recursively iterates over suites and fills with assertions. Check also
+ * _fillTestAssertins function.
+ */
 function _fillSuiteAssertions (refSuite, suite) {
   refSuite.tests.forEach(function (refTest, index) {
     _fillTestAssertions(refTest, suite.tests[index])
@@ -93,7 +111,6 @@ function _fillSuiteAssertions (refSuite, suite) {
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
-      var testDescription
       var keys = ['passed', 'actual', 'expected', 'message', 'stack']
 
       before(function (done) {
@@ -147,6 +164,9 @@ describe('Adapters integration', function () {
           return value[0] === 'testEnd'
         })
 
+        // If the framework under testing is Mocha, then apply other
+        // expectations and then exit (Mocha provides for the assertions prop an
+        // empty array).
         if (adapter === 'Mocha') {
           refTestsEnd.forEach(function (value, index) {
             var test = testsEnd[index][1]
@@ -161,6 +181,7 @@ describe('Adapters integration', function () {
           var refTest = value[1]
           var test = testsEnd[index][1]
 
+          // Expect to contain the correct number of assertions.
           expect(test.assertions).to.have.lengthOf(refTest.assertions.length)
 
           var passedAssertions = test.assertions.filter(function (assertion) {
@@ -190,62 +211,61 @@ describe('Adapters integration', function () {
       })
 
       refData.forEach(function (value, index) {
-        testDescription = value[2]
-        //  var refEvent = value[0]
-        // var refTestItem = value[1]
-        // var event = collectedData[index][0]
-        // var testItem = collectedData[index][1]
+        var testDescription = value[2]
 
         it(testDescription, function () {
+          var refEvent = value[0]
           var refTestItem = value[1]
+          var event = collectedData[index][0]
           var testItem = collectedData[index][1]
 
           // Set tests runtime to 0 to match the reference tests runtime.
-          if (collectedData[index][0] === 'testEnd' &&
-              collectedData[index][1].status !== 'skipped') {
+          if (event === 'testEnd' && testItem.status !== 'skipped') {
             collectedData[index][1].runtime = 0
           }
 
           // Set suite tests runtime to 0, also for the globalSuite.
-          if (collectedData[index][0] === 'suiteEnd' ||
-              collectedData[index][0] === 'runEnd') {
+          if (event === 'suiteEnd' || event === 'runEnd') {
             _setSuiteTestsRuntime(collectedData[index][1])
           }
 
-          if (collectedData[index][0] === 'testEnd') {
+          // Set assertions to match those from data-refrence file.
+          if (event === 'testEnd') {
             if (adapter === 'Mocha') {
               _fillTestAssertions(refTestItem, testItem)
             } else {
-              _overWriteTestNormalizedAssertions(collectedData[index][1])
+              _overWriteTestAssertions(testItem)
             }
           }
 
-          if (collectedData[index][0] === 'suiteEnd' ||
-              collectedData[index][0] === 'runEnd') {
+          // Set assertions to match thos from the data-refrence file.
+          if (event === 'suiteEnd' || event === 'runEnd') {
             if (adapter === 'Mocha') {
               _fillSuiteAssertions(refTestItem, testItem)
             } else {
-              _overWriteSuitesNormalizedAssertions(collectedData[index][1])
+              _overWriteSuitesAssertions(testItem)
             }
           }
 
-          expect(collectedData[index][0]).equal(value[0])
-          expect(collectedData[index][1]).to.be.deep.equal(value[1])
+          expect(event).equal(refEvent)
+          expect(testItem).to.be.deep.equal(refTestItem)
 
-          // Verify the dynamic props.
-          if (value[0] === 'suiteStart' || value[0] === 'runStart') {
-            expect(collectedData[index][1].status).to.be.undefined
-            expect(collectedData[index][1].runtime).to.be.undefined
+          // Verify suite start dynamic props.
+          if (event === 'suiteStart' || event === 'runStart') {
+            expect(testItem.status).to.be.undefined
+            expect(testItem.runtime).to.be.undefined
           }
 
-          // Verify the dynamic props.
-          if (value[0] === 'suiteEnd' || value[0] === 'runEnd') {
-            expect(collectedData[index][1].status).to.be.equal(value[3])
+          // Verify suite end dynamic props.
+          if (event === 'suiteEnd' || event === 'runEnd') {
+            var refStatus = value[3]
 
-            if (collectedData[index][1].status !== 'skipped') {
-              expect(collectedData[index][1].runtime).to.be.a('number')
+            expect(testItem.status).to.be.equal(refStatus)
+
+            if (testItem.status !== 'skipped') {
+              expect(testItem.runtime).to.be.a('number')
             } else {
-              expect(collectedData[index][1].runtime).to.be.undefined
+              expect(testItem.runtime).to.be.undefined
             }
           }
         })

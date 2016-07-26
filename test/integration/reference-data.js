@@ -5,6 +5,11 @@ var Test = JsReporters.Test
 var noErrors = []
 var noAssertions = []
 
+/**
+ * All props are undefined, except "passed", because we don't know what they
+ * will contain, which is depending from framework to framework. The props are
+ * anyway verified one by one, see "adapters.js" file.
+ */
 var errors = [{
   passed: false,
   actual: undefined,
