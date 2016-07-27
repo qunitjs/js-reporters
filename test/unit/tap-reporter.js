@@ -27,7 +27,7 @@ describe('Tap reporter', function () {
 
   it('should output ok for a passing test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'ok 1 ' + data.passingTest.testName
+    var expected = 'ok 1 ' + data.passingTest.name
 
     emitter.emit('testEnd', data.passingTest)
 
@@ -36,7 +36,7 @@ describe('Tap reporter', function () {
 
   it('should output ok for a skipped test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'ok 2 ' + data.skippedTest.testName + ' # SKIP'
+    var expected = 'ok 2 ' + data.skippedTest.name + ' # SKIP'
 
     emitter.emit('testEnd', data.skippedTest)
 
@@ -45,7 +45,7 @@ describe('Tap reporter', function () {
 
   it('should output not ok for a failing test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'not ok 3 ' + data.failingTest.testName
+    var expected = 'not ok 3 ' + data.failingTest.name
 
     emitter.emit('testEnd', data.failingTest)
 
