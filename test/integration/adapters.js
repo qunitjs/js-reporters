@@ -44,6 +44,19 @@ function _setSuiteTestsRuntime (suite) {
 }
 
 /**
+ * Set the suites runtime to 0 to match the runtime of the refrence suites.
+ */
+function _setSuitesRuntime (suite) {
+  if (suite.status !== 'skipped') {
+    suite.runtime = 0
+  }
+
+  suite.childSuites.forEach(function (childSuite) {
+    _setSuitesRuntime(childSuite)
+  })
+}
+
+/**
  * Overwrite test assertions (for test frameworks that provide this) so that
  * they will match match those from the refrence-data file.
  */
@@ -247,16 +260,13 @@ describe('Adapters integration', function () {
             }
           }
 
-          expect(event).equal(refEvent)
-          expect(testItem).to.be.deep.equal(refTestItem)
-
-          // Verify suite start dynamic props.
+          // Verify suite self-setting props.
           if (event === 'suiteStart' || event === 'runStart') {
             expect(testItem.status).to.be.undefined
             expect(testItem.runtime).to.be.undefined
           }
 
-          // Verify suite end dynamic props.
+          // Verify suite self-setting props.
           if (event === 'suiteEnd' || event === 'runEnd') {
             var refStatus = value[3]
 
@@ -264,10 +274,15 @@ describe('Adapters integration', function () {
 
             if (testItem.status !== 'skipped') {
               expect(testItem.runtime).to.be.a('number')
+              // Set suites runtime to 0, to pass the deep equal assertion.
+              _setSuitesRuntime(testItem)
             } else {
               expect(testItem.runtime).to.be.undefined
             }
           }
+
+          expect(event).equal(refEvent)
+          expect(testItem).to.be.deep.equal(refTestItem)
         })
       })
     })
