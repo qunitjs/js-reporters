@@ -3,7 +3,7 @@ import JasmineAdapter from './lib/adapters/JasmineAdapter.js'
 import MochaAdapter from './lib/adapters/MochaAdapter.js'
 import TapReporter from './lib/reporters/TapReporter.js'
 import ConsoleReporter from './lib/reporters/ConsoleReporter.js'
-import {Test, Suite} from './lib/Data.js'
+import {Assertion, Test, Suite} from './lib/Data.js'
 
 export default {
   QUnitAdapter,
@@ -11,6 +11,7 @@ export default {
   MochaAdapter,
   TapReporter,
   ConsoleReporter,
+  Assertion,
   Test,
   Suite
 }
