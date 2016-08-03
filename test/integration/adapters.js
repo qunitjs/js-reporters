@@ -121,6 +121,59 @@ function _fillSuiteAssertions (refSuite, suite) {
   })
 }
 
+/**
+ * Counts tests for the "suiteStart" and "runStart" event.
+ */
+function getTestCountsStart (refSuite) {
+  var testCounts = {
+    passed: undefined,
+    failed: undefined,
+    skipped: undefined,
+    total: refSuite.tests.length
+  }
+
+  refSuite.childSuites.forEach(function (childSuite) {
+    testCounts.total += getTestCountsStart(childSuite).total
+  })
+
+  return testCounts
+}
+
+/**
+ * Counts tests for the "suiteEnd" and "runEnd" event.
+ */
+function getTestCountsEnd (refSuite) {
+  var testCounts = {
+    passed: 0,
+    failed: 0,
+    skipped: 0,
+    total: refSuite.tests.length
+  }
+
+  testCounts.passed += refSuite.tests.filter(function (test) {
+    return test.status === 'passed'
+  }).length
+
+  testCounts.failed += refSuite.tests.filter(function (test) {
+    return test.status === 'failed'
+  }).length
+
+  testCounts.skipped += refSuite.tests.filter(function (test) {
+    return test.status === 'skipped'
+  }).length
+
+  refSuite.childSuites.forEach(function (childSuite) {
+    var childTestCounts = getTestCountsEnd(childSuite)
+
+    testCounts.passed += childTestCounts.passed
+    testCounts.failed += childTestCounts.failed
+    testCounts.skipped += childTestCounts.skipped
+    testCounts.total += childTestCounts.total
+  })
+
+  return testCounts
+}
+
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
@@ -264,6 +317,9 @@ describe('Adapters integration', function () {
           if (event === 'suiteStart' || event === 'runStart') {
             expect(testItem.status).to.be.undefined
             expect(testItem.runtime).to.be.undefined
+
+            expect(testItem.testCounts).to.be.deep
+              .equal(getTestCountsStart(refTestItem))
           }
 
           // Verify suite self-setting props.
@@ -279,6 +335,9 @@ describe('Adapters integration', function () {
             } else {
               expect(testItem.runtime).to.be.undefined
             }
+
+            expect(testItem.testCounts).to.be.deep
+              .equal(getTestCountsEnd(refTestItem))
           }
 
           expect(event).equal(refEvent)
