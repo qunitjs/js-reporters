@@ -110,6 +110,64 @@ Based on the discussion in [#79](https://github.com/js-reporters/js-reporters/is
 
 Additional properties (not defined here) can be added to the Assertion object.
 
+## Details
+
+For details please check out the [docs](docs) and especially the [example](docs/example.md) which presents a testsuite and its reporting data based on the standard presented above.
+
+For implementation examples please check [Usage of the adapters](#usage-of-the-adapters) and [Integrations](#integrations).
+
+## Usage of the adapters
+
+Listen to the events and receive the emitted data:
+
+```js
+var runner;
+
+// Attach the adapter.
+if (QUnit) {
+  runner = new JsReporters.QUnitAdapter(QUnit);
+} else if (mocha) {
+  runner = new JsReporters.MochaAdapter(mocha);
+} else if (jasmine) {
+  runner = new JsReporters.JasmineAdapter(jasmine.getEnv());
+}
+ 
+ // Listen to the same events for any testing framework.
+ runner.on('testEnd', function(test) {
+   console.log('Test %s has errors:', test.fullname.join(' '), test.errors);
+ });
+ 
+ runner.on('runEnd', function(globalSuite) {
+   var testCounts = globalSuite.testCounts;
+   
+   console.log('Testsuite status: %s', globalSuite.status);
+   
+   console.log('Total %d tests: %d passed, %d failed, %d skipped', testCounts.total, testCounts.passed,
+     testCounts.failed, testCounts.skipped);
+   
+   console.log('Total duration: %d', globalSuite.runtime);
+ });
+ 
+ // Or use one of the built-in reporters.
+ JsReporters.TapReporter.init(runner);
+```
+
+## Integrations
+
+ - [browserstack-runner](https://github.com/browserstack/browserstack-runner/blob/master/lib/_patch/reporter.js) 
+
+## Differences
+
+This section is dedicated to explain the limitations of the adapters in respect to the standard. 
+
+The only limitation is the emitting order, which is not done in source order:
+
+- Jasmine: the emitting order of the tests will be the one from Jasmine
+- Mocha: the emitting order of the tests will be the one from Mocha
+- QUnit: the emitting order is done in suite order, which means if there is a suite that contains tests and other suites, it emits the start of the suite and then emits its tests and only after it emits the other suites, even if the tests were the last in source order
+
+If you want to know more about each testing framework and about their emitting order, please checkout the [frameworks](docs/frameworks.md) document.
+
 ## Cross-Reference Issues
 
 ### Unit Testing Frameworks
