@@ -231,13 +231,13 @@ describe('Adapters integration', function () {
         })
 
         // If the framework under testing is Mocha, then apply other
-        // expectations and then exit (Mocha provides for the assertions prop an
-        // empty array).
+        // expectations and then exit.
         if (adapter === 'Mocha') {
           refTestsEnd.forEach(function (value, index) {
+            var refTest = value[1]
             var test = testsEnd[index][1]
 
-            expect(test.assertions).to.be.deep.equal([])
+            expect(test.assertions).to.be.deep.equal(refTest.errors)
           })
 
           return
