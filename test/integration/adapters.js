@@ -96,11 +96,12 @@ function _overWriteSuitesAssertions (suite) {
  * number of contained assertions.
  */
 function _fillTestAssertions (refTest, test) {
+  test.assertions = []
+  test.errors = []
+
   refTest.assertions.forEach(function (assertion) {
     test.assertions.push(assertion)
   })
-
-  test.errors = []
 
   refTest.errors.forEach(function (error) {
     test.errors.push(error)
@@ -230,25 +231,15 @@ describe('Adapters integration', function () {
           return value[0] === 'testEnd'
         })
 
-        // If the framework under testing is Mocha, then apply other
-        // expectations and then exit.
-        if (adapter === 'Mocha') {
-          refTestsEnd.forEach(function (value, index) {
-            var refTest = value[1]
-            var test = testsEnd[index][1]
-
-            expect(test.assertions).to.be.deep.equal(refTest.errors)
-          })
-
-          return
-        }
-
         refTestsEnd.forEach(function (value, index) {
           var refTest = value[1]
           var test = testsEnd[index][1]
 
-          // Expect to contain the correct number of assertions.
-          expect(test.assertions).to.have.lengthOf(refTest.assertions.length)
+          // Expect to contain the correct number of assertions, only for
+          // test frameworks that provide all assertions.
+          if (adapter !== 'Mocha') {
+            expect(test.assertions).to.have.lengthOf(refTest.assertions.length)
+          }
 
           var passedAssertions = test.assertions.filter(function (assertion) {
             return assertion.passed
