@@ -127,9 +127,6 @@ function _fillSuiteAssertions (refSuite, suite) {
  */
 function getTestCountsStart (refSuite) {
   var testCounts = {
-    passed: undefined,
-    failed: undefined,
-    skipped: undefined,
     total: refSuite.tests.length
   }
 

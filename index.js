@@ -3,7 +3,7 @@ import JasmineAdapter from './lib/adapters/JasmineAdapter.js'
 import MochaAdapter from './lib/adapters/MochaAdapter.js'
 import TapReporter from './lib/reporters/TapReporter.js'
 import ConsoleReporter from './lib/reporters/ConsoleReporter.js'
-import {Assertion, Test, Suite} from './lib/Data.js'
+import {Assertion, TestStart, TestEnd, SuiteStart, SuiteEnd} from './lib/Data.js'
 import {autoRegister} from './lib/helpers.js'
 
 export default {
@@ -13,7 +13,9 @@ export default {
   TapReporter,
   ConsoleReporter,
   Assertion,
-  Test,
-  Suite,
+  TestStart,
+  TestEnd,
+  SuiteStart,
+  SuiteEnd
   autoRegister
 }
