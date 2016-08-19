@@ -121,16 +121,8 @@ For implementation examples please check [Usage of the adapters](#usage-of-the-a
 Listen to the events and receive the emitted data:
 
 ```js
-var runner;
-
-// Attach the adapter.
-if (QUnit) {
-  runner = new JsReporters.QUnitAdapter(QUnit);
-} else if (mocha) {
-  runner = new JsReporters.MochaAdapter(mocha);
-} else if (jasmine) {
-  runner = new JsReporters.JasmineAdapter(jasmine.getEnv());
-}
+ // Attach one of the exiting adapters.
+ var runner = JsReporters.autoRegister();
  
  // Listen to the same events for any testing framework.
  runner.on('testEnd', function(test) {
@@ -151,6 +143,12 @@ if (QUnit) {
  // Or use one of the built-in reporters.
  JsReporters.TapReporter.init(runner);
 ```
+
+## API
+
+**autoRegister()**
+
+Auto registers one of the existing adapters by checking for existing testing frameworks in the global scope and returns the runner to attach event listeners.
 
 ## Integrations
 
