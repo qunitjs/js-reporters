@@ -11,6 +11,18 @@ describe('Helpers', function () {
   var dummyFunc = function () {}
 
   describe('autoregister', function () {
+    beforeEach(function () {
+      GLOBAL.QUnit = undefined
+      GLOBAL.mocha = undefined
+      GLOBAL.jasmine = undefined
+    })
+
+    afterEach(function () {
+      delete GLOBAL.QUnit
+      delete GLOBAL.mocha
+      delete GLOBAL.jasmine
+    })
+
     it('should register the QUnitAdapter', function () {
       GLOBAL.QUnit = {
         begin: sinon.stub(),
@@ -23,12 +35,9 @@ describe('Helpers', function () {
       JsReporters.autoRegister()
 
       expect(GLOBAL.QUnit.begin).to.have.been.calledOnce
-
-      delete GLOBAL.QUnit
     })
 
     it('should register the MochaAdapter', function () {
-      GLOBAL.QUnit = undefined
       GLOBAL.mocha = {
         reporter: sinon.stub()
       }
@@ -36,14 +45,10 @@ describe('Helpers', function () {
       JsReporters.autoRegister()
 
       expect(GLOBAL.mocha.reporter).to.have.been.calledOnce
-
-      delete GLOBAL.Jasmine
     })
 
     it('should register the JasmineAdapter', function () {
       var spy = sinon.stub()
-      GLOBAL.QUnit = undefined
-      GLOBAL.mocha = undefined
       GLOBAL.jasmine = {
         getEnv: function () {
           return {
@@ -55,15 +60,9 @@ describe('Helpers', function () {
       JsReporters.autoRegister()
 
       expect(spy).to.have.been.calledOnce
-
-      delete GLOBAL.Jasmine
     })
 
     it('should throw an error if no testing framework was found', function () {
-      GLOBAL.QUnit = undefined
-      GLOBAL.mocha = undefined
-      GLOBAL.jasmine = undefined
-
       expect(JsReporters.autoRegister).to.throw(Error)
     })
   })
