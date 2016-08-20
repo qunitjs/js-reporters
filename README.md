@@ -148,7 +148,11 @@ Listen to the events and receive the emitted data:
 
 **autoRegister()**
 
-Auto registers one of the existing adapters by checking for existing testing frameworks in the global scope and returns the runner to attach event listeners.
+Auto registers one of the existing adapters by checking for existing testing frameworks in the global scope and returns the runner to attach event listeners. If no framework is found, it will throw an `Error`.
+
+```
+JsReporters.autoRegister();
+```
 
 ## Integrations
 
