@@ -12,19 +12,19 @@ describe('Helpers', function () {
 
   describe('autoregister', function () {
     beforeEach(function () {
-      GLOBAL.QUnit = undefined
-      GLOBAL.mocha = undefined
-      GLOBAL.jasmine = undefined
+      global.QUnit = undefined
+      global.mocha = undefined
+      global.jasmine = undefined
     })
 
     afterEach(function () {
-      delete GLOBAL.QUnit
-      delete GLOBAL.mocha
-      delete GLOBAL.jasmine
+      delete global.QUnit
+      delete global.mocha
+      delete global.jasmine
     })
 
     it('should register the QUnitAdapter', function () {
-      GLOBAL.QUnit = {
+      global.QUnit = {
         begin: sinon.stub(),
         testStart: dummyFunc,
         log: dummyFunc,
@@ -34,22 +34,22 @@ describe('Helpers', function () {
 
       JsReporters.autoRegister()
 
-      expect(GLOBAL.QUnit.begin).to.have.been.calledOnce
+      expect(global.QUnit.begin).to.have.been.calledOnce
     })
 
     it('should register the MochaAdapter', function () {
-      GLOBAL.mocha = {
+      global.mocha = {
         reporter: sinon.stub()
       }
 
       JsReporters.autoRegister()
 
-      expect(GLOBAL.mocha.reporter).to.have.been.calledOnce
+      expect(global.mocha.reporter).to.have.been.calledOnce
     })
 
     it('should register the JasmineAdapter', function () {
       var spy = sinon.stub()
-      GLOBAL.jasmine = {
+      global.jasmine = {
         getEnv: function () {
           return {
             addReporter: spy
