@@ -20,8 +20,7 @@ module.exports = {
       spec_files: ['jasmine.js']
     })
 
-    jasmineRunner = new JsReporters.JasmineAdapter(jasmine.env)
-    jasmine.addReporter({})
+    jasmineRunner = new JsReporters.JasmineAdapter(jasmine)
 
     attachListeners(jasmineRunner)
 
