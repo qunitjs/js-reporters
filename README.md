@@ -63,41 +63,60 @@ For more background check [#62](https://github.com/js-reporters/js-reporters/iss
 
 ### Event Data
 
-Based on the discussion in [#12](https://github.com/js-reporters/js-reporters/issues/12#issuecomment-120483356), there are two basic data structures: Suites and Tests. A test represents an atomic test/spec/`it()`. A suite contains tests and optionally other suites.
+Based on the discussion in [#12](https://github.com/js-reporters/js-reporters/issues/12#issuecomment-120483356), there are two basic data structures: **Suites** and **Tests**. A test represents an atomic test/spec/`it()`. A suite contains tests and optionally other suites.
 
-For `testStart` and `testEnd`, the corresponding test object is passed to the reporter. The same applies to `suiteStart` and `suiteEnd` where the matching suite object is passed to the reporter. For `runStart` and `runEnd` a "global" suite object is passed to the reporter, this suite wraps all other top-level user defined suites as its child suites, it will be reffered to as `globalSuite`.
+The structures have been divided in two parts, a start part and an end part:
+ - SuiteStart
+ - SuiteEnd
+ - TestStart
+ - TestEnd
+
+For `testStart` and `testEnd`, the corresponding TestStart, respectively TestEnd, object is passed to the reporter. The same applies to `suiteStart` and `suiteEnd` where the matching SuiteStart/SuiteEnd object is passed to the reporter. For `runStart` and `runEnd` a "global" suite object is passed to the reporter, this suite wraps all other top-level user defined suites as its child suites, it will be reffered to as `globalSuite`.
 
 The data structures are defined as follows:
 
-- **Suite**: `Object` - A suite is a collection of tests and potentially other suites.
+- **SuiteStart**: `Object` - A SuiteStart is a collection of tests-starts and potentially other suites-starts, emitted before the suite have been executed, which means before executing any of its tests and child suites.
  - **name**: `String|undefined` - name of the suite, will be `undefined` only for the `globalSuite`.
  - **fullname**: `Array` - array of strings containing the name of the suite and the names of all its suites ancestors.
  - **tests**: `Array` - array containing all tests that directly belong to the suite (but not to a child suite).
  - **childSuites**: `Array` - array with all direct subsuites.
- - **status**: `String|undefined` - summarized status of the suite, it will be `undefined` on the `suiteStart` and `runStart` event.
+ - **testCounts**: `Object` - contains the total number of tests in the suite, including the tests of the child suites.
+    - **total**: `Number` - total number of tests
+
+- **SuiteEnd**: `Object` - A SuiteEnd is a collection of tests-ends and potentially other suites-ends, emitted after the suite has been executed, which means that all its tests and child suites have been also executed.
+ - **name**: `String|undefined` - name of the suite, will be `undefined` only for the `globalSuite`.
+ - **fullname**: `Array` - array of strings containing the name of the suite and the names of all its suites ancestors.
+ - **tests**: `Array` - array containing all tests that directly belong to the suite (but not to a child suite).
+ - **childSuites**: `Array` - array with all direct subsuites.
+ - **status**: `String` - summarized status of the suite.
     - `failed`, if at least one test in the suite or in its child suites has failed.
     - `skipped`, if all tests in the suite and in its child suites are skipped (and there is at least one skipped test).
     - `passed`, if there is at least one passed test in the suite or in its child suites and all other tests are skipped or if there are no tests in the suite.
  - **testCounts**: `Object` - contains how many tests have passed, failed etc. including the tests of child suites.
-    - **passed**: `Number|undefined` - number of passed tests, it will be `undefined` for the `runStart` and `suiteStart` event.
-    - **failed**: `Number|undefined` - number of failed tests, it will be `undefined` for the `runStart` and `suiteStart` event.
-    - **skipped**: `Number|undefined` - number of skipped tests, it will be `undefined` for the `runStart` and `suiteStart` event.
+    - **passed**: `Number` - number of passed tests.
+    - **failed**: `Number` - number of failed tests.
+    - **skipped**: `Number` - number of skipped tests.
     - **total**: `Number` - total number of tests, the sum of the above 3 properties must equal this one.
- - **runtime**: `Number|undefined` - execution time of the whole suite in milliseconds (including child suites), it will be `undefined` on the `suiteStart` and `runStart` event.
+ - **runtime**: `Number` - execution time of the whole suite in milliseconds (including child suites).
  
 The above `suite properties` apply also for the `globalSuite`.
 
-- **Test**: `Object` - A test holds basic information on a single test/spec.
+- **TestStart**: `Object` - A test-start holds basic information on a single test/spec before its execution.
+ - **name**: `String` - name of the test.
+ - **suiteName**: `String` - name of the suite the test belongs to.
+ - **fullName**: `Array` - array of strings containing the name of the test and the names of all its suites ancestors.1
+
+- **TestEnd**: `Object` - A test-end holds basic information on a single test/spec after its execution.
  - **name**: `String` - name of the test.
  - **suiteName**: `String` - name of the suite the test belongs to.
  - **fullName**: `Array` - array of strings containing the name of the test and the names of all its suites ancestors.
- - **status**: `String|undefined` - result of the test, it will be `undefined` for the `testStart` event. Can be:
+ - **status**: `String` - result of the test. Can be:
     - `passed`, if all assertions have passed.
     - `failed`, if at least one assertion has failed.
     - `skipped`, if the test is disabled and wasn't executed.
- - **runtime**: `Number|undefined` - execution time in milliseconds, it will be `undefined` for the `testStart` event.
- - **errors**: `Array|undefined` - array containing all errors, i.e failed Assertions, it will be `undefined` for the `testStart` event. It will contain at least one error for failed statuses and it will be empty for statuses other than failed.
- - **assertions**: `Array|undefined` - array of Assertions containing all assertions passed and failed, for a skipped test there will be an empty array, it will be `undefined` for the `testStart` event. Frameworks that don't track passed assertions can always provide an empty array for passed tests. In that case, for failed tests this should match the errors property.
+ - **runtime**: `Number` - execution time in milliseconds.
+ - **errors**: `Array|undefined` - array containing all errors, i.e failed Assertions. It will contain at least one error for failed statuses and it will be empty for statuses other than failed.
+ - **assertions**: `Array` - array of Assertions containing all assertions passed and failed, for a skipped test there will be an empty array. Frameworks that don't track passed assertions can always provide an empty array for passed tests. In that case, for failed tests this should match the errors property.
 
 Based on the discussion in [#79](https://github.com/js-reporters/js-reporters/issues/79), js-reporters establishes also a minimum set of properties for the emitted assertions, failed or passed:
 
