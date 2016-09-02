@@ -25,7 +25,6 @@
     "commitplease": "^2.2.3",
     "events": "^1.1.0",
     "jasmine": "^2.3.1",
-    "jasmine-core": "^2.3.4",
     "mocha": "^2.4.5",
     "qunitjs": "^2.0.0-rc1",
     "rollup": "^0.34.1",
