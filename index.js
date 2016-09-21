@@ -4,7 +4,8 @@ import MochaAdapter from './lib/adapters/MochaAdapter.js'
 import TapReporter from './lib/reporters/TapReporter.js'
 import ConsoleReporter from './lib/reporters/ConsoleReporter.js'
 import {Assertion, TestStart, TestEnd, SuiteStart, SuiteEnd} from './lib/Data.js'
-import {autoRegister} from './lib/helpers.js'
+import {autoRegister, createSuiteStart, createTestStart,
+  createTestEnd, createSuiteEnd} from './lib/helpers.js'
 
 export default {
   QUnitAdapter,
@@ -17,5 +18,9 @@ export default {
   TestEnd,
   SuiteStart,
   SuiteEnd,
+  createSuiteStart,
+  createTestStart,
+  createTestEnd,
+  createSuiteEnd,
   autoRegister
 }

@@ -3,6 +3,7 @@
 var chai = require('chai')
 var sinon = require('sinon')
 var JsReporters = require('../../dist/js-reporters.js')
+var data = require('./data.js')
 var expect = chai.expect
 
 chai.use(require('sinon-chai'))
@@ -64,6 +65,32 @@ describe('Helpers', function () {
 
     it('should throw an error if no testing framework was found', function () {
       expect(JsReporters.autoRegister).to.throw(Error)
+    })
+  })
+
+  describe('create functions', function () {
+    it('should return a suite start', function () {
+      var startSuite = JsReporters.createSuiteStart(data.startSuite)
+
+      expect(startSuite).to.be.deep.equal(data.startSuite)
+    })
+
+    it('should return a test start', function () {
+      var startTest = JsReporters.createTestStart(data.startTest)
+
+      expect(startTest).to.be.deep.equal(data.startTest)
+    })
+
+    it('should return a test end', function () {
+      var endTest = JsReporters.createTestEnd(data.endTest)
+
+      expect(endTest).to.be.deep.equal(data.endTest)
+    })
+
+    it('should return a suite end', function () {
+      var endSuite = JsReporters.createSuiteEnd(data.endSuite)
+
+      expect(endSuite).to.be.deep.equal(data.endSuite)
     })
   })
 })
