@@ -16,6 +16,6 @@ export default {
   TestStart,
   TestEnd,
   SuiteStart,
-  SuiteEnd
+  SuiteEnd,
   autoRegister
 }
