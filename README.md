@@ -75,7 +75,7 @@ For `testStart` and `testEnd`, the corresponding TestStart, respectively TestEnd
 
 The data structures are defined as follows:
 
-- **SuiteStart**: `Object` - A SuiteStart is a collection of tests-starts and potentially other suites-starts, emitted before the suite have been executed, which means before executing any of its tests and child suites.
+- **SuiteStart**: `Object` - A SuiteStart is a collection of test-starts and potentially other suite-starts, emitted before the suite have been executed, which means before executing any of its tests and child suites.
  - **name**: `String|undefined` - name of the suite, will be `undefined` only for the `globalSuite`.
  - **fullname**: `Array` - array of strings containing the name of the suite and the names of all its suites ancestors.
  - **tests**: `Array` - array containing all tests that directly belong to the suite (but not to a child suite).
@@ -83,11 +83,7 @@ The data structures are defined as follows:
  - **testCounts**: `Object` - contains the total number of tests in the suite, including the tests of the child suites.
     - **total**: `Number` - total number of tests
 
-- **SuiteEnd**: `Object` - A SuiteEnd is a collection of tests-ends and potentially other suites-ends, emitted after the suite has been executed, which means that all its tests and child suites have been also executed.
- - **name**: `String|undefined` - name of the suite, will be `undefined` only for the `globalSuite`.
- - **fullname**: `Array` - array of strings containing the name of the suite and the names of all its suites ancestors.
- - **tests**: `Array` - array containing all tests that directly belong to the suite (but not to a child suite).
- - **childSuites**: `Array` - array with all direct subsuites.
+- **SuiteEnd**: `Object` - A SuiteEnd is a collection of test-ends and potentially other suite-ends, emitted after the suite has been executed, which means that all its tests and child suites have been also executed. **In addition** to the properties of `SuiteStart`, `SuiteEnd` also has the following properties:
  - **status**: `String` - summarized status of the suite.
     - `failed`, if at least one test in the suite or in its child suites has failed.
     - `skipped`, if all tests in the suite and in its child suites are skipped (and there is at least one skipped test).
@@ -115,7 +111,7 @@ The above `suite properties` apply also for the `globalSuite`.
     - `failed`, if at least one assertion has failed.
     - `skipped`, if the test is disabled and wasn't executed.
  - **runtime**: `Number` - execution time in milliseconds.
- - **errors**: `Array|undefined` - array containing all errors, i.e failed Assertions. It will contain at least one error for failed statuses and it will be empty for statuses other than failed.
+ - **errors**: `Array` - array containing all errors, i.e failed Assertions. It will contain at least one error for failed statuses and it will be empty for statuses other than failed.
  - **assertions**: `Array` - array of Assertions containing all assertions passed and failed, for a skipped test there will be an empty array. Frameworks that don't track passed assertions can always provide an empty array for passed tests. In that case, for failed tests this should match the errors property.
 
 Based on the discussion in [#79](https://github.com/js-reporters/js-reporters/issues/79), js-reporters establishes also a minimum set of properties for the emitted assertions, failed or passed:
