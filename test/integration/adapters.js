@@ -145,6 +145,7 @@ function getTestCountsEnd (refSuite) {
     passed: 0,
     failed: 0,
     skipped: 0,
+    todo: 0,
     total: refSuite.tests.length
   }
 
@@ -160,12 +161,17 @@ function getTestCountsEnd (refSuite) {
     return test.status === 'skipped'
   }).length
 
+  testCounts.todo += refSuite.tests.filter(function (test) {
+    return test.status === 'todo'
+  }).length
+
   refSuite.childSuites.forEach(function (childSuite) {
     var childTestCounts = getTestCountsEnd(childSuite)
 
     testCounts.passed += childTestCounts.passed
     testCounts.failed += childTestCounts.failed
     testCounts.skipped += childTestCounts.skipped
+    testCounts.todo += childTestCounts.todo
     testCounts.total += childTestCounts.total
   })
 
@@ -175,7 +181,7 @@ function getTestCountsEnd (refSuite) {
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
-      var keys = ['passed', 'actual', 'expected', 'message', 'stack']
+      var keys = ['passed', 'actual', 'expected', 'message', 'stack', 'todo']
 
       before(function (done) {
         collectedData = []

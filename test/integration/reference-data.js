@@ -17,7 +17,8 @@ var errors = [{
   actual: undefined,
   expected: undefined,
   message: undefined,
-  stack: undefined
+  stack: undefined,
+  todo: undefined
 }]
 
 var failedAssertions = [{
@@ -25,7 +26,8 @@ var failedAssertions = [{
   actual: undefined,
   expected: undefined,
   message: undefined,
-  stack: undefined
+  stack: undefined,
+  todo: undefined
 }]
 
 var passedAssertions = [{
@@ -33,7 +35,8 @@ var passedAssertions = [{
   actual: undefined,
   expected: undefined,
   message: undefined,
-  stack: undefined
+  stack: undefined,
+  todo: undefined
 }]
 
 var globalTestStart = new TestStart('global test', undefined, ['global test'])
