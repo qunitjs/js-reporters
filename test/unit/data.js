@@ -9,6 +9,7 @@ module.exports = {
     new Error('first error'), new Error('second error')
   ]),
   skippedTest: new TestEnd('skip', undefined, [], 'skipped', 0, []),
+  todoTest: new TestEnd('todo', undefined, [], 'todo', 0, []),
   startSuite: new SuiteStart('start', 'start', [], []),
   startTest: new TestStart('start', 'start', 'start start'),
   endTest: new TestEnd('end', 'end', 'end end', 'failed', 0,

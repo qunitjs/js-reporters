@@ -27,7 +27,7 @@ describe('Tap reporter', function () {
 
   it('should output ok for a passing test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'ok 1 ' + data.passingTest.name
+    var expected = 'ok 1 ' + data.passingTest.fullName.join(' > ')
 
     emitter.emit('testEnd', data.passingTest)
 
@@ -36,16 +36,25 @@ describe('Tap reporter', function () {
 
   it('should output ok for a skipped test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'ok 2 ' + data.skippedTest.name + ' # SKIP'
+    var expected = 'ok 2 # SKIP ' + data.skippedTest.fullName.join(' > ')
 
     emitter.emit('testEnd', data.skippedTest)
 
     expect(spy).to.have.been.calledWith(expected)
   }))
 
+  it('should output not ok for a todo test', sinon.test(function () {
+    var spy = this.stub(console, 'log')
+    var expected = 'not ok 3 # TODO ' + data.todoTest.fullName.join(' > ')
+
+    emitter.emit('testEnd', data.todoTest)
+
+    expect(spy).to.have.been.calledWith(expected)
+  }))
+
   it('should output not ok for a failing test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'not ok 3 ' + data.failingTest.name
+    var expected = 'not ok 4 ' + data.failingTest.fullName.join(' > ')
 
     emitter.emit('testEnd', data.failingTest)
 
@@ -58,8 +67,9 @@ describe('Tap reporter', function () {
 
     data.failingTest.errors.forEach(function (error) {
       expected.push('  ---')
-      expected.push('  message: "' + error.toString() + '"')
+      expected.push('  message: "' + error.message + '"')
       expected.push('  severity: failed')
+      expected.push('  stack: "' + error.stack + '"')
       expected.push('  ...')
     })
 
@@ -72,10 +82,28 @@ describe('Tap reporter', function () {
 
   it('should output the total number of tests', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = '1..4'
+    var summary = '1..6'
+    var testCount = 'tests 6'
+    var passCount = 'pass 3'
+    var failCount = 'fail 2'
+    var skipCount = 'skip 1'
+    var todoCount = 'todo 0'
 
-    emitter.emit('runEnd', {})
+    emitter.emit('runEnd', {
+      testCounts: {
+        total: 6,
+        pass: 3,
+        fail: 2,
+        skip: 1,
+        todo: 0
+      }
+    })
 
-    expect(spy).to.have.been.calledWith(expected)
+    expect(spy).to.have.been.calledWith(summary)
+    expect(spy).to.have.been.calledWith(testCount)
+    expect(spy).to.have.been.calledWith(passCount)
+    expect(spy).to.have.been.calledWith(failCount)
+    expect(spy).to.have.been.calledWith(skipCount)
+    expect(spy).to.have.been.calledWith(todoCount)
   }))
 })
