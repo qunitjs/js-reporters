@@ -44,6 +44,7 @@
     "rollup-plugin-node-resolve": "^1.7.2",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
-    "standard": "^6.0.8"
+    "standard": "^6.0.8",
+    "webpack": "^1.0.0"
   }
 }
