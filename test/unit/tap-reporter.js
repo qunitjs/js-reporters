@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 var chai = require('chai')
+var chalk = require('chalk')
 var sinon = require('sinon')
 var EventEmitter = require('events').EventEmitter
 var JsReporters = require('../../dist/js-reporters.js')
@@ -36,7 +37,7 @@ describe('Tap reporter', function () {
 
   it('should output ok for a skipped test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'ok 2 # SKIP ' + data.skippedTest.fullName.join(' > ')
+    var expected = chalk.yellow('ok 2 # SKIP ' + data.skippedTest.fullName.join(' > '))
 
     emitter.emit('testEnd', data.skippedTest)
 
@@ -45,7 +46,7 @@ describe('Tap reporter', function () {
 
   it('should output not ok for a todo test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'not ok 3 # TODO ' + data.todoTest.fullName.join(' > ')
+    var expected = chalk.cyan('not ok 3 # TODO ' + data.todoTest.fullName.join(' > '))
 
     emitter.emit('testEnd', data.todoTest)
 
@@ -54,7 +55,7 @@ describe('Tap reporter', function () {
 
   it('should output not ok for a failing test', sinon.test(function () {
     var spy = this.stub(console, 'log')
-    var expected = 'not ok 4 ' + data.failingTest.fullName.join(' > ')
+    var expected = chalk.red('not ok 4 ' + data.failingTest.fullName.join(' > '))
 
     emitter.emit('testEnd', data.failingTest)
 
@@ -69,11 +70,13 @@ describe('Tap reporter', function () {
       expected.push('  ---')
       expected.push('  message: "' + error.message + '"')
       expected.push('  severity: failed')
-      expected.push('  stack: "' + error.stack + '"')
+      expected.push('  stack: ' + error.stack)
       expected.push('  ...')
     })
 
     emitter.emit('testEnd', data.failingTest)
+
+    console.warn(expected)
 
     for (var i = 0; i < expected.length; i++) {
       expect(spy).to.have.been.calledWith(expected[i])
@@ -83,27 +86,25 @@ describe('Tap reporter', function () {
   it('should output the total number of tests', sinon.test(function () {
     var spy = this.stub(console, 'log')
     var summary = '1..6'
-    var testCount = 'tests 6'
-    var passCount = 'pass 3'
-    var failCount = 'fail 2'
-    var skipCount = 'skip 1'
-    var todoCount = 'todo 0'
+    var passCount = '# pass 3'
+    var skipCount = chalk.yellow('# skip 1')
+    var todoCount = chalk.cyan('# todo 0')
+    var failCount = chalk.red('# fail 2')
 
     emitter.emit('runEnd', {
       testCounts: {
         total: 6,
-        pass: 3,
-        fail: 2,
-        skip: 1,
+        passed: 3,
+        failed: 2,
+        skipped: 1,
         todo: 0
       }
     })
 
     expect(spy).to.have.been.calledWith(summary)
-    expect(spy).to.have.been.calledWith(testCount)
     expect(spy).to.have.been.calledWith(passCount)
-    expect(spy).to.have.been.calledWith(failCount)
     expect(spy).to.have.been.calledWith(skipCount)
     expect(spy).to.have.been.calledWith(todoCount)
+    expect(spy).to.have.been.calledWith(failCount)
   }))
 })
