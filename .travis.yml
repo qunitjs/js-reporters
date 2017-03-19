@@ -1,8 +1,8 @@
 language: node_js
 node_js:
-  - '0.12' # Legacy
   - '4' # LTS
-  - 'stable'
+  - '6' # LTS
+  - '7' # Current
 script:
   - "npm run build"
   - "npm test"
