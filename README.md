@@ -19,7 +19,7 @@ https://github.com/js-reporters/js-reporters/issues/
 
 ## Background
 
-We on the [QUnit](http://qunitjs.com/) team have been [discussing](https://github.com/jquery/qunit/issues/531) the possibility of working with other JS test frameworks, especially those that can be run client-side (e.g. Mocha, Jasmine, Intern, Buster, etc.), to agree upon a "Common Reporter Interface" so that we could hopefully share Reporter plugins between testing frameworks. This would also benefit high-level consumers of the frameworks such as Karma, BrowserStack, SauceLabs, Testling, etc.
+We on the [QUnit](http://qunitjs.com/) team have been [discussing](https://github.com/qunitjs/qunit/issues/531) the possibility of working with other JS test frameworks, especially those that can be run client-side (e.g. Mocha, Jasmine, Intern, Buster, etc.), to agree upon a "Common Reporter Interface" so that we could hopefully share Reporter plugins between testing frameworks. This would also benefit high-level consumers of the frameworks such as Karma, BrowserStack, SauceLabs, Testling, etc.
 
 This would most likely come in the form of:
  - a common Reporter API/Interface, e.g.
@@ -195,7 +195,7 @@ If you want to know more about each testing framework and about their emitting o
 
 ### Unit Testing Frameworks
 
- - https://github.com/jquery/qunit/issues/531  (original discussion)
+ - https://github.com/qunitjs/qunit/issues/531  (original discussion)
  - https://github.com/visionmedia/mocha/issues/1326
  - https://github.com/pivotal/jasmine/issues/659
  - https://github.com/theintern/intern/issues/257
