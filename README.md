@@ -127,7 +127,7 @@ Based on the discussion in [#79](https://github.com/js-reporters/js-reporters/is
   - **stack**: `String|undefined` - represents the stack trace for a failed assertion, for a `passed` one it is `undefined`.
   - **todo**: `Boolean` - whether this assertion was part of a todo test
 
-Additional properties (not defined here) can be added to the Assertion object.
+Additional properties (not defined here) can be added to the Assertion object. If Assertion objects are included in the Test and Suite objects defined above, it is recommended to remove the `actual` and `expected` values after `TestEnd` occurs to avoid leaking memory.
 
 ## Details
 
