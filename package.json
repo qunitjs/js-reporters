@@ -46,5 +46,14 @@
     "sinon-chai": "^2.8.0",
     "standard": "^6.0.8",
     "webpack": "^1.0.0"
+  },
+  "commitplease": {
+    "components": [
+      "Build",
+      "Readme",
+      "Reporter",
+      "Test",
+      "Docs"
+    ]
   }
 }
