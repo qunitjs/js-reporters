@@ -81,6 +81,38 @@ describe('Tap reporter', function () {
     }
   }))
 
+  it('should output actual value for failed assertions even it was undefined', sinon.test(function () {
+    var spy = this.stub(console, 'log')
+
+    emitter.emit('testEnd', data.actualUndefinedTest)
+
+    expect(spy).to.have.been.calledWith('  actual: undefined')
+  }))
+
+  it('should output actual value for failed assertions even it was falsy', sinon.test(function () {
+    var spy = this.stub(console, 'log')
+
+    emitter.emit('testEnd', data.actualFalsyTest)
+
+    expect(spy).to.have.been.calledWith('  actual: 0')
+  }))
+
+  it('should output expected value for failed assertions even it was undefined', sinon.test(function () {
+    var spy = this.stub(console, 'log')
+
+    emitter.emit('testEnd', data.expectedUndefinedTest)
+
+    expect(spy).to.have.been.calledWith('  expected: undefined')
+  }))
+
+  it('should output expected value for failed assertions even it was falsy', sinon.test(function () {
+    var spy = this.stub(console, 'log')
+
+    emitter.emit('testEnd', data.expectedFalsyTest)
+
+    expect(spy).to.have.been.calledWith('  expected: 0')
+  }))
+
   it('should output the total number of tests', sinon.test(function () {
     var spy = this.stub(console, 'log')
     var summary = '1..6'
