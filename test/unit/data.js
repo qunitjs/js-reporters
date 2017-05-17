@@ -8,6 +8,26 @@ module.exports = {
   failingTest: new TestEnd('fail', undefined, [], 'failed', 0, [
     new Error('first error'), new Error('second error')
   ]),
+  actualUndefinedTest: new TestEnd('fail', undefined, [], 'failed', 0, [{
+    passed: false,
+    actual: undefined,
+    expected: 'expected'
+  }]),
+  actualFalsyTest: new TestEnd('fail', undefined, [], 'failed', 0, [{
+    passed: false,
+    actual: 0,
+    expected: 'expected'
+  }]),
+  expectedUndefinedTest: new TestEnd('fail', undefined, [], 'failed', 0, [{
+    passed: false,
+    actual: 'actual',
+    expected: undefined
+  }]),
+  expectedFalsyTest: new TestEnd('fail', undefined, [], 'failed', 0, [{
+    passed: false,
+    actual: 'actual',
+    expected: 0
+  }]),
   skippedTest: new TestEnd('skip', undefined, [], 'skipped', 0, []),
   todoTest: new TestEnd('todo', undefined, [], 'todo', 0, []),
   startSuite: new SuiteStart('start', 'start', [], []),
