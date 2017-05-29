@@ -76,8 +76,6 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.failingTest)
 
-    console.warn(expected)
-
     for (var i = 0; i < expected.length; i++) {
       expect(spy).to.have.been.calledWith(expected[i])
     }
