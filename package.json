@@ -50,7 +50,9 @@
   "commitplease": {
     "components": [
       "Build",
+      "Changelog",
       "Readme",
+      "Release",
       "Reporter",
       "Test",
       "Docs"

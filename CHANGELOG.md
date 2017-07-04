@@ -1,3 +1,13 @@
+1.2.1 / 2017-07-04
+==================
+
+  * Reporter: Print "actual:", "expected:" even if they are undefined
+  * Reporter: Drop accidentally committed console.warn()
+  * Readme: Use canonical path to QUnit repository (#99)
+  * Readme: Add note about potential assertion memory leaks
+  * Readme: Improve formatting of bullets
+  * Release: Add documentation for release process
+
 1.2.0 / 2017-03-22
 ==================
 
