@@ -68,13 +68,14 @@ describe('Tap reporter', function () {
 
     data.failingTest.errors.forEach(function (error) {
       expected.push('  ---')
-      expected.push('  message: "' + error.message.replace(/"/g, '\\"') + '"')
+      expected.push('  message: "' + error.message + '"')
       expected.push('  severity: failed')
-      expected.push('  stack: "' + error.stack.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"')
+      expected.push('  stack: ' + error.stack)
       expected.push('  ...')
     })
 
     emitter.emit('testEnd', data.failingTest)
+
     for (var i = 0; i < expected.length; i++) {
       expect(spy).to.have.been.calledWith(expected[i])
     }
@@ -93,7 +94,7 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.actualFalsyTest)
 
-    expect(spy).to.have.been.calledWith('  actual  : "0"')
+    expect(spy).to.have.been.calledWith('  actual  : 0')
   }))
 
   it('should output expected value for failed assertions even it was undefined', sinon.test(function () {
@@ -109,7 +110,7 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.expectedFalsyTest)
 
-    expect(spy).to.have.been.calledWith('  expected: "0"')
+    expect(spy).to.have.been.calledWith('  expected: 0')
   }))
 
   it('should output the total number of tests', sinon.test(function () {
