@@ -68,9 +68,9 @@ describe('Tap reporter', function () {
 
     data.failingTest.errors.forEach(function (error) {
       expected.push('  ---')
-      expected.push('  message: "' + error.message.replace(/"/g, '\\"') + '"')
+      expected.push('  message: "' + error.message.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"')
       expected.push('  severity: failed')
-      expected.push('  stack: "' + error.stack.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"')
+      expected.push('  stack: "' + error.stack.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"')
       expected.push('  ...')
     })
 
