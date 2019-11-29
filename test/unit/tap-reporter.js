@@ -80,6 +80,39 @@ describe('Tap reporter', function () {
     }
   }))
 
+  it('should escape error messages properly', sinon.test(function () {
+    var spy = this.stub(console, 'log')
+    var messages = [
+      ['quotes should be escaped: "', 'quotes should be escaped: \\"'],
+      ['backslashes should be escaped: \\', 'backslashes should be escaped: \\\\'],
+      ['special characters should be escaped: \x99', 'special characters should be escaped: \\u0099']
+    ]
+    var errors = messages.map(([msg, qmsg]) => [new Error(msg), qmsg])
+
+    var expected = []
+    errors.forEach(function ([error, qmsg]) {
+      expected.push('  ---')
+      expected.push('  message: "' + qmsg + '"')
+      expected.push('  severity: failed')
+      expected.push('  stack: "' +
+                    error.stack
+                    .replace(/\\/g, '\\\\')
+                    .replace(/"/g, '\\"')
+                    .replace(/\n/g, '\\n')
+                    .replace(/\x99/g, '\\u0099') +
+                    '"')
+      expected.push('  ...')
+    })
+
+    var TestEnd = require('../../dist/js-reporters.js').TestEnd
+    emitter.emit('testEnd',
+                 new TestEnd('fail', undefined, [], 'failed', 0,
+                             errors.map(([err, qmsg]) => err)))
+    for (var i = 0; i < expected.length; i++) {
+      expect(spy).to.have.been.calledWith(expected[i])
+    }
+  }))
+
   it('should output actual value for failed assertions even it was undefined', sinon.test(function () {
     var spy = this.stub(console, 'log')
 
