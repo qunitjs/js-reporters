@@ -85,7 +85,7 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.actualUndefinedTest)
 
-    expect(spy).to.have.been.calledWith('  actual: undefined')
+    expect(spy).to.have.been.calledWith('  actual  : undefined')
   }))
 
   it('should output actual value for failed assertions even it was falsy', sinon.test(function () {
@@ -93,7 +93,7 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.actualFalsyTest)
 
-    expect(spy).to.have.been.calledWith('  actual: "0"')
+    expect(spy).to.have.been.calledWith('  actual  : "0"')
   }))
 
   it('should output expected value for failed assertions even it was undefined', sinon.test(function () {
