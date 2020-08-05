@@ -1,3 +1,8 @@
+1.2.2 / 2019-05-13
+==================
+
+  * Reporter: Fix YAML output in TAP reporter ([#110](https://github.com/js-reporters/js-reporters/issues/110))
+
 1.2.1 / 2017-07-04
 ==================
 
