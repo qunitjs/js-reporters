@@ -1,15 +1,16 @@
 /* eslint-env mocha */
+/* eslint-disable no-unused-expressions */
 
-var chai = require('chai');
-var sinon = require('sinon');
-var JsReporters = require('../../dist/js-reporters.js');
-var data = require('./data.js');
-var expect = chai.expect;
+const chai = require('chai');
+const sinon = require('sinon');
+const JsReporters = require('../../');
+const data = require('./data.js');
+const expect = chai.expect;
 
 chai.use(require('sinon-chai'));
 
 describe('Helpers', function () {
-  var dummyFunc = function () {};
+  const dummyFunc = function () {};
 
   describe('autoregister', function () {
     beforeEach(function () {
@@ -49,7 +50,7 @@ describe('Helpers', function () {
     });
 
     it('should register the JasmineAdapter', function () {
-      var spy = sinon.stub();
+      const spy = sinon.stub();
       global.jasmine = {
         getEnv: function () {
           return {
@@ -70,28 +71,27 @@ describe('Helpers', function () {
 
   describe('create functions', function () {
     it('should return a suite start', function () {
-      var startSuite = JsReporters.createSuiteStart(data.startSuite);
+      const startSuite = JsReporters.createSuiteStart(data.startSuite);
 
       expect(startSuite).to.be.deep.equal(data.startSuite);
     });
 
     it('should return a test start', function () {
-      var startTest = JsReporters.createTestStart(data.startTest);
+      const startTest = JsReporters.createTestStart(data.startTest);
 
       expect(startTest).to.be.deep.equal(data.startTest);
     });
 
     it('should return a test end', function () {
-      var endTest = JsReporters.createTestEnd(data.endTest);
+      const endTest = JsReporters.createTestEnd(data.endTest);
 
       expect(endTest).to.be.deep.equal(data.endTest);
     });
 
     it('should return a suite end', function () {
-      var endSuite = JsReporters.createSuiteEnd(data.endSuite);
+      const endSuite = JsReporters.createSuiteEnd(data.endSuite);
 
       expect(endSuite).to.be.deep.equal(data.endSuite);
     });
   });
 });
-

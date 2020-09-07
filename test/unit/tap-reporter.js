@@ -1,17 +1,18 @@
 /* eslint-env mocha */
+/* eslint-disable no-unused-expressions */
 
-var chai = require('chai');
-var chalk = require('chalk');
-var sinon = require('sinon');
-var EventEmitter = require('events').EventEmitter;
-var JsReporters = require('../../dist/js-reporters.js');
-var data = require('./data.js');
-var expect = chai.expect;
+const chai = require('chai');
+const chalk = require('chalk');
+const sinon = require('sinon');
+const EventEmitter = require('events').EventEmitter;
+const JsReporters = require('../../');
+const data = require('./data.js');
+const expect = chai.expect;
 
 chai.use(require('sinon-chai'));
 
 describe('Tap reporter', function () {
-  var emitter;
+  let emitter;
 
   before(function () {
     emitter = new EventEmitter();
@@ -19,7 +20,7 @@ describe('Tap reporter', function () {
   });
 
   it('should output the TAP header', sinon.test(function () {
-    var spy = this.stub(console, 'log');
+    const spy = this.stub(console, 'log');
 
     emitter.emit('runStart', {});
 
@@ -27,8 +28,8 @@ describe('Tap reporter', function () {
   }));
 
   it('should output ok for a passing test', sinon.test(function () {
-    var spy = this.stub(console, 'log');
-    var expected = 'ok 1 ' + data.passingTest.fullName.join(' > ');
+    const spy = this.stub(console, 'log');
+    const expected = 'ok 1 ' + data.passingTest.fullName.join(' > ');
 
     emitter.emit('testEnd', data.passingTest);
 
@@ -36,8 +37,8 @@ describe('Tap reporter', function () {
   }));
 
   it('should output ok for a skipped test', sinon.test(function () {
-    var spy = this.stub(console, 'log');
-    var expected = chalk.yellow('ok 2 # SKIP ' + data.skippedTest.fullName.join(' > '));
+    const spy = this.stub(console, 'log');
+    const expected = chalk.yellow('ok 2 # SKIP ' + data.skippedTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.skippedTest);
 
@@ -45,8 +46,8 @@ describe('Tap reporter', function () {
   }));
 
   it('should output not ok for a todo test', sinon.test(function () {
-    var spy = this.stub(console, 'log');
-    var expected = chalk.cyan('not ok 3 # TODO ' + data.todoTest.fullName.join(' > '));
+    const spy = this.stub(console, 'log');
+    const expected = chalk.cyan('not ok 3 # TODO ' + data.todoTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.todoTest);
 
@@ -54,8 +55,8 @@ describe('Tap reporter', function () {
   }));
 
   it('should output not ok for a failing test', sinon.test(function () {
-    var spy = this.stub(console, 'log');
-    var expected = chalk.red('not ok 4 ' + data.failingTest.fullName.join(' > '));
+    const spy = this.stub(console, 'log');
+    const expected = chalk.red('not ok 4 ' + data.failingTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.failingTest);
 
@@ -63,8 +64,8 @@ describe('Tap reporter', function () {
   }));
 
   it('should output all errors for a failing test', sinon.test(function () {
-    var spy = this.stub(console, 'log');
-    var expected = [];
+    const spy = this.stub(console, 'log');
+    const expected = [];
 
     data.failingTest.errors.forEach(function (error) {
       expected.push('  ---');
@@ -75,13 +76,13 @@ describe('Tap reporter', function () {
     });
 
     emitter.emit('testEnd', data.failingTest);
-    for (var i = 0; i < expected.length; i++) {
+    for (let i = 0; i < expected.length; i++) {
       expect(spy).to.have.been.calledWith(expected[i]);
     }
   }));
 
   it('should output actual value for failed assertions even it was undefined', sinon.test(function () {
-    var spy = this.stub(console, 'log');
+    const spy = this.stub(console, 'log');
 
     emitter.emit('testEnd', data.actualUndefinedTest);
 
@@ -89,7 +90,7 @@ describe('Tap reporter', function () {
   }));
 
   it('should output actual value for failed assertions even it was falsy', sinon.test(function () {
-    var spy = this.stub(console, 'log');
+    const spy = this.stub(console, 'log');
 
     emitter.emit('testEnd', data.actualFalsyTest);
 
@@ -97,7 +98,7 @@ describe('Tap reporter', function () {
   }));
 
   it('should output expected value for failed assertions even it was undefined', sinon.test(function () {
-    var spy = this.stub(console, 'log');
+    const spy = this.stub(console, 'log');
 
     emitter.emit('testEnd', data.expectedUndefinedTest);
 
@@ -105,7 +106,7 @@ describe('Tap reporter', function () {
   }));
 
   it('should output expected value for failed assertions even it was falsy', sinon.test(function () {
-    var spy = this.stub(console, 'log');
+    const spy = this.stub(console, 'log');
 
     emitter.emit('testEnd', data.expectedFalsyTest);
 
@@ -113,12 +114,12 @@ describe('Tap reporter', function () {
   }));
 
   it('should output the total number of tests', sinon.test(function () {
-    var spy = this.stub(console, 'log');
-    var summary = '1..6';
-    var passCount = '# pass 3';
-    var skipCount = chalk.yellow('# skip 1');
-    var todoCount = chalk.cyan('# todo 0');
-    var failCount = chalk.red('# fail 2');
+    const spy = this.stub(console, 'log');
+    const summary = '1..6';
+    const passCount = '# pass 3';
+    const skipCount = chalk.yellow('# skip 1');
+    const todoCount = chalk.cyan('# todo 0');
+    const failCount = chalk.red('# fail 2');
 
     emitter.emit('runEnd', {
       testCounts: {

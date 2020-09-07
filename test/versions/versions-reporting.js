@@ -1,9 +1,8 @@
-var childProcess = require('child_process');
-var chalk = require('chalk');
-var frameworks = ['QUnitJS', 'Jasmine', 'Mocha'];
+const childProcess = require('child_process');
+const chalk = require('chalk');
+const frameworks = ['QUnitJS', 'Jasmine', 'Mocha'];
 
 console.log();
-childProcess.execSync('npm run build');
 
 /**
  * Takes each version of each framework available on npm and runs the tests
@@ -11,12 +10,12 @@ childProcess.execSync('npm run build');
  * the js-reporters adapters and which don't.
  */
 frameworks.forEach(function (framework) {
-  var command = 'npm view ' + framework.toLowerCase() + ' versions';
-  var output = childProcess.execSync(command).toString()
+  let command = 'npm view ' + framework.toLowerCase() + ' versions';
+  const output = childProcess.execSync(command).toString()
     .replace(/[[]|]|'| |\n/g, '');
-  var versions = output.split(',');
-  var workingVersions = [];
-  var notWorkingVersions = [];
+  const versions = output.split(',');
+  const workingVersions = [];
+  const notWorkingVersions = [];
 
   console.log(chalk.underline.bold.green(framework));
   console.log();
@@ -29,7 +28,7 @@ frameworks.forEach(function (framework) {
       stdio: ['ignore', 'ignore', 'ignore']
     });
 
-    var details = childProcess.spawnSync('npm', ['run', 'test-integration']);
+    const details = childProcess.spawnSync('npm', ['run', 'test-integration']);
 
     if (details.status === 0) {
       workingVersions.push(version);

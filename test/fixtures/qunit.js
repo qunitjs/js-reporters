@@ -1,4 +1,4 @@
-var QUnit = require('qunitjs');
+const QUnit = require('qunitjs');
 
 // Add dummy assertions in passing tests, because QUnit is checking for at
 // least one assertion, if there is none, then QUnit throws an error and the

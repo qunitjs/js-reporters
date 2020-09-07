@@ -1,10 +1,10 @@
-var Jasmine = require('jasmine');
-var QUnit = require('qunitjs');
-var Mocha = require('mocha');
-var JsReporters = require('../../dist/js-reporters.js');
-var path = require('path');
+const Jasmine = require('jasmine');
+const QUnit = require('qunitjs');
+const Mocha = require('mocha');
+const JsReporters = require('../../');
+const path = require('path');
 
-var testDir = path.join(__dirname, '../fixtures');
+const testDir = path.join(__dirname, '../fixtures');
 
 /**
  * Exports a function for each adapter that will run
@@ -12,15 +12,13 @@ var testDir = path.join(__dirname, '../fixtures');
  */
 module.exports = {
   Jasmine: function (attachListeners) {
-    var jasmine = new Jasmine();
-    var jasmineRunner;
-
+    const jasmine = new Jasmine();
     jasmine.loadConfig({
       spec_dir: 'test/fixtures',
       spec_files: ['jasmine.js']
     });
 
-    jasmineRunner = new JsReporters.JasmineAdapter(jasmine);
+    const jasmineRunner = new JsReporters.JasmineAdapter(jasmine);
 
     attachListeners(jasmineRunner);
 
@@ -28,7 +26,7 @@ module.exports = {
   },
 
   QUnit: function (attachListeners) {
-    var qunitRunner = new JsReporters.QUnitAdapter(QUnit);
+    const qunitRunner = new JsReporters.QUnitAdapter(QUnit);
 
     attachListeners(qunitRunner);
 
@@ -40,13 +38,12 @@ module.exports = {
   },
 
   Mocha: function (attachListeners) {
-    var mocha = new Mocha();
-    var origWrite = process.stdout.write;
-    var mochaRunner;
+    const mocha = new Mocha();
+    const origWrite = process.stdout.write;
 
     mocha.addFile(path.join(testDir, 'mocha.js'));
 
-    mochaRunner = new JsReporters.MochaAdapter(mocha);
+    const mochaRunner = new JsReporters.MochaAdapter(mocha);
 
     attachListeners(mochaRunner);
 

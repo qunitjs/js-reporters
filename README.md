@@ -141,7 +141,7 @@ Listen to the events and receive the emitted data:
 
 ```js
 // Attach one of the exiting adapters.
-var runner = JsReporters.autoRegister();
+const runner = JsReporters.autoRegister();
 
 // Listen to the same events for any testing framework.
 runner.on('testEnd', function(test) {
@@ -149,7 +149,7 @@ runner.on('testEnd', function(test) {
 });
 
 runner.on('runEnd', function(globalSuite) {
-  var testCounts = globalSuite.testCounts;
+  const testCounts = globalSuite.testCounts;
 
   console.log('Testsuite status: %s', globalSuite.status);
 

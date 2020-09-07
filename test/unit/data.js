@@ -1,7 +1,4 @@
-var TestEnd = require('../../dist/js-reporters.js').TestEnd;
-var TestStart = require('../../dist/js-reporters.js').TestStart;
-var SuiteStart = require('../../dist/js-reporters.js').SuiteStart;
-var SuiteEnd = require('../../dist/js-reporters.js').SuiteEnd;
+const { TestEnd, TestStart, SuiteStart, SuiteEnd } = require('../../');
 
 module.exports = {
   passingTest: new TestEnd('pass', undefined, [], 'passed', 0, []),

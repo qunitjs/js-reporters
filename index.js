@@ -1,13 +1,18 @@
-import QUnitAdapter from './lib/adapters/QUnitAdapter.js';
-import JasmineAdapter from './lib/adapters/JasmineAdapter.js';
-import MochaAdapter from './lib/adapters/MochaAdapter.js';
-import TapReporter from './lib/reporters/TapReporter.js';
-import ConsoleReporter from './lib/reporters/ConsoleReporter.js';
-import {Assertion, TestStart, TestEnd, SuiteStart, SuiteEnd} from './lib/Data.js';
-import {autoRegister, createSuiteStart, createTestStart,
-  createTestEnd, createSuiteEnd} from './lib/helpers.js';
+const QUnitAdapter = require('./lib/adapters/QUnitAdapter.js');
+const JasmineAdapter = require('./lib/adapters/JasmineAdapter.js');
+const MochaAdapter = require('./lib/adapters/MochaAdapter.js');
+const TapReporter = require('./lib/reporters/TapReporter.js');
+const ConsoleReporter = require('./lib/reporters/ConsoleReporter.js');
+const { Assertion, TestStart, TestEnd, SuiteStart, SuiteEnd } = require('./lib/Data.js');
+const {
+  createSuiteStart,
+  createTestStart,
+  createTestEnd,
+  createSuiteEnd
+} = require('./lib/helpers.js');
+const { autoRegister } = require('./lib/auto.js');
 
-export default {
+module.exports = {
   QUnitAdapter,
   JasmineAdapter,
   MochaAdapter,
