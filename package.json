@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git+https://github.com/js-reporters/js-reporters.git"
   },
+  "engines": {
+    "node": ">=10"
+  },
   "scripts": {
     "build": "rollup -c",
     "prepublish": "npm run build",
