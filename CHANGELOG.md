@@ -1,7 +1,15 @@
+
+1.2.3 / 2020-09-07
+==================
+
+  * Helpers: Correct spelling in `autoRegister()` error message. (P. Roebuck) [#108](https://github.com/js-reporters/js-reporters/issues/108)
+  * Reporter: Align `actual` with `expected` in TapReporter. (Robert Jackson) [#107](https://github.com/js-reporters/js-reporters/pull/107)
+  * Reporter: Revert "Fix YAML output in TAP reporter". [#110](https://github.com/js-reporters/js-reporters/issues/110)
+
 1.2.2 / 2019-05-13
 ==================
 
-  * Reporter: Fix YAML output in TAP reporter ([#110](https://github.com/js-reporters/js-reporters/issues/110))
+  * Reporter: Fix YAML output in TAP reporter. [#110](https://github.com/js-reporters/js-reporters/issues/110)
 
 1.2.1 / 2017-07-04
 ==================

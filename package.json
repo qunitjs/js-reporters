@@ -1,6 +1,6 @@
 {
   "name": "js-reporters",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "common reporter interface for javascript testing frameworks",
   "main": "dist/js-reporters.js",
   "license": "MIT",
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "pretest": "npm run build",
     "test": "standard && npm run test-unit && npm run test-integration",
     "test-unit": "mocha --recursive test/unit/ && npm run test-browser",
