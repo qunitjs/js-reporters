@@ -65,19 +65,10 @@ describe('Tap reporter', function () {
 
   it('should output all errors for a failing test', sinon.test(function () {
     const spy = this.stub(console, 'log');
-    const expected = [];
-
-    data.failingTest.errors.forEach(function (error) {
-      expected.push('  ---');
-      expected.push('  message: "' + error.message.replace(/"/g, '\\"') + '"');
-      expected.push('  severity: failed');
-      expected.push('  stack: "' + error.stack.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"');
-      expected.push('  ...');
-    });
 
     emitter.emit('testEnd', data.failingTest);
-    for (let i = 0; i < expected.length; i++) {
-      expect(spy).to.have.been.calledWith(expected[i]);
+    for (let i = 0; i < data.failingTapData.length; i++) {
+      expect(spy).to.have.been.calledWith(data.failingTapData[i]);
     }
   }));
 
@@ -86,7 +77,7 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.actualUndefinedTest);
 
-    expect(spy).to.have.been.calledWith('  actual  : undefined');
+    expect(spy).to.have.been.calledWithMatch(/^ {2}actual {2}: undefined$/m);
   }));
 
   it('should output actual value for failed assertions even it was falsy', sinon.test(function () {
@@ -94,7 +85,7 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.actualFalsyTest);
 
-    expect(spy).to.have.been.calledWith('  actual  : "0"');
+    expect(spy).to.have.been.calledWithMatch(/^ {2}actual {2}: 0$/m);
   }));
 
   it('should output expected value for failed assertions even it was undefined', sinon.test(function () {
@@ -102,7 +93,7 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.expectedUndefinedTest);
 
-    expect(spy).to.have.been.calledWith('  expected: undefined');
+    expect(spy).to.have.been.calledWithMatch(/^ {2}expected: undefined$/m);
   }));
 
   it('should output expected value for failed assertions even it was falsy', sinon.test(function () {
@@ -110,7 +101,7 @@ describe('Tap reporter', function () {
 
     emitter.emit('testEnd', data.expectedFalsyTest);
 
-    expect(spy).to.have.been.calledWith('  expected: "0"');
+    expect(spy).to.have.been.calledWithMatch(/^ {2}expected: 0$/m);
   }));
 
   it('should output the total number of tests', sinon.test(function () {
