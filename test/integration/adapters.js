@@ -1,31 +1,31 @@
 /* eslint-env mocha */
 
-var expect = require('chai').expect
-var refData = require('./reference-data.js')
-var runAdapters = require('./adapters-run.js')
+var expect = require('chai').expect;
+var refData = require('./reference-data.js');
+var runAdapters = require('./adapters-run.js');
 
 // Collecting the adapter's output.
-var collectedData
+var collectedData;
 
 function _collectOutput (eventName, done, eventData) {
-  collectedData.push([eventName, eventData])
-  done()
+  collectedData.push([eventName, eventData]);
+  done();
 }
 
 /**
  * Attaches the event handler for the runner events.
  */
 function _attachListeners (done, runner) {
-  var dummyFunc = function () {}
+  var dummyFunc = function () {};
 
-  runner.on('runStart', _collectOutput.bind(null, 'runStart', dummyFunc))
-  runner.on('suiteStart', _collectOutput.bind(null, 'suiteStart', dummyFunc))
-  runner.on('testStart', _collectOutput.bind(null, 'testStart', dummyFunc))
-  runner.on('testEnd', _collectOutput.bind(null, 'testEnd', dummyFunc))
-  runner.on('suiteEnd', _collectOutput.bind(null, 'suiteEnd', dummyFunc))
+  runner.on('runStart', _collectOutput.bind(null, 'runStart', dummyFunc));
+  runner.on('suiteStart', _collectOutput.bind(null, 'suiteStart', dummyFunc));
+  runner.on('testStart', _collectOutput.bind(null, 'testStart', dummyFunc));
+  runner.on('testEnd', _collectOutput.bind(null, 'testEnd', dummyFunc));
+  runner.on('suiteEnd', _collectOutput.bind(null, 'suiteEnd', dummyFunc));
 
   // Only when the runEnd event is emitted we can notify Mocha that we are done.
-  runner.on('runEnd', _collectOutput.bind(null, 'runEnd', done))
+  runner.on('runEnd', _collectOutput.bind(null, 'runEnd', done));
 }
 
 /**
@@ -34,13 +34,13 @@ function _attachListeners (done, runner) {
 function _setSuiteTestsRuntime (suite) {
   suite.tests.forEach(function (test) {
     if (test.status !== 'skipped') {
-      test.runtime = 0
+      test.runtime = 0;
     }
-  })
+  });
 
   suite.childSuites.forEach(function (childSuite) {
-    _setSuiteTestsRuntime(childSuite)
-  })
+    _setSuiteTestsRuntime(childSuite);
+  });
 }
 
 /**
@@ -48,12 +48,12 @@ function _setSuiteTestsRuntime (suite) {
  */
 function _setSuitesRuntime (suite) {
   if (suite.status !== 'skipped') {
-    suite.runtime = 0
+    suite.runtime = 0;
   }
 
   suite.childSuites.forEach(function (childSuite) {
-    _setSuitesRuntime(childSuite)
-  })
+    _setSuitesRuntime(childSuite);
+  });
 }
 
 /**
@@ -62,18 +62,18 @@ function _setSuitesRuntime (suite) {
  */
 function _overWriteTestAssertions (test) {
   test.errors.forEach(function (error) {
-    error.actual = undefined
-    error.expected = undefined
-    error.message = undefined
-    error.stack = undefined
-  })
+    error.actual = undefined;
+    error.expected = undefined;
+    error.message = undefined;
+    error.stack = undefined;
+  });
 
   test.assertions.forEach(function (assertion) {
-    assertion.actual = undefined
-    assertion.expected = undefined
-    assertion.message = undefined
-    assertion.stack = undefined
-  })
+    assertion.actual = undefined;
+    assertion.expected = undefined;
+    assertion.message = undefined;
+    assertion.stack = undefined;
+  });
 }
 
 /**
@@ -82,12 +82,12 @@ function _overWriteTestAssertions (test) {
  */
 function _overWriteSuitesAssertions (suite) {
   suite.tests.forEach(function (test) {
-    _overWriteTestAssertions(test)
-  })
+    _overWriteTestAssertions(test);
+  });
 
   suite.childSuites.forEach(function (childSuite) {
-    _overWriteSuitesAssertions(childSuite)
-  })
+    _overWriteSuitesAssertions(childSuite);
+  });
 }
 
 /**
@@ -96,16 +96,16 @@ function _overWriteSuitesAssertions (suite) {
  * number of contained assertions.
  */
 function _fillTestAssertions (refTest, test) {
-  test.assertions = []
-  test.errors = []
+  test.assertions = [];
+  test.errors = [];
 
   refTest.assertions.forEach(function (assertion) {
-    test.assertions.push(assertion)
-  })
+    test.assertions.push(assertion);
+  });
 
   refTest.errors.forEach(function (error) {
-    test.errors.push(error)
-  })
+    test.errors.push(error);
+  });
 }
 
 /**
@@ -114,12 +114,12 @@ function _fillTestAssertions (refTest, test) {
  */
 function _fillSuiteAssertions (refSuite, suite) {
   refSuite.tests.forEach(function (refTest, index) {
-    _fillTestAssertions(refTest, suite.tests[index])
-  })
+    _fillTestAssertions(refTest, suite.tests[index]);
+  });
 
   refSuite.childSuites.forEach(function (childSuite, index) {
-    _fillSuiteAssertions(childSuite, suite.childSuites[index])
-  })
+    _fillSuiteAssertions(childSuite, suite.childSuites[index]);
+  });
 }
 
 /**
@@ -128,13 +128,13 @@ function _fillSuiteAssertions (refSuite, suite) {
 function getTestCountsStart (refSuite) {
   var testCounts = {
     total: refSuite.tests.length
-  }
+  };
 
   refSuite.childSuites.forEach(function (childSuite) {
-    testCounts.total += getTestCountsStart(childSuite).total
-  })
+    testCounts.total += getTestCountsStart(childSuite).total;
+  });
 
-  return testCounts
+  return testCounts;
 }
 
 /**
@@ -147,197 +147,197 @@ function getTestCountsEnd (refSuite) {
     skipped: 0,
     todo: 0,
     total: refSuite.tests.length
-  }
+  };
 
   testCounts.passed += refSuite.tests.filter(function (test) {
-    return test.status === 'passed'
-  }).length
+    return test.status === 'passed';
+  }).length;
 
   testCounts.failed += refSuite.tests.filter(function (test) {
-    return test.status === 'failed'
-  }).length
+    return test.status === 'failed';
+  }).length;
 
   testCounts.skipped += refSuite.tests.filter(function (test) {
-    return test.status === 'skipped'
-  }).length
+    return test.status === 'skipped';
+  }).length;
 
   testCounts.todo += refSuite.tests.filter(function (test) {
-    return test.status === 'todo'
-  }).length
+    return test.status === 'todo';
+  }).length;
 
   refSuite.childSuites.forEach(function (childSuite) {
-    var childTestCounts = getTestCountsEnd(childSuite)
+    var childTestCounts = getTestCountsEnd(childSuite);
 
-    testCounts.passed += childTestCounts.passed
-    testCounts.failed += childTestCounts.failed
-    testCounts.skipped += childTestCounts.skipped
-    testCounts.todo += childTestCounts.todo
-    testCounts.total += childTestCounts.total
-  })
+    testCounts.passed += childTestCounts.passed;
+    testCounts.failed += childTestCounts.failed;
+    testCounts.skipped += childTestCounts.skipped;
+    testCounts.todo += childTestCounts.todo;
+    testCounts.total += childTestCounts.total;
+  });
 
-  return testCounts
+  return testCounts;
 }
 
 describe('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     describe(adapter + ' adapter', function () {
-      var keys = ['passed', 'actual', 'expected', 'message', 'stack', 'todo']
+      var keys = ['passed', 'actual', 'expected', 'message', 'stack', 'todo'];
 
       before(function (done) {
-        collectedData = []
-        runAdapters[adapter](_attachListeners.bind(null, done))
-      })
+        collectedData = [];
+        runAdapters[adapter](_attachListeners.bind(null, done));
+      });
 
       it('tests runtime should be a number', function () {
         collectedData.forEach(function (value) {
           if (value[0] === 'testEnd' && value[1].status !== 'skipped') {
-            expect(value[1].runtime).to.be.a('number')
+            expect(value[1].runtime).to.be.a('number');
           }
-        })
-      })
+        });
+      });
 
       it('testing tests errors prop', function () {
         var refTestsEnd = refData.filter(function (value) {
-          return value[0] === 'testEnd'
-        })
+          return value[0] === 'testEnd';
+        });
 
         var testsEnd = collectedData.filter(function (value) {
-          return value[0] === 'testEnd'
-        })
+          return value[0] === 'testEnd';
+        });
 
         refTestsEnd.forEach(function (value, index) {
-          var refTest = value[1]
-          var test = testsEnd[index][1]
+          var refTest = value[1];
+          var test = testsEnd[index][1];
 
           if (refTest.status === 'passed' || refTest.status === 'skipped') {
-            expect(test.errors).to.be.deep.equal(refTest.errors)
+            expect(test.errors).to.be.deep.equal(refTest.errors);
           } else {
-            expect(test.errors).to.have.lengthOf(refTest.errors.length)
+            expect(test.errors).to.have.lengthOf(refTest.errors.length);
 
             test.errors.forEach(function (error) {
-              expect(error).to.have.all.keys(keys)
+              expect(error).to.have.all.keys(keys);
 
-              expect(error.passed).to.be.false
-              expect(error.message).to.be.a('string')
-              expect(error.stack).to.be.a('string')
-            })
+              expect(error.passed).to.be.false;
+              expect(error.message).to.be.a('string');
+              expect(error.stack).to.be.a('string');
+            });
           }
-        })
-      })
+        });
+      });
 
       it('testing tests assertions prop', function () {
         var refTestsEnd = refData.filter(function (value) {
-          return value[0] === 'testEnd'
-        })
+          return value[0] === 'testEnd';
+        });
 
         var testsEnd = collectedData.filter(function (value) {
-          return value[0] === 'testEnd'
-        })
+          return value[0] === 'testEnd';
+        });
 
         refTestsEnd.forEach(function (value, index) {
-          var refTest = value[1]
-          var test = testsEnd[index][1]
+          var refTest = value[1];
+          var test = testsEnd[index][1];
 
           // Expect to contain the correct number of assertions, only for
           // test frameworks that provide all assertions.
           if (adapter !== 'Mocha') {
-            expect(test.assertions).to.have.lengthOf(refTest.assertions.length)
+            expect(test.assertions).to.have.lengthOf(refTest.assertions.length);
           }
 
           var passedAssertions = test.assertions.filter(function (assertion) {
-            return assertion.passed
-          })
+            return assertion.passed;
+          });
 
           var failedAssertions = test.assertions.filter(function (assertion) {
-            return !assertion.passed
-          })
+            return !assertion.passed;
+          });
 
           passedAssertions.forEach(function (assertion) {
-            expect(assertion).to.have.all.keys(keys)
+            expect(assertion).to.have.all.keys(keys);
 
-            expect(assertion.passed).to.be.true
-            expect(assertion.message).to.be.a('string')
-            expect(assertion.stack).to.be.undefined
-          })
+            expect(assertion.passed).to.be.true;
+            expect(assertion.message).to.be.a('string');
+            expect(assertion.stack).to.be.undefined;
+          });
 
           failedAssertions.forEach(function (assertion) {
-            expect(assertion).to.have.all.keys(keys)
+            expect(assertion).to.have.all.keys(keys);
 
-            expect(assertion.passed).to.be.false
-            expect(assertion.message).to.be.a('string')
-            expect(assertion.stack).to.be.a('string')
-          })
-        })
-      })
+            expect(assertion.passed).to.be.false;
+            expect(assertion.message).to.be.a('string');
+            expect(assertion.stack).to.be.a('string');
+          });
+        });
+      });
 
       refData.forEach(function (value, index) {
-        var testDescription = value[2]
+        var testDescription = value[2];
 
         it(testDescription, function () {
-          var refEvent = value[0]
-          var refTestItem = value[1]
-          var event = collectedData[index][0]
-          var testItem = collectedData[index][1]
+          var refEvent = value[0];
+          var refTestItem = value[1];
+          var event = collectedData[index][0];
+          var testItem = collectedData[index][1];
 
           // Set tests runtime to 0 to match the reference tests runtime.
           if (event === 'testEnd' && testItem.status !== 'skipped') {
-            collectedData[index][1].runtime = 0
+            collectedData[index][1].runtime = 0;
           }
 
           // Set suite tests runtime to 0, also for the globalSuite.
           if (event === 'suiteEnd' || event === 'runEnd') {
-            _setSuiteTestsRuntime(collectedData[index][1])
+            _setSuiteTestsRuntime(collectedData[index][1]);
           }
 
           // Set assertions to match those from data-refrence file.
           if (event === 'testEnd') {
             if (adapter === 'Mocha') {
-              _fillTestAssertions(refTestItem, testItem)
+              _fillTestAssertions(refTestItem, testItem);
             } else {
-              _overWriteTestAssertions(testItem)
+              _overWriteTestAssertions(testItem);
             }
           }
 
           // Set assertions to match thos from the data-refrence file.
           if (event === 'suiteEnd' || event === 'runEnd') {
             if (adapter === 'Mocha') {
-              _fillSuiteAssertions(refTestItem, testItem)
+              _fillSuiteAssertions(refTestItem, testItem);
             } else {
-              _overWriteSuitesAssertions(testItem)
+              _overWriteSuitesAssertions(testItem);
             }
           }
 
           // Verify suite self-setting props.
           if (event === 'suiteStart' || event === 'runStart') {
-            expect(testItem.status).to.be.undefined
-            expect(testItem.runtime).to.be.undefined
+            expect(testItem.status).to.be.undefined;
+            expect(testItem.runtime).to.be.undefined;
 
             expect(testItem.testCounts).to.be.deep
-              .equal(getTestCountsStart(refTestItem))
+              .equal(getTestCountsStart(refTestItem));
           }
 
           // Verify suite self-setting props.
           if (event === 'suiteEnd' || event === 'runEnd') {
-            var refStatus = value[3]
+            var refStatus = value[3];
 
-            expect(testItem.status).to.be.equal(refStatus)
+            expect(testItem.status).to.be.equal(refStatus);
 
             if (testItem.status !== 'skipped') {
-              expect(testItem.runtime).to.be.a('number')
+              expect(testItem.runtime).to.be.a('number');
               // Set suites runtime to 0, to pass the deep equal assertion.
-              _setSuitesRuntime(testItem)
+              _setSuitesRuntime(testItem);
             } else {
-              expect(testItem.runtime).to.be.undefined
+              expect(testItem.runtime).to.be.undefined;
             }
 
             expect(testItem.testCounts).to.be.deep
-              .equal(getTestCountsEnd(refTestItem))
+              .equal(getTestCountsEnd(refTestItem));
           }
 
-          expect(event).equal(refEvent)
-          expect(testItem).to.be.deep.equal(refTestItem)
-        })
-      })
-    })
-  })
-})
+          expect(event).equal(refEvent);
+          expect(testItem).to.be.deep.equal(refTestItem);
+        });
+      });
+    });
+  });
+});

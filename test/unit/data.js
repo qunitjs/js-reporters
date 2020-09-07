@@ -1,7 +1,7 @@
-var TestEnd = require('../../dist/js-reporters.js').TestEnd
-var TestStart = require('../../dist/js-reporters.js').TestStart
-var SuiteStart = require('../../dist/js-reporters.js').SuiteStart
-var SuiteEnd = require('../../dist/js-reporters.js').SuiteEnd
+var TestEnd = require('../../dist/js-reporters.js').TestEnd;
+var TestStart = require('../../dist/js-reporters.js').TestStart;
+var SuiteStart = require('../../dist/js-reporters.js').SuiteStart;
+var SuiteEnd = require('../../dist/js-reporters.js').SuiteEnd;
 
 module.exports = {
   passingTest: new TestEnd('pass', undefined, [], 'passed', 0, []),
@@ -35,4 +35,4 @@ module.exports = {
   endTest: new TestEnd('end', 'end', 'end end', 'failed', 0,
     [new Error('error')], []),
   endSuite: new SuiteEnd('end', 'end', [], [])
-}
+};

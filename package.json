@@ -15,7 +15,8 @@
     "build": "rollup -c",
     "prepublish": "npm run build",
     "pretest": "npm run build",
-    "test": "standard && npm run test-unit && npm run test-integration",
+    "lint": "semistandard",
+    "test": "npm run lint && npm run test-unit && npm run test-integration",
     "test-unit": "mocha --recursive test/unit/ && npm run test-browser",
     "test-browser": "karma start",
     "test-integration": "mocha test/integration/adapters.js",
@@ -45,9 +46,9 @@
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^3.3.1",
     "rollup-plugin-node-resolve": "^1.7.2",
+    "semistandard": "14.2.3",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
-    "standard": "^6.0.8",
     "webpack": "^1.0.0"
   },
   "commitplease": {

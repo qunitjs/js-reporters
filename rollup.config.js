@@ -1,12 +1,12 @@
-var fs = require('fs')
-var babel = require('rollup-plugin-babel')
-var nodeResolve = require('rollup-plugin-node-resolve')
-var commonjs = require('rollup-plugin-commonjs')
-var pkg = require('./package.json')
+var fs = require('fs');
+var babel = require('rollup-plugin-babel');
+var nodeResolve = require('rollup-plugin-node-resolve');
+var commonjs = require('rollup-plugin-commonjs');
+var pkg = require('./package.json');
 
 var licenseHeader = fs.readFileSync('license-header', {encoding: 'utf8'})
   .replace('@VERSION', pkg.version)
-  .replace('@DATE', (new Date()).toDateString())
+  .replace('@DATE', (new Date()).toDateString());
 
 module.exports = {
   entry: 'index.js',
@@ -21,4 +21,4 @@ module.exports = {
     commonjs(),
     babel()
   ]
-}
+};

@@ -1,11 +1,11 @@
-var JsReporters = require('../../dist/js-reporters.js')
-var SuiteStart = JsReporters.SuiteStart
-var SuiteEnd = JsReporters.SuiteEnd
-var TestStart = JsReporters.TestStart
-var TestEnd = JsReporters.TestEnd
+var JsReporters = require('../../dist/js-reporters.js');
+var SuiteStart = JsReporters.SuiteStart;
+var SuiteEnd = JsReporters.SuiteEnd;
+var TestStart = JsReporters.TestStart;
+var TestEnd = JsReporters.TestEnd;
 
-var noErrors = []
-var noAssertions = []
+var noErrors = [];
+var noAssertions = [];
 
 /**
  * All props are undefined, except "passed", because we don't know what they
@@ -19,7 +19,7 @@ var errors = [{
   message: undefined,
   stack: undefined,
   todo: undefined
-}]
+}];
 
 var failedAssertions = [{
   passed: false,
@@ -28,7 +28,7 @@ var failedAssertions = [{
   message: undefined,
   stack: undefined,
   todo: undefined
-}]
+}];
 
 var passedAssertions = [{
   passed: true,
@@ -37,93 +37,93 @@ var passedAssertions = [{
   message: undefined,
   stack: undefined,
   todo: undefined
-}]
+}];
 
-var globalTestStart = new TestStart('global test', undefined, ['global test'])
+var globalTestStart = new TestStart('global test', undefined, ['global test']);
 var globalTestEnd = new TestEnd('global test', undefined, ['global test'],
-    'passed', 0, noErrors, passedAssertions)
+  'passed', 0, noErrors, passedAssertions);
 
 var passingTestStart1 = new TestStart('should pass', 'suite with passing test',
-    ['suite with passing test', 'should pass'])
+  ['suite with passing test', 'should pass']);
 var passingTestEnd1 = new TestEnd('should pass', 'suite with passing test',
-    ['suite with passing test', 'should pass'], 'passed', 0, noErrors,
-    passedAssertions)
+  ['suite with passing test', 'should pass'], 'passed', 0, noErrors,
+  passedAssertions);
 
 var passingTestStart2 = new TestStart('should pass', 'suite with tests',
-    ['suite with tests', 'should pass'])
+  ['suite with tests', 'should pass']);
 var passingTestEnd2 = new TestEnd('should pass', 'suite with tests',
-    ['suite with tests', 'should pass'], 'passed', 0, noErrors,
-    passedAssertions)
+  ['suite with tests', 'should pass'], 'passed', 0, noErrors,
+  passedAssertions);
 
 var skippedTestStart1 = new TestStart('should skip', 'suite with skipped test',
-    ['suite with skipped test', 'should skip'])
+  ['suite with skipped test', 'should skip']);
 var skippedTestEnd1 = new TestEnd('should skip', 'suite with skipped test',
-    ['suite with skipped test', 'should skip'], 'skipped', undefined, noErrors,
-    noAssertions)
+  ['suite with skipped test', 'should skip'], 'skipped', undefined, noErrors,
+  noAssertions);
 
 var skippedTestStart2 = new TestStart('should skip', 'suite with tests',
-    ['suite with tests', 'should skip'])
+  ['suite with tests', 'should skip']);
 var skippedTestEnd2 = new TestEnd('should skip', 'suite with tests',
-    ['suite with tests', 'should skip'], 'skipped', undefined, noErrors,
-    noAssertions)
+  ['suite with tests', 'should skip'], 'skipped', undefined, noErrors,
+  noAssertions);
 
 var failingTestStart1 = new TestStart('should fail', 'suite with failing test',
-    ['suite with failing test', 'should fail'])
+  ['suite with failing test', 'should fail']);
 var failingTestEnd1 = new TestEnd('should fail', 'suite with failing test',
-    ['suite with failing test', 'should fail'], 'failed', 0, errors,
-    failedAssertions)
+  ['suite with failing test', 'should fail'], 'failed', 0, errors,
+  failedAssertions);
 
 var failingTestStart2 = new TestStart('should fail', 'suite with tests',
-    ['suite with tests', 'should fail'])
+  ['suite with tests', 'should fail']);
 var failingTestEnd2 = new TestEnd('should fail', 'suite with tests',
-    ['suite with tests', 'should fail'], 'failed', 0, errors,
-    failedAssertions)
+  ['suite with tests', 'should fail'], 'failed', 0, errors,
+  failedAssertions);
 
 var innerTestStart = new TestStart('inner test', 'inner suite',
-    ['outter suite', 'inner suite', 'inner test'])
+  ['outter suite', 'inner suite', 'inner test']);
 var innerTestEnd = new TestEnd('inner test', 'inner suite', ['outter suite',
-    'inner suite', 'inner test'], 'passed', 0, noErrors, passedAssertions)
+  'inner suite', 'inner test'], 'passed', 0, noErrors, passedAssertions);
 
 var outterTestStart = new TestStart('outter test', 'outter suite',
-    ['outter suite', 'outter test'])
+  ['outter suite', 'outter test']);
 var outterTestEnd = new TestEnd('outter test', 'outter suite', ['outter suite',
-    'outter test'], 'passed', 0, noErrors, passedAssertions)
+  'outter test'], 'passed', 0, noErrors, passedAssertions);
 
 var passingSuiteStart = new SuiteStart('suite with passing test',
-    ['suite with passing test'], [passingTestStart1], [])
+  ['suite with passing test'], [passingTestStart1], []);
 var passingSuiteEnd = new SuiteEnd('suite with passing test',
-    ['suite with passing test'], [passingTestEnd1], [])
+  ['suite with passing test'], [passingTestEnd1], []);
 
 var skippedSuiteStart = new SuiteStart('suite with skipped test',
-    ['suite with skipped test'], [skippedTestStart1], [])
+  ['suite with skipped test'], [skippedTestStart1], []);
 var skippedSuiteEnd = new SuiteEnd('suite with skipped test',
-    ['suite with skipped test'], [skippedTestEnd1], [])
+  ['suite with skipped test'], [skippedTestEnd1], []);
 
 var failingSuiteStart = new SuiteStart('suite with failing test',
-    ['suite with failing test'], [failingTestStart1], [])
+  ['suite with failing test'], [failingTestStart1], []);
 var failingSuiteEnd = new SuiteEnd('suite with failing test',
-    ['suite with failing test'], [failingTestEnd1], [])
+  ['suite with failing test'], [failingTestEnd1], []);
 
 var testSuiteStart = new SuiteStart('suite with tests', ['suite with tests'], [
   passingTestStart2,
   skippedTestStart2,
   failingTestStart2
-], [])
+], []);
 var testSuiteEnd = new SuiteEnd('suite with tests', ['suite with tests'], [
   passingTestEnd2,
   skippedTestEnd2,
   failingTestEnd2
-], [])
+], []);
 
 var innerSuiteStart = new SuiteStart('inner suite',
-  ['outter suite', 'inner suite'], [innerTestStart], [])
+  ['outter suite', 'inner suite'], [innerTestStart], []);
 var innerSuiteEnd = new SuiteEnd('inner suite', ['outter suite', 'inner suite'],
-  [innerTestEnd], [])
+  [innerTestEnd], []);
 
 var outterSuiteStart = new SuiteStart('outter suite', ['outter suite'],
-  [outterTestStart], [innerSuiteStart])
+  [outterTestStart], [innerSuiteStart]);
 var outterSuiteEnd = new SuiteEnd('outter suite', ['outter suite'],
-  [outterTestEnd], [innerSuiteEnd])
+  [outterTestEnd], [innerSuiteEnd]);
 
 var globalSuiteStart = new SuiteStart(undefined, [], [globalTestStart], [
   passingSuiteStart,
@@ -131,14 +131,14 @@ var globalSuiteStart = new SuiteStart(undefined, [], [globalTestStart], [
   failingSuiteStart,
   testSuiteStart,
   outterSuiteStart
-])
+]);
 var globalSuiteEnd = new SuiteEnd(undefined, [], [globalTestEnd], [
   passingSuiteEnd,
   skippedSuiteEnd,
   failingSuiteEnd,
   testSuiteEnd,
   outterSuiteEnd
-])
+]);
 
 module.exports = [
   ['runStart', globalSuiteStart, 'global suite starts'],
@@ -173,4 +173,4 @@ module.exports = [
   ['suiteEnd', innerSuiteEnd, 'inner suite ends', 'passed'],
   ['suiteEnd', outterSuiteEnd, 'outter suite ends', 'passed'],
   ['runEnd', globalSuiteEnd, 'global suite ends', 'failed']
-]
+];

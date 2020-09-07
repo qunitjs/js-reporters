@@ -1,10 +1,10 @@
-var Jasmine = require('jasmine')
-var QUnit = require('qunitjs')
-var Mocha = require('mocha')
-var JsReporters = require('../../dist/js-reporters.js')
-var path = require('path')
+var Jasmine = require('jasmine');
+var QUnit = require('qunitjs');
+var Mocha = require('mocha');
+var JsReporters = require('../../dist/js-reporters.js');
+var path = require('path');
 
-var testDir = path.join(__dirname, '../fixtures')
+var testDir = path.join(__dirname, '../fixtures');
 
 /**
  * Exports a function for each adapter that will run
@@ -12,51 +12,51 @@ var testDir = path.join(__dirname, '../fixtures')
  */
 module.exports = {
   Jasmine: function (attachListeners) {
-    var jasmine = new Jasmine()
-    var jasmineRunner
+    var jasmine = new Jasmine();
+    var jasmineRunner;
 
     jasmine.loadConfig({
       spec_dir: 'test/fixtures',
       spec_files: ['jasmine.js']
-    })
+    });
 
-    jasmineRunner = new JsReporters.JasmineAdapter(jasmine)
+    jasmineRunner = new JsReporters.JasmineAdapter(jasmine);
 
-    attachListeners(jasmineRunner)
+    attachListeners(jasmineRunner);
 
-    jasmine.execute()
+    jasmine.execute();
   },
 
   QUnit: function (attachListeners) {
-    var qunitRunner = new JsReporters.QUnitAdapter(QUnit)
+    var qunitRunner = new JsReporters.QUnitAdapter(QUnit);
 
-    attachListeners(qunitRunner)
+    attachListeners(qunitRunner);
 
-    QUnit.config.autorun = false
+    QUnit.config.autorun = false;
 
-    require(path.join(testDir, 'qunit.js'))
+    require(path.join(testDir, 'qunit.js'));
 
-    QUnit.load()
+    QUnit.load();
   },
 
   Mocha: function (attachListeners) {
-    var mocha = new Mocha()
-    var origWrite = process.stdout.write
-    var mochaRunner
+    var mocha = new Mocha();
+    var origWrite = process.stdout.write;
+    var mochaRunner;
 
-    mocha.addFile(path.join(testDir, 'mocha.js'))
+    mocha.addFile(path.join(testDir, 'mocha.js'));
 
-    mochaRunner = new JsReporters.MochaAdapter(mocha)
+    mochaRunner = new JsReporters.MochaAdapter(mocha);
 
-    attachListeners(mochaRunner)
+    attachListeners(mochaRunner);
 
     // Surpress output, so that Mocha's default reporter output will not be
     // displayed during testing.
-    process.stdout.write = function () {}
+    process.stdout.write = function () {};
 
     mocha.run(function () {
       // Restore output.
-      process.stdout.write = origWrite
-    })
+      process.stdout.write = origWrite;
+    });
   }
-}
+};
