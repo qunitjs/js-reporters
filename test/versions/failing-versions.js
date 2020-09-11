@@ -3,13 +3,16 @@
  */
 
 module.exports = {
-  // The package name 'qunitjs' is deprecated in favour of 'qunit'.
-  // It provides qunitjs@1.9.0 until qunitjs@2.4.1.
   qunitjs: [
+    // Used until qunitjs@2.4.1, later releases are under 'qunit'.
     '1.11.0',
     '1.12.0-pre',
     '1.12.0',
     '1.13.0'
+  ],
+  qunit: [
+    // qunit@2.4.1 and later:
+    // No known issues!
   ],
   jasmine: [
     // Jasmine 2.3.0: there is a bug that makes Jasmine exit and kill the process.
