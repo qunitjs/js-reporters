@@ -1,7 +1,7 @@
-/* eslint-env mocha */
+/* eslint-env qunit */
 /* eslint-disable no-unused-expressions */
 
-const expect = require('chai').expect;
+const { test } = QUnit;
 const refData = require('./reference-data.js');
 const runAdapters = require('./adapters-run.js');
 
@@ -150,21 +150,10 @@ function getTestCountsEnd (refSuite) {
     total: refSuite.tests.length
   };
 
-  testCounts.passed += refSuite.tests.filter(function (test) {
-    return test.status === 'passed';
-  }).length;
-
-  testCounts.failed += refSuite.tests.filter(function (test) {
-    return test.status === 'failed';
-  }).length;
-
-  testCounts.skipped += refSuite.tests.filter(function (test) {
-    return test.status === 'skipped';
-  }).length;
-
-  testCounts.todo += refSuite.tests.filter(function (test) {
-    return test.status === 'todo';
-  }).length;
+  testCounts.passed += refSuite.tests.filter(test => test.status === 'passed').length;
+  testCounts.failed += refSuite.tests.filter(test => test.status === 'failed').length;
+  testCounts.skipped += refSuite.tests.filter(test => test.status === 'skipped').length;
+  testCounts.todo += refSuite.tests.filter(test => test.status === 'todo').length;
 
   refSuite.childSuites.forEach(function (childSuite) {
     const childTestCounts = getTestCountsEnd(childSuite);
@@ -179,106 +168,89 @@ function getTestCountsEnd (refSuite) {
   return testCounts;
 }
 
-describe('Adapters integration', function () {
+QUnit.module('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
-    describe(adapter + ' adapter', function () {
+    QUnit.module(adapter + ' adapter', hooks => {
       const keys = ['passed', 'actual', 'expected', 'message', 'stack', 'todo'];
 
-      before(function (done) {
+      hooks.before(assert => {
+        const done = assert.async();
         collectedData = [];
         runAdapters[adapter](_attachListeners.bind(null, done));
       });
 
-      it('tests runtime should be a number', function () {
-        collectedData.forEach(function (value) {
+      test('Event "testEnd" runtime property', assert => {
+        collectedData.forEach(value => {
           if (value[0] === 'testEnd' && value[1].status !== 'skipped') {
-            expect(value[1].runtime).to.be.a('number');
+            assert.equal(typeof value[1].runtime, 'number');
           }
         });
       });
 
-      it('testing tests errors prop', function () {
-        const refTestsEnd = refData.filter(function (value) {
-          return value[0] === 'testEnd';
-        });
+      test('Event "testEnd" errors property', assert => {
+        const refTestsEnd = refData.filter(value => value[0] === 'testEnd');
+        const testsEnd = collectedData.filter(value => value[0] === 'testEnd');
 
-        const testsEnd = collectedData.filter(function (value) {
-          return value[0] === 'testEnd';
-        });
-
-        refTestsEnd.forEach(function (value, index) {
+        refTestsEnd.forEach((value, index) => {
           const refTest = value[1];
           const test = testsEnd[index][1];
 
           if (refTest.status === 'passed' || refTest.status === 'skipped') {
-            expect(test.errors).to.be.deep.equal(refTest.errors);
+            assert.deepEqual(test.errors, refTest.errors);
           } else {
-            expect(test.errors).to.have.lengthOf(refTest.errors.length);
+            assert.equal(test.errors.length, refTest.errors.length);
 
-            test.errors.forEach(function (error) {
-              expect(error).to.have.all.keys(keys);
+            test.errors.forEach(error => {
+              assert.deepEqual(Object.keys(error), keys);
 
-              expect(error.passed).to.be.false;
-              expect(error.message).to.be.a('string');
-              expect(error.stack).to.be.a('string');
+              assert.false(error.passed);
+              assert.strictEqual(typeof error.message, 'string');
+              assert.strictEqual(typeof error.stack, 'string');
             });
           }
         });
       });
 
-      it('testing tests assertions prop', function () {
-        const refTestsEnd = refData.filter(function (value) {
-          return value[0] === 'testEnd';
-        });
+      test('Event "testEnd" assertions property', assert => {
+        const refTestsEnd = refData.filter(value => value[0] === 'testEnd');
+        const testsEnd = collectedData.filter(value => value[0] === 'testEnd');
 
-        const testsEnd = collectedData.filter(function (value) {
-          return value[0] === 'testEnd';
-        });
-
-        refTestsEnd.forEach(function (value, index) {
+        refTestsEnd.forEach((value, index) => {
           const refTest = value[1];
           const test = testsEnd[index][1];
 
           // Expect to contain the correct number of assertions, only for
           // test frameworks that provide all assertions.
           if (adapter !== 'Mocha') {
-            expect(test.assertions).to.have.lengthOf(refTest.assertions.length);
+            assert.strictEqual(test.assertions.length, refTest.assertions.length);
           }
 
-          const passedAssertions = test.assertions.filter(function (assertion) {
-            return assertion.passed;
+          const passedAssertions = test.assertions.filter(assertion => assertion.passed);
+          const failedAssertions = test.assertions.filter(assertion => !assertion.passed);
+
+          passedAssertions.forEach(assertion => {
+            assert.deepEqual(Object.keys(assertion), keys);
+
+            assert.true(assertion.passed);
+            assert.strictEqual(typeof assertion.message, 'string');
+            assert.strictEqual(assertion.stack, undefined);
           });
 
-          const failedAssertions = test.assertions.filter(function (assertion) {
-            return !assertion.passed;
-          });
+          failedAssertions.forEach(assertion => {
+            assert.deepEqual(Object.keys(assertion), keys);
 
-          passedAssertions.forEach(function (assertion) {
-            expect(assertion).to.have.all.keys(keys);
-
-            expect(assertion.passed).to.be.true;
-            expect(assertion.message).to.be.a('string');
-            expect(assertion.stack).to.be.undefined;
-          });
-
-          failedAssertions.forEach(function (assertion) {
-            expect(assertion).to.have.all.keys(keys);
-
-            expect(assertion.passed).to.be.false;
-            expect(assertion.message).to.be.a('string');
-            expect(assertion.stack).to.be.a('string');
+            assert.false(assertion.passed);
+            assert.strictEqual(typeof assertion.message, 'string');
+            assert.strictEqual(typeof assertion.stack, 'string');
           });
         });
       });
 
-      refData.forEach(function (value, index) {
-        const testDescription = value[2];
+      refData.forEach((value, index) => {
+        const [refEvent, refTestItem, refTestDescription] = value;
 
-        it(testDescription, function () {
-          const refEvent = value[0];
-          const refTestItem = value[1];
-          const event = collectedData[index][0];
-          const testItem = collectedData[index][1];
+        test(refTestDescription, assert => {
+          const [event, testItem] = collectedData[index];
 
           // Set tests runtime to 0 to match the reference tests runtime.
           if (event === 'testEnd' && testItem.status !== 'skipped') {
@@ -310,33 +282,37 @@ describe('Adapters integration', function () {
 
           // Verify suite self-setting props.
           if (event === 'suiteStart' || event === 'runStart') {
-            expect(testItem.status).to.be.undefined;
-            expect(testItem.runtime).to.be.undefined;
+            assert.strictEqual(testItem.status, undefined);
+            assert.strictEqual(testItem.runtime, undefined);
 
-            expect(testItem.testCounts).to.be.deep
-              .equal(getTestCountsStart(refTestItem));
+            assert.deepEqual(testItem.testCounts, getTestCountsStart(refTestItem));
           }
 
           // Verify suite self-setting props.
           if (event === 'suiteEnd' || event === 'runEnd') {
             const refStatus = value[3];
 
-            expect(testItem.status).to.be.equal(refStatus);
+            assert.strictEqual(testItem.status, refStatus);
 
             if (testItem.status !== 'skipped') {
-              expect(testItem.runtime).to.be.a('number');
+              assert.strictEqual(typeof testItem.runtime, 'number');
               // Set suites runtime to 0, to pass the deep equal assertion.
               _setSuitesRuntime(testItem);
             } else {
-              expect(testItem.runtime).to.be.undefined;
+              assert.strictEqual(testItem.runtime, undefined);
             }
 
-            expect(testItem.testCounts).to.be.deep
-              .equal(getTestCountsEnd(refTestItem));
+            assert.deepEqual(testItem.testCounts, getTestCountsEnd(refTestItem));
           }
 
-          expect(event).equal(refEvent);
-          expect(testItem).to.be.deep.equal(refTestItem);
+          assert.strictEqual(event, refEvent);
+
+          // FIXME: Ref data has TestEnd#assertions as plain objects instead of Assertion objects.
+          // > not ok 6 Adapters integration > Jasmine adapter > global test ends
+          // actual  : assertions: [ Assertion { passed: true, … } ]
+          // expected: assertions: [ { passed: true, … } ]
+          // assert.deepEqual(testItem, refTestItem);
+          assert.propEqual(testItem, refTestItem);
         });
       });
     });

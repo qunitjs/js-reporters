@@ -1,111 +1,113 @@
-/* eslint-env mocha */
+/* eslint-env qunit */
 /* eslint-disable no-unused-expressions */
 
-const chai = require('chai');
+const { test } = QUnit;
 const chalk = require('chalk');
 const sinon = require('sinon');
-const EventEmitter = require('events').EventEmitter;
+const { EventEmitter } = require('events');
 const JsReporters = require('../../');
-const data = require('./data.js');
-const expect = chai.expect;
+const data = require('../fixtures/unit.js');
 
-chai.use(require('sinon-chai'));
+QUnit.module('Tap reporter', hooks => {
+  let emitter, sandbox;
 
-describe('Tap reporter', function () {
-  let emitter;
-
-  before(function () {
+  hooks.before(function () {
     emitter = new EventEmitter();
     JsReporters.TapReporter.init(emitter);
+    sandbox = sinon.sandbox.create();
   });
 
-  it('should output the TAP header', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  hooks.afterEach(function () {
+    sandbox.restore();
+  });
+
+  test('output the TAP header', assert => {
+    const spy = sandbox.stub(console, 'log');
 
     emitter.emit('runStart', {});
 
-    expect(spy).to.have.been.calledOnce;
-  }));
+    assert.true(spy.calledOnce);
+  });
 
-  it('should output ok for a passing test', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output ok for a passing test', assert => {
+    const spy = sandbox.stub(console, 'log');
     const expected = 'ok 1 ' + data.passingTest.fullName.join(' > ');
 
     emitter.emit('testEnd', data.passingTest);
 
-    expect(spy).to.have.been.calledWith(expected);
-  }));
+    assert.true(spy.calledWith(expected));
+  });
 
-  it('should output ok for a skipped test', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output ok for a skipped test', assert => {
+    const spy = sandbox.stub(console, 'log');
     const expected = chalk.yellow('ok 2 # SKIP ' + data.skippedTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.skippedTest);
 
-    expect(spy).to.have.been.calledWith(expected);
-  }));
+    assert.true(spy.calledWith(expected));
+  });
 
-  it('should output not ok for a todo test', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output not ok for a todo test', assert => {
+    const spy = sandbox.stub(console, 'log');
     const expected = chalk.cyan('not ok 3 # TODO ' + data.todoTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.todoTest);
 
-    expect(spy).to.have.been.calledWith(expected);
-  }));
+    assert.true(spy.calledWith(expected));
+  });
 
-  it('should output not ok for a failing test', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output not ok for a failing test', assert => {
+    const spy = sandbox.stub(console, 'log');
     const expected = chalk.red('not ok 4 ' + data.failingTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.failingTest);
 
-    expect(spy).to.have.been.calledWith(expected);
-  }));
+    assert.true(spy.calledWith(expected));
+  });
 
-  it('should output all errors for a failing test', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output all errors for a failing test', assert => {
+    const spy = sandbox.stub(console, 'log');
 
     emitter.emit('testEnd', data.failingTest);
     for (let i = 0; i < data.failingTapData.length; i++) {
-      expect(spy).to.have.been.calledWith(data.failingTapData[i]);
+      assert.true(spy.calledWith(data.failingTapData[i]));
     }
-  }));
+  });
 
-  it('should output actual value for failed assertions even it was undefined', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output actual value for failed assertions even it was undefined', assert => {
+    const spy = sandbox.stub(console, 'log');
 
     emitter.emit('testEnd', data.actualUndefinedTest);
 
-    expect(spy).to.have.been.calledWithMatch(/^ {2}actual {2}: undefined$/m);
-  }));
+    assert.true(spy.calledWithMatch(/^ {2}actual {2}: undefined$/m));
+  });
 
-  it('should output actual value for failed assertions even it was falsy', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output actual value for failed assertions even it was falsy', assert => {
+    const spy = sandbox.stub(console, 'log');
 
     emitter.emit('testEnd', data.actualFalsyTest);
 
-    expect(spy).to.have.been.calledWithMatch(/^ {2}actual {2}: 0$/m);
-  }));
+    assert.true(spy.calledWithMatch(/^ {2}actual {2}: 0$/m));
+  });
 
-  it('should output expected value for failed assertions even it was undefined', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output expected value for failed assertions even it was undefined', assert => {
+    const spy = sandbox.stub(console, 'log');
 
     emitter.emit('testEnd', data.expectedUndefinedTest);
 
-    expect(spy).to.have.been.calledWithMatch(/^ {2}expected: undefined$/m);
-  }));
+    assert.true(spy.calledWithMatch(/^ {2}expected: undefined$/m));
+  });
 
-  it('should output expected value for failed assertions even it was falsy', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output expected value for failed assertions even it was falsy', assert => {
+    const spy = sandbox.stub(console, 'log');
 
     emitter.emit('testEnd', data.expectedFalsyTest);
 
-    expect(spy).to.have.been.calledWithMatch(/^ {2}expected: 0$/m);
-  }));
+    assert.true(spy.calledWithMatch(/^ {2}expected: 0$/m));
+  });
 
-  it('should output the total number of tests', sinon.test(function () {
-    const spy = this.stub(console, 'log');
+  test('output the total number of tests', assert => {
+    const spy = sandbox.stub(console, 'log');
     const summary = '1..6';
     const passCount = '# pass 3';
     const skipCount = chalk.yellow('# skip 1');
@@ -122,10 +124,10 @@ describe('Tap reporter', function () {
       }
     });
 
-    expect(spy).to.have.been.calledWith(summary);
-    expect(spy).to.have.been.calledWith(passCount);
-    expect(spy).to.have.been.calledWith(skipCount);
-    expect(spy).to.have.been.calledWith(todoCount);
-    expect(spy).to.have.been.calledWith(failCount);
-  }));
+    assert.true(spy.calledWith(summary));
+    assert.true(spy.calledWith(passCount));
+    assert.true(spy.calledWith(skipCount));
+    assert.true(spy.calledWith(todoCount));
+    assert.true(spy.calledWith(failCount));
+  });
 });

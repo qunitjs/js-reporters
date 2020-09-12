@@ -1,7 +1,7 @@
 const path = require('path');
 const JsReporters = require('../../');
 
-const testDir = path.join(__dirname, '../fixtures');
+const testDir = path.join(__dirname, '../fixtures/integration');
 
 function rerequire (file) {
   const resolved = require.resolve(file);
@@ -19,7 +19,7 @@ module.exports = {
     const jasmine = new Jasmine();
 
     jasmine.loadConfig({
-      spec_dir: 'test/fixtures',
+      spec_dir: 'test/fixtures/integration',
       spec_files: ['jasmine.js']
     });
 
@@ -43,7 +43,8 @@ module.exports = {
     QUnit.load();
   },
   QUnit: function (attachListeners) {
-    const QUnit = require('qunit');
+    // Get a reporter context independent of the integration test suite itself
+    const QUnit = rerequire('qunit');
     global.QUnit = QUnit;
     QUnit.config.autorun = false;
 

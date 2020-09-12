@@ -1,26 +1,22 @@
-/* eslint-env mocha */
-const expect = require('chai').expect;
+/* eslint-env qunit */
+const { test } = QUnit;
 const failingVersionsRef = require('./failing-versions.js');
 const failingVersions = require('./versions-reporting.js');
 
-describe('Versions', function () {
-  it('qunit versions', function () {
-    expect(failingVersions.qunit).to.be.deep
-      .equal(failingVersionsRef.qunit);
+QUnit.module('Versions', function () {
+  test('qunit versions', assert => {
+    assert.deepEqual(failingVersions.qunit, failingVersionsRef.qunit);
   });
 
-  it('qunitjs versions', function () {
-    expect(failingVersions.qunitjs).to.be.deep
-      .equal(failingVersionsRef.qunitjs);
+  test('qunitjs versions', assert => {
+    assert.deepEqual(failingVersions.qunitjs, failingVersionsRef.qunitjs);
   });
 
-  it('jasmine versions', function () {
-    expect(failingVersions.jasmine).to.be.deep
-      .equal(failingVersionsRef.jasmine);
+  test('jasmine versions', assert => {
+    assert.deepEqual(failingVersions.jasmine, failingVersionsRef.jasmine);
   });
 
-  it('mocha versions', function () {
-    expect(failingVersions.mocha).to.be.deep
-      .equal(failingVersionsRef.mocha);
+  test('mocha versions', assert => {
+    assert.deepEqual(failingVersions.mocha, failingVersionsRef.mocha);
   });
 });

@@ -1,31 +1,28 @@
-/* eslint-env mocha */
+/* eslint-env qunit */
 /* eslint-disable no-unused-expressions */
 
-const chai = require('chai');
+const { test } = QUnit;
 const sinon = require('sinon');
 const JsReporters = require('../../');
-const data = require('./data.js');
-const expect = chai.expect;
+const data = require('../fixtures/unit.js');
 
-chai.use(require('sinon-chai'));
-
-describe('Helpers', function () {
+QUnit.module('Helpers', function () {
   const dummyFunc = function () {};
 
-  describe('autoregister', function () {
-    beforeEach(function () {
+  QUnit.module('autoregister', hooks => {
+    hooks.beforeEach(function () {
       global.QUnit = undefined;
       global.mocha = undefined;
       global.jasmine = undefined;
     });
 
-    afterEach(function () {
+    hooks.afterEach(function () {
       delete global.QUnit;
       delete global.mocha;
       delete global.jasmine;
     });
 
-    it('should register the QUnitAdapter', function () {
+    test('register the QUnitAdapter', assert => {
       global.QUnit = {
         begin: sinon.stub(),
         testStart: dummyFunc,
@@ -36,20 +33,20 @@ describe('Helpers', function () {
 
       JsReporters.autoRegister();
 
-      expect(global.QUnit.begin).to.have.been.calledOnce;
+      assert.true(global.QUnit.begin.calledOnce);
     });
 
-    it('should register the MochaAdapter', function () {
+    test('register the MochaAdapter', assert => {
       global.mocha = {
         reporter: sinon.stub()
       };
 
       JsReporters.autoRegister();
 
-      expect(global.mocha.reporter).to.have.been.calledOnce;
+      assert.true(global.mocha.reporter.calledOnce);
     });
 
-    it('should register the JasmineAdapter', function () {
+    test('register the JasmineAdapter', assert => {
       const spy = sinon.stub();
       global.jasmine = {
         getEnv: function () {
@@ -61,37 +58,37 @@ describe('Helpers', function () {
 
       JsReporters.autoRegister();
 
-      expect(spy).to.have.been.calledOnce;
+      assert.true(spy.calledOnce);
     });
 
-    it('should throw an error if no testing framework was found', function () {
-      expect(JsReporters.autoRegister).to.throw(Error);
+    test('should throw an error if no testing framework was found', assert => {
+      assert.throws(JsReporters.autoRegister, Error);
     });
   });
 
-  describe('create functions', function () {
-    it('should return a suite start', function () {
+  QUnit.module('create functions', function () {
+    test('return a suite start', assert => {
       const startSuite = JsReporters.createSuiteStart(data.startSuite);
 
-      expect(startSuite).to.be.deep.equal(data.startSuite);
+      assert.deepEqual(startSuite, data.startSuite);
     });
 
-    it('should return a test start', function () {
+    test('return a test start', assert => {
       const startTest = JsReporters.createTestStart(data.startTest);
 
-      expect(startTest).to.be.deep.equal(data.startTest);
+      assert.deepEqual(startTest, data.startTest);
     });
 
-    it('should return a test end', function () {
+    test('return a test end', assert => {
       const endTest = JsReporters.createTestEnd(data.endTest);
 
-      expect(endTest).to.be.deep.equal(data.endTest);
+      assert.deepEqual(endTest, data.endTest);
     });
 
-    it('should return a suite end', function () {
+    test('return a suite end', assert => {
       const endSuite = JsReporters.createSuiteEnd(data.endSuite);
 
-      expect(endSuite).to.be.deep.equal(data.endSuite);
+      assert.deepEqual(endSuite, data.endSuite);
     });
   });
 });
