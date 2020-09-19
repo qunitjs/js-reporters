@@ -27,111 +27,17 @@ Would _you_ be interested in discussing this with us further? Please join in!
 
 https://github.com/js-reporters/js-reporters/issues/
 
-## Draft Proposal
+## Specification
 
-### Event Names
+See [CRI Specification](docs/cri-draft.md).
 
-Based on the discussion in [#1](https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874), this is the suggested _minimum_ set of event names to be triggered by a testing framework, to be consumed by reporters or other testing tools.
+### Details
 
-- `runStart`: Indicates the beginning of a testsuite, triggered just once.
-- `suiteStart`: Triggered at the start of each group of tests within a testsuite.
-- `testStart`: Triggered at the start of each test.
-- `testEnd`: Triggered at the end of each test.
-- `suiteEnd`:  Triggered at the end of each group of tests within a testsuite.
-- `runEnd`:  Indicates the end of a testsuite, triggered just once.
-
-#### Selection Criteria
-
-The criteria for picking these event names included:
-
-- These use the most common terms across a selection of frameworks, as gathered in [#1](https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874)
-- It uses names that are valid JavaScript identifiers, which allows using those as keys in JSON and avoids the need to quote keys in regular JS objects or function calls.
-- It doesn't overlap with any known existing events, so introducing these could be done in parallel to the existing API in each framework, optionally deprecating and eventually removing the previous API.
-
-#### Reporting Order
-
-The recommended **reporting order** for emitting the aformentioned events with their related data should be done in **source order**. Please note that execution order is different from reporting order, that's why we don't assume any specific execution order, but we recommend whatever is higher up in the source file should be emitted first.
-
-For more background check [#62](https://github.com/js-reporters/js-reporters/issues/62).
-
-### Event Data
-
-Based on the discussion in [#12](https://github.com/js-reporters/js-reporters/issues/12#issuecomment-120483356), there are two basic data structures: **Suites** and **Tests**. A test represents an atomic test/spec/`it()`. A suite contains tests and optionally other suites.
-
-The structures have been divided in two parts, a start part and an end part:
-
-- SuiteStart
-- SuiteEnd
-- TestStart
-- TestEnd
-
-For `testStart` and `testEnd`, the corresponding TestStart, respectively TestEnd, object is passed to the reporter. The same applies to `suiteStart` and `suiteEnd` where the matching SuiteStart/SuiteEnd object is passed to the reporter. For `runStart` and `runEnd` a "global" suite object is passed to the reporter, this suite wraps all other top-level user defined suites as its child suites, it will be reffered to as `globalSuite`.
-
-The data structures are defined as follows:
-
-- **SuiteStart**: `Object` - A SuiteStart is a collection of test-starts and potentially other suite-starts, emitted before the suite have been executed, which means before executing any of its tests and child suites.
-  - **name**: `String|undefined` - name of the suite, will be `undefined` only for the `globalSuite`.
-  - **fullname**: `Array` - array of strings containing the name of the suite and the names of all its suites ancestors.
-  - **tests**: `Array` - array containing all tests that directly belong to the suite (but not to a child suite).
-  - **childSuites**: `Array` - array with all direct subsuites.
-  - **testCounts**: `Object` - contains the total number of tests in the suite, including the tests of the child suites.
-    - **total**: `Number` - total number of tests
-
-- **SuiteEnd**: `Object` - A SuiteEnd is a collection of test-ends and potentially other suite-ends, emitted after the suite has been executed, which means that all its tests and child suites have been also executed. **In addition** to the properties of `SuiteStart`, `SuiteEnd` also has the following properties:
-  - **status**: `String` - summarized status of the suite.
-    - `failed`, if at least one test in the suite or in its child suites has failed.
-    - `skipped`, if all tests in the suite and in its child suites are skipped (and there is at least one skipped test).
-    - `todo`, if all tests in the suite and in its child suites are todo (and there is at least one todo test).
-    - `passed`, if there is at least one passed test in the suite or in its child suites and all other tests are skipped or todo, or if there are no tests in the suite.
-  - **testCounts**: `Object` - contains how many tests have passed, failed etc. including the tests of child suites.
-    - **passed**: `Number` - number of passed tests.
-    - **failed**: `Number` - number of failed tests.
-    - **skipped**: `Number` - number of skipped tests.
-    - **todo**: `Number` - number of todo tests.
-    - **total**: `Number` - total number of tests, the sum of the above properties must equal this one.
-  - **runtime**: `Number` - execution time of the whole suite in milliseconds (including child suites).
-
-The above `suite properties` apply also for the `globalSuite`.
-
-- **TestStart**: `Object` - A test-start holds basic information on a single test/spec before its execution.
-  - **name**: `String` - name of the test.
-  - **suiteName**: `String` - name of the suite the test belongs to.
-  - **fullName**: `Array` - array of strings containing the name of the test and the names of all its suites ancestors.1
-
-- **TestEnd**: `Object` - A test-end holds basic information on a single test/spec after its execution.
-  - **name**: `String` - name of the test.
-  - **suiteName**: `String` - name of the suite the test belongs to.
-  - **fullName**: `Array` - array of strings containing the name of the test and the names of all its suites ancestors.
-  - **status**: `String` - result of the test. Can be:
-    - `passed`, if all assertions have passed.
-    - `failed`, if at least one assertion has failed or if the test is todo and all assertions passed.
-    - `skipped`, if the test is disabled and wasn't executed.
-    - `todo`, if the test is todo and at least one assertion failed.*
-  - **runtime**: `Number` - execution time in milliseconds.
-  - **errors**: `Array` - array containing all errors, i.e failed Assertions. It will contain at least one error for failed statuses and it will be empty for statuses other than failed.
-  - **assertions**: `Array` - array of Assertions containing all assertions passed and failed, for a skipped test there will be an empty array. Frameworks that don't track passed assertions can always provide an empty array for passed tests. In that case, for failed tests this should match the errors property.
-
-_*For more info about todo tests, please refer to the [QUnit documentation for todo tests](https://api.qunitjs.com/QUnit.todo/) and the [TAP 13 specification on the todo directive](https://testanything.org/tap-version-13-specification.html#directives)_.
-
-Based on the discussion in [#79](https://github.com/js-reporters/js-reporters/issues/79), js-reporters establishes also a minimum set of properties for the emitted assertions, failed or passed:
-
-- **Assertion**: `Object` - An object which contains information of a single assertion/expectation.
-  - **passed**: `Boolean` - `true` for a passed assertion, `failed` for a failed assertion.
-  - **actual**: `*` - the actual value passed to the assertion, should coincide with `expected` for passed assertions.
-  - **expected**: `*` - the expected value passed to the assertion, should coincide with `actual` for passed assertions.
-  - **message**: `String` - a description.
-  - **stack**: `String|undefined` - represents the stack trace for a failed assertion, for a `passed` one it is `undefined`.
-  - **todo**: `Boolean` - whether this assertion was part of a todo test
-
-Additional properties (not defined here) can be added to the Assertion object. If Assertion objects are included in the Test and Suite objects defined above, it is recommended to remove the `actual` and `expected` values after `TestEnd` occurs to avoid leaking memory.
-
-## Details
-
-For details please check out the [docs](docs) and especially the [example](docs/example.md) which presents a testsuite and its reporting data based on the standard presented above.
+For details please check out the [docs](docs/) and especially the [example](docs/example.md) which presents a testsuite and its reporting data based on the standard presented above.
 
 For implementation examples please check [Usage of the adapters](#usage-of-the-adapters) and [Integrations](#integrations).
 
-## Usage of the adapters
+## Usage
 
 Listen to the events and receive the emitted data:
 
@@ -162,7 +68,7 @@ runner.on('runEnd', function(globalSuite) {
 JsReporters.TapReporter.init(runner);
 ```
 
-## API
+### API
 
 **autoRegister()**
 
