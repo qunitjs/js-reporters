@@ -1,4 +1,4 @@
-Lets take the below testsuite and see how the reporting should be, based on the standard.
+# Example
 
 ```js
 
@@ -20,9 +20,9 @@ describe('suite 1', function() {
 });
 ```
 
-The emitted events and data will be in the following order:
+For the above Mocha test suite, the following events and even data are expected to be emitted by a CRI-compliant interface (Common Reporter Interface):
 
-- **runStart**: 
+- **runStart**:
 
 ```js
 Suite {

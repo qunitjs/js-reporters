@@ -1,7 +1,9 @@
 # Frameworks flow
-This document is intended to explain all differences between testing frameworks.
+
+This document studies the differencess between various JavaScript testing frameworks.
 
 ## Mocha
+
 [Mocha](https://github.com/mochajs/mocha) is a testing framework without builtin assertions, this is why it is not checking tests
 for at least one assertion, so in our Mocha specific [test fixture](https://github.com/js-reporters/js-reporters/blob/master/test/fixtures/mocha.js)
 we can have empty tests.
@@ -65,25 +67,24 @@ Execution flow:
 
 This is the execution of the above test fixture, as you can see the `d suite` is not executed.
 
-Mocha has also an open [issue](https://github.com/mochajs/mocha/issues/902) for random test execution.
+Mocha has an open [issue](https://github.com/mochajs/mocha/issues/902) for random test execution.
 
 ## QUnit
 
-[QUnit](http://qunitjs.com/) is a testing framework with builtin assertion, so it is checking tests for at least one assertion, if it does not find one, the test will fail with an error thrown by QUnit itself.
+[QUnit](https://qunitjs.com/) is a testing framework with builtin assertion, so it is checking tests for at least one assertion, if it does not find one, the test will fail with an error thrown by QUnit itself.
 
-Tests are grouped in modules, which can be also nested from [1.20.0 version](https://github.com/jquery/qunit/blob/master/History.md#1200--2015-10-27). Tests can be placed outside a module, we call them also *global tests*.
+Tests are grouped in modules, which can be also nested since [QUnit 1.20](https://github.com/qunitjs/qunit/releases/tag/1.20.0). Tests can be placed outside a module, we call them *global tests*.
 
-Internally QUnit has a global module, where global tests are putted, but it does not wrap the other modules into it. To emit a global suite on our *runStart/runEnd* events we must access QUnit internals, *QUnit.config.modules* which is a linear array that will contain all modules, even the nested ones.
+Internally, QUnit has an implicit global module to hold any global tests. Note that user-defined modules are siblings of the global one, not nested within it. To emit a global suite on our *runStart/runEnd* events we must access QUnit internals, *QUnit.config.modules* which is a linear array that will contain all modules, even the nested ones.
 
-An interesting fact of *QUnit.config.modules* is that it will not contain the *global module* if it does not have at least
-one test, but it will contain all other modules, even if they do not have a test.
+An interesting fact of *QUnit.config.modules* is that it will not contain the implicit *global module* unless it has at least one test, but it will contain all user-defined modules, even if they do not have a test.
 
 Test particularities:
-  * skipped tests have a numeric value for their runtime
+  * skipped tests have a numeric value for their runtime.
 
-Modules particularities:
-  * the start and end of a module, even the global one, are emitted only if the suite itself contains at least one test
-  * nested modules have a concatenated name, from the outer most suite to the inner most
+Module particularities:
+  * the start and end of a module, even the global one, are emitted only if the suite itself contains at least one test.
+  * nested modules have a concatenated name, from the outer most suite to the inner most.
 
 The execution is done in the source order, but QUnit has a more flat style for nested modules, it emits the start of a module, emits its tests, then the module ends and starts another, even if the modules were nested, there is not a sort of recursion between the modules.
 
@@ -152,19 +153,20 @@ The *QUnit.config.modules* will contain 5 modules:
   4. module *a > d*
 
 **The above execution flow is the default one**, QUnit has also 2 options that randomizes tests execution:
-  1. the [reorder](http://api.qunitjs.com/QUnit.config/) option that on a rerun, runs firstly the failed tests, it is activated by default
-  2. the [seed](http://api.qunitjs.com/QUnit.config/) option that randomizes tests execution, it is disabled by default
+  1. the [reorder](https://api.qunitjs.com/config/QUnit.config/) option that on a rerun, runs firstly the failed tests, it is activated by default
+  2. the [seed](https://api.qunitjs.com/config/QUnit.config/) option that randomizes tests execution, it is disabled by default
 
 **The QUnit.config.modules will always contain the suites in the same order!**
 
 ## Jasmine
-[Jasmine](http://jasmine.github.io/) is another testing framework with builtin assertions. Tests will pass even without containing any assertion.
+
+[Jasmine](https://jasmine.github.io/) is another testing framework with builtin assertions. Tests will pass, even if they have no assertions.
 
 Tests are grouped in suites, which can be nested. Tests can be placed also outside a suite, then they will belong to Jasmine's global suite.
 
 To obtain information about the relationships between tests and suites can be achieved only through Jasmines's `topSuite`, because the objects emitted on Jasmine specific events contain only plain data about the test/suite in cause.
 
-Tests and suites objects contain always a unique id assigned by Jasmine itself. 
+Tests and suites objects contain always a unique id assigned by Jasmine itself.
 
 Test particularities:
 * tests have no `runtime` prop

@@ -5,31 +5,27 @@
 [![npm](https://img.shields.io/npm/v/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
 [![npm](https://img.shields.io/npm/l/js-reporters.svg?maxAge=2592000)](https://www.npmjs.com/package/js-reporters)
 
-The Common Reporter Interface (CRI) for JavaScript Unit Testing Frameworks.
+The Common Reporter Interface (CRI) for JavaScript Testing Frameworks.
 
 | Avoid this:                | Do this:                         |
 |----------------------------|----------------------------------|
 | ![](img/situation-now.png) | ![](img/situation-expected.png)  |
 
-## Centralized Discussions
-
-https://github.com/js-reporters/js-reporters/issues/
 
 ## Background
 
-We on the [QUnit](http://qunitjs.com/) team have been [discussing](https://github.com/qunitjs/qunit/issues/531) the possibility of working with other JS test frameworks, especially those that can be run client-side (e.g. Mocha, Jasmine, Intern, Buster, etc.), to agree upon a "Common Reporter Interface" so that we could hopefully share Reporter plugins between testing frameworks. This would also benefit high-level consumers of the frameworks such as Karma, BrowserStack, SauceLabs, Testling, etc.
+In 2014, the [QUnit](https://qunitjs.com/) team started [discussing](https://github.com/qunitjs/qunit/issues/531) the possibility of interoperability between JavaScript test frameworks such as QUnit, Mocha, Jasmine, Intern, Buster, etc. The "Common Reporter Interface" would be an allow integrations for output formats and communication bridges to be shared between frameworks. This would also benefit high-level consumers of these frameworks such as Karma, BrowserStack, SauceLabs, Testling, by having a standard machine-readable interface.
 
-This would most likely come in the form of:
+Our mission is to deliver:
 
-- a common Reporter API/Interface, e.g.
-  - an EventEmitter interface (`.on(...)`/`.off(...)`) _**OR**_ an object with standard "hook" properties
-  - _maybe_ a standard-ish way to register a Reporter, e.g. `MyLib.addReporter(x)`, `MyLib.reporter = x;`, etc.
-- a minimum viable set of standardly-named events
-  - an associated standard set of data/details provided for each event
-- a minimum viable set of standard test status types (e.g. pass, fail, skip, todo, pending, etc.)
-- updating all participating test frameworks to support this new common Reporter interface
+- a common JavaScript API, e.g. based on EventEmitter featuring `.on()` and `.off()`.
+- a minimum viable set of events with standardized event names and event data.
+- a minimum viable set of concepts behind those events to allow consumers to set expectations (e.g. define what "pass", "fail", "skip", "todo", and "pending" mean).
+- work with participating test frameworks to support the Common Reporter Interface.
 
 Would _you_ be interested in discussing this with us further? Please join in!
+
+https://github.com/js-reporters/js-reporters/issues/
 
 ## Draft Proposal
 
