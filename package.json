@@ -38,6 +38,7 @@
       "Release",
       "Reporter",
       "Test",
+      "Spec",
       "Docs"
     ]
   }

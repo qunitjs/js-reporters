@@ -1,0 +1,379 @@
+= Common Reporter Interface - Working Draft
+:sectanchors:
+:sectlinks:
+:sectnums:
+:toc: macro
+:toclevels: 2
+:toc-title:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+
+Participate::
+  https://github.com/js-reporters[GitHub js-reporters/js-reporters] (https://github.com/js-reporters/issues/new[new issue], https://github.com/js-reporters/issues[open issues]) +
+  https://gitter.im/qunitjs/qunit[Chat room on Gitter]
+
+Last updated::
+  19 September 2020
+
+Abstract::
+  This specification defines APIs for reporting progress and results of JavaScript-based test suites.
+
+Goal::
+  This specification is meant to be implemented by testing frameworks and consumed by reporters.
+
+toc::[]
+
+== Terminology
+
+Testing framework::
+  A testing framework is a program that helps define, organize, load, or execute software tests through assertions. (https://en.wikipedia.org/wiki/Test_automation[Learn more])
+
+Assertion::
+  An assertion is a logical preposition required to evaluate to true. Developers and testing frameworks may decide how assertions are evaluated, so long as they produce a single boolean outcome. Assertions must be part of a "Test". (link:https://en.wikipedia.org/wiki/Assertion_(software_development)[Learn more])
+
+Passing assertion::
+  An assertion that evaluated to boolean true.
+
+Failed assertion::
+  An assertion that evaluated to boolean false.
+
+[[test]] Test::
+  A test is a named group representing zero or more assertions. It is recommended that all tests contain assertions. But, a testing frameworks may choose to only record failed assertions, and thus may report a Test as having no assertions. +
+   +
+  In QUnit, a test may be defined by calling `QUnit.test()`. +
+  In Mocha and Jasmine BDD, a test may be known as a "spec", defined by calling `it()`.
+
+Skipped test::
+  A <<test>> that was not executed by the testing framework. Testing frameworks may have ways of selecting, partially loading, filtering, or otherwise skipping tests. These implementation choices may mean that some tests are not considered part of the <<run>>, and thus entirely left out of the information exposed to reporters. Presence of a skipped test does not imply that all skipped tests will be reported. +
+   +
+  See also the `SKIP` directive of the https://testanything.org/tap-version-13-specification.html#directives[TAP specification].
+
+Todo test::
+  A <<test>> that is expected to have one or more known failing assertions. +
+   +
+  See also the `TODO` directive of the https://testanything.org/tap-version-13-specification.html#directives[TAP specification].
+
+[[suite]] Suite::
+  A suite is a named group representing zero or more tests, and zero or more other test suites. A suite that is part of another suite may also be called a "child suite". A suite that holds one or more child suites may also be called an "ancestor suite". +
+  (https://en.wikipedia.org/wiki/Test_case[Learn more]) +
+   +
+  In QUnit, a suite may be known as a "module", defined by calling `QUnit.module()`. +
+  In Mocha and Jasmine BDD, a suite is defined by calling `describe()`. +
+  In JUnit and xUnit-derivatives, tests are first grouped in a `TestCase` which are then further grouped under a `<testsuite>`. In the CRI standard, both of these are considered a suite.
+
+[[run]] Run::
+  A run is the single top-level group representing all tests and test suites loaded together into a testing framework.
+
+Reporter::
+  A reporter is a software program that consumes information from a run to then display, store, and/or transport this information in some way. For example to render an HTML graphical user interface, write command-line output in the https://testanything.org/[TAP] format, write results to a https://llg.cubic.org/docs/junit/[JUnit XML] artifact file, or serialize the information and transfer it over a socket to another server or process.
+
+[TIP]
+=====
+The use of "Suite" and "Test" as the main two data structues was decided in in https://github.com/js-reporters/js-reporters/issues/12[issue #12].
+=====
+
+== Events
+
+These are the events that a testing framework should emit from its <<runner-api>>, and may be consumed by reporters.
+
+[TIP]
+=====
+These events were selected as:
+
+- common across known testing frameworks, as gathered in https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874[issue #1].
+- valid JavaScript identifiers, allowing use as variable name and as object literal key without quotes.
+- not overlapping with existing events in known testing frameworks, for easy adoption in existing APIs.
+=====
+
+=== Reporting order
+
+It is recommended that events about suites and tests are emitted in **source order**, based on how the tests are defined by the developer in their source code. This means results of tests defined is higher up in a source file should be emitted earlier than those defined lower down in the file.
+
+Note that execution order may be different from reporting order. If a testing framework uses concurrency or random seeding for its execution, we recommend that events are still consistently emitted in the source order.
+
+[TIP]
+=====
+Read https://github.com/js-reporters/js-reporters/issues/62[issue #62] for the discussion about reporting order.
+=====
+
+=== Event `runStart`
+
+The **runStart** event indicates the beginning of a <<run>>. It must be emitted to a reporter exactly once, before any <<event-suitestart>>.
+
+Callback parameters:
+
+* <<suitestart>> **globalSuite**: Describes an implicit <<suite>> that wraps all top-level suites loaded by the framework.
+
+[source,javascript]
+----
+runner.on('runStart', (globalSuite) => { … });
+----
+
+=== Event `runEnd`
+
+The **runEnd** event indicates the end of a <<run>>. It must be emitted to a reporter exactly once, after the last <<event-suiteend>>.
+
+Callback parameters:
+
+* <<suiteend>> **globalSuite**: Describes an implicit <<suite>> that wraps all top-level suites loaded by the framework.
+
+[source,javascript]
+----
+runner.on('runEnd', (globalSuite) => { … });
+----
+
+=== Event `suiteStart`
+
+The **suiteStart** event indicates the beginning of a <<suite>>. It must eventually be followed by a corresponding <<event-suiteend>>.
+
+Callback parameters:
+
+* <<suitestart>> **suite**: Describes a <<suite>>.
+
+[source,javascript]
+----
+runner.on('suiteStart', (suite) => { … });
+----
+
+=== Event `suiteEnd`
+
+The **suiteEnd** event indicates the end of a <<suite>>. It must be emitted after its corresponding <<event-suiteend>>, and after the last <<event-testend>> of any test belonging to this suite, and after the last <<event-suiteend>> of any child suite belonging to this suite.
+
+Callback parameters:
+
+* <<suiteend>> **suite**: Describes a <<suite>> and each of its tests and child suites.
+
+[source,javascript]
+----
+runner.on('suiteEnd', (suite) => { … });
+----
+
+=== Event `testStart`
+
+The **testStart** event emitted at the beginning of each <<test>>. It must eventually be followed by a corresponding <<event-testend>>.
+
+Callback parameters:
+
+* <<teststart>> **test**: Describes a <<test>>.
+
+[source,javascript]
+----
+runner.on('testStart', (test) => { … });
+----
+
+=== Event `testEnd`
+
+The **testEnd** event is emitted at the end of each <<test>>. It must be emitted after its corresponding <<event-suitestart>>.
+
+Callback parameters:
+
+* <<testend>> **test**: Describes a <<test>> and its assertions.
+
+[source,javascript]
+----
+runner.on('testEnd', (test) => { … });
+----
+
+== Event data
+
+The following data structures must be implemented as objects that have the specified fields as own properties. The objects are not required to be an instance of any specific class. They may be null-inherited objects, plain objects, or an instance of any public or private class.
+
+=== SuiteStart
+
+A **SuiteStart** is a collection of TestStart and other SuiteStart objects.
+
+`SuiteStart` object:
+
+* `string|undefined` **name**: Name of the suite, or `undefined` for the `globalSuite`.
+* `Array` **fullname**: List of strings containing the name of the suite and the names of all its ancestor suites.
+* `Array<TestStart>` **tests**: List of all tests that belong directly to the suite (not a child suite), as <<teststart>> objects.
+* `Array<SuiteStart>` **childSuites**: List of all direct child suites, as <<suitestart>> objects.
+* `Object` **testCounts**: Aggregate counts about all tests in the suite, including from child suites.
+** `number` **total**: Total number of known tests
+
+=== SuiteEnd
+
+A **SuiteEnd** is a collection of TestEnd and other SuiteEnd objects, emitted after the suite has been executed, which means that all its tests and child suites have been also executed.
+
+`SuiteEnd` object:
+
+* `string|undefined` **name**: Name of the suite, or `undefined` for the `globalSuite`.
+* `Array` **fullname**: List of strings containing the name of the suite and the names of all its ancestor suites.
+* `Array<TestEnd>` **tests**: List of all tests that belong directly to the suite (not a child suite), as <<testend>> objects.
+* `Array<SuiteEnd>` **childSuites**: List of all direct child suites, as <<suiteend>> objects.
+* `string` **status**: Aggregate result status of the suite, one of:
+** **failed** if at least one test in the suite or in its child suites has failed.
+** **skipped**, if all tests in the suite and in its child suites were skipped (and there was at least one skipped test).
+** **todo**, if all tests in the suite and in its child suites were todo (and there was at least one todo test).
+** **passed**, if were no failed tests in this suite or in any child suites, this means there was at least one test that executed and passed or there are no tests in this suite.
+* `Object` **testCounts**: Aggregate counts about all tests in the suite, including from child suites.
+** `number` **passed**: Number of passed tests.
+** `number` **failed**: Number of failed tests.
+** `number` **skipped**: Number of skipped tests.
+** `number` **todo**: Number of todo tests.
+** `number` **total**: Total number of known tests, the sum of the above properties must equal this one.
+* `number` **runtime**: Execution time of the whole suite in milliseconds, including child suites.
+
+=== TestStart
+
+A **TestStart** holds basic information about a <<test>> as it is known before execution.
+
+`TestStart` object:
+
+* `string` **name**: Name of the test.
+* `string|undefined` **suiteName**: Name of the suite the test belongs to, or `undefined` for the `globalSuite`.
+* `Array<string>` **fullName**: List of strings containing the name of the test, and the names of all ancestor suites.
+
+=== TestEnd
+
+A **TestEnd** holds information about a <<test>> as captured after any execution. This is a superset of <<teststart>>.
+
+`TestEnd` object:
+
+* `string` **name**: Name of the test.
+* `string|undefined` **suiteName**: Name of the suite the test belongs to, or `undefined` for the `globalSuite`.
+* `Array<string>` **fullName**: List of strings containing the name of the test, and the names of all ancestor suites.
+* `string` **status**: Result of the test, one of:
+** **passed**, if all assertions have passed, or if no assertions were recorded.
+** **failed**, if at least one assertion has failed or if the test is todo and its assertions unexpectedly all passed.
+** **skipped**, if the test was intentionally not executed.
+** **todo**, if the test is todo and indeed has at least one failing assertion still.
+* `number` **runtime**: Execution time in milliseconds.
+* `Array<Assertion>` **errors**: List of failed <<assertion>> objects. It will contain at least one error for failed statuses and it will be empty for statuses other than failed.
+* `Array<Assertion>` **assertions**: List of both passed and failed Assertion objects. For a skipped test, this must be an empty array. Testing frameworks that don't record passed assertions may set an empty array for passed tests, and for failed tests in that case this list should contain the same objects as the errors list.
+
+=== Assertion
+
+The **Assertion** object contains information about a single <<assertion>>.
+
+`Assertion` object:
+
+* `boolean` **passed**: Set to `true` for a passed assertion, `false` for a failed assertion.
+* `Mixed` **actual**: The actual value passed to the assertion, should be similar to `expected` for passed assertions.
+* `Mixed` **expected**: The expected value passed to the assertion, should be similar to `actual` for passed assertions.
+* `string` **message**: Name of the actual value, or description of what the assertion validates.
+* `string|undefined` **stack**: Optional stack trace. For a "passed" assertion, it is always `undefined`.
+* `boolean` **todo**: Whether this assertion was part of a todo test.
+
+It is allowed for additional non-standard properties to be added to am Assertion object, by the testing framework or a reporter.
+
+[TIP]
+=====
+See https://github.com/js-reporters/js-reporters/issues/79[issue #79] for the discussion that informed which minimum set of properties are part of the emitted Assertion object.
+=====
+
+== Runner API
+
+The Runner API should be implemented by testing frameworks, or CRI standard adapters for testing frameworks. The object on which the Runner API is implemented does not need to be exclusive or otherwise limited to the Runner API. Testing frameworks are encouraged to implement the Runner API as transparently as possible.
+
+[TIP]
+=====
+For testing frameworks that provide their main interface through a singleton or global object, the Runner API could be mixed into that main object. For example, `runner.on()` is defined in QUnit as https://api.qunitjs.com/callbacks/QUnit.on/[QUnit.on()].
+
+If the testing framework works through instantiation or through an "environment" instance (such as Jasmine), the Runner API could be exposed as part of that instance instead.
+=====
+
+=== runner.on(eventName, callback)
+
+Register a callback to be called whenever the specified event is emitted, as described under <<events>>.
+
+Parameters:
+
+* `string` **eventName**: Name of any CRI standard event.
+* `Function` **callback**: A callback function.
+
+Return:
+
+* `Mixed`: May be `undefined`, or any other value.
+
+[TIP]
+=====
+The `on()` method does not need to be exclusive to CRI standard events. The same event emitter may support additional events custom to the testing framework.
+
+In Node.js, the https://nodejs.org/api/events.html[built-in `events` module] provides an EventEmitter that one could use as the basis for a Runner API implementation. For example:
+
+[source,javascript]
+----
+const EventEmitter = require('events');
+const runner = new EventEmitter();
+
+// runner.emit('runStart', { … });
+// runner.emit('runEnd', { … });
+
+module.exports = runner;
+----
+=====
+
+== Reporter API
+
+The Reporter API should be implemented by reporters that are intended to be generally useful. It may be implemented in a module with exported functions, or statically on a class.
+
+=== reporter.init(runner)
+
+Attach the reporter to the <<runner-api,Runner>>.
+
+Parameters:
+
+* <<runner-api,Runner>> **runner**: The main interface of the testing framework.
+
+Return:
+
+* `undefined`: Void.
+
+
+[cols="5a,5a"]
+|===
+| Example: Class-based reporter | Example: Functional reporter
+
+|
+[source,javascript,indent=0]
+----
+  class MyReporter {
+    constructor (runner) {
+      // runner.on(…, …);
+    }
+
+    static init (runner) {
+      new MyReporter(runner);
+    }
+  }
+
+  // CommonJS:
+  module.exports = MyReporter;
+
+  // ES Module:
+  export default MyReporter;
+----
+|
+[source,javascript,indent=0]
+----
+  function init (runner) {
+    // runner.on(…, …);
+  }
+
+  // CommonJS:
+  module.exports = { init: init };
+
+  // ES Module:
+  export { init };
+----
+
+// bogus line breaks to workaround vertical-align
+   +
+
+   +
+
+    
+
+// currently being broken on GitHub's adoc renderer.
+
+|===
+
+== Acknowledgments
+
+The editors would like to thank the following people for their contributions to the project: James M. Greene, Jörn Zaefferer, Franziska Carstens, Jiahao Guo, Florentin Simion, Nikhil Shagrithaya, Trent Willis, Kevin Partington, Martin Olsson, jeberger, Timo Tijhof, and Robert Jackson.
+
+This standard is written by Jörn Zaefferer, Timo Tijhof, Franziska Carstens, and Florentin Simion.
+
+Copyright 2014-2020 JS Reporters. This text is licensed under the link:../LICENSE[MIT license].

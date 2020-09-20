@@ -1,6 +1,7 @@
 # js-reporters
 
 [![Build Status](https://travis-ci.org/js-reporters/js-reporters.svg?branch=master)](https://travis-ci.org/js-reporters/js-reporters)
+[![Chat on Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/qunitjs/qunit)
 [![npm](https://img.shields.io/npm/dm/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
 [![npm](https://img.shields.io/npm/v/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
 [![npm](https://img.shields.io/npm/l/js-reporters.svg?maxAge=2592000)](https://www.npmjs.com/package/js-reporters)
@@ -11,33 +12,42 @@ The Common Reporter Interface (CRI) for JavaScript Testing Frameworks.
 |----------------------------|----------------------------------|
 | ![](img/situation-now.png) | ![](img/situation-expected.png)  |
 
+## Specification
+
+**See [Common Reporter Interface](spec/cri-draft.adoc) for the latest version of the specification.**
+
+See also:
+
+* [example](docs/example.md), illustrates how reporting works in practice.
+* [frameworks](docs/frameworks.md), studies various popular testing frameworks.
+* **[Integrations](#integrations)**, a list of real-world implementations.
+
+Help with AsciiDoc (used for the standard document):
+
+* [AsciiDoc Syntax Quick Reference](https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/)
+* [AsciiDoc User Manual](https://asciidoctor.org/docs/user-manual/)
+* [AsciiDoc cheatsheet](https://powerman.name/doc/asciidoc)
 
 ## Background
 
-In 2014, the [QUnit](https://qunitjs.com/) team started [discussing](https://github.com/qunitjs/qunit/issues/531) the possibility of interoperability between JavaScript test frameworks such as QUnit, Mocha, Jasmine, Intern, Buster, etc. The "Common Reporter Interface" would be an allow integrations for output formats and communication bridges to be shared between frameworks. This would also benefit high-level consumers of these frameworks such as Karma, BrowserStack, SauceLabs, Testling, by having a standard machine-readable interface.
+In 2014, the [QUnit](https://qunitjs.com/) team started [discussing](https://github.com/qunitjs/qunit/issues/531) the possibility of interoperability between JavaScript testing frameworks such as QUnit, Mocha, Jasmine, Intern, Buster, etc. The "Common Reporter Interface" would be an allow integrations for output formats and communication bridges to be shared between frameworks. This would also benefit high-level consumers of these frameworks such as Karma, BrowserStack, SauceLabs, Testling, by having a standard machine-readable interface.
 
 Our mission is to deliver:
 
 - a common JavaScript API, e.g. based on EventEmitter featuring `.on()` and `.off()`.
 - a minimum viable set of events with standardized event names and event data.
 - a minimum viable set of concepts behind those events to allow consumers to set expectations (e.g. define what "pass", "fail", "skip", "todo", and "pending" mean).
-- work with participating test frameworks to support the Common Reporter Interface.
+- work with participating testing frameworks to support the Common Reporter Interface.
 
 Would _you_ be interested in discussing this with us further? Please join in!
 
-https://github.com/js-reporters/js-reporters/issues/
+* [Join the Chat room](https://gitter.im/qunitjs/qunit)
+* [Browse open issues](https://github.com/js-reporters/js-reporters/issues/)
+* [Help frameworks and runners implement the spec](#cross-project-coordination)
 
-## Specification
+## js-reporters Package
 
-See [CRI Specification](docs/cri-draft.md).
-
-### Details
-
-For details please check out the [docs](docs/) and especially the [example](docs/example.md) which presents a testsuite and its reporting data based on the standard presented above.
-
-For implementation examples please check [Usage of the adapters](#usage-of-the-adapters) and [Integrations](#integrations).
-
-## Usage
+### Usage
 
 Listen to the events and receive the emitted data:
 
@@ -46,11 +56,11 @@ Listen to the events and receive the emitted data:
 const runner = JsReporters.autoRegister();
 
 // Listen to the same events for any testing framework.
-runner.on('testEnd', function(test) {
+runner.on('testEnd', function (test) {
   console.log('Test %s has errors:', test.fullname.join(' '), test.errors);
 });
 
-runner.on('runEnd', function(globalSuite) {
+runner.on('runEnd', function (globalSuite) {
   const testCounts = globalSuite.testCounts;
 
   console.log('Testsuite status: %s', globalSuite.status);
@@ -72,7 +82,7 @@ JsReporters.TapReporter.init(runner);
 
 **autoRegister()**
 
-Auto registers one of the existing adapters by checking for existing testing frameworks in the global scope and returns the runner to attach event listeners. If no framework is found, it will throw an `Error`.
+Automatically detects which testing framework you use and attaches any adapters as needed, and returns a compatible runner object. If no framework is found, it will throw an `Error`.
 
 ```js
 JsReporters.autoRegister();
@@ -80,35 +90,33 @@ JsReporters.autoRegister();
 
 ## Integrations
 
-- [browserstack-runner](https://github.com/browserstack/browserstack-runner/blob/master/lib/_patch/reporter.js)
+Runners:
 
-## Differences
+* [QUnit](https://qunitjs.com/), natively since [QUnit 2.2](https://github.com/qunitjs/qunit/releases/2.2.0).
+* Jasmine, via [js-reporters JasmineAdapter](lib/adapters/JasmineAdapter.js).
+* Mocha, via [js-reporters MochaAdapter](lib/adapters/MochaAdapter.js).
 
-This section is dedicated to explain the limitations of the adapters in respect to the standard.
+Reporters:
 
-The only limitation is the emitting order, which is not done in source order:
+* [TAP](lib/reporters/TapReporter), implements the [Test Anything Protocol](https://testanything.org/) for command-line output.
+* [browserstack-runner](https://github.com/browserstack/browserstack-runner/blob/0.9.1/lib/_patch/reporter.js), runs JavaScript unit tests remotely in multiple browsers, summarize the results by browser, and fail or pass the continuous integration build accordingly.
+* _Add your own, and let us know!_
 
-- Jasmine: the emitting order of the tests will be the one from Jasmine
-- Mocha: the emitting order of the tests will be the one from Mocha
-- QUnit: the emitting order is done in suite order, which means if there is a suite that contains tests and other suites, it emits the start of the suite and then emits its tests and only after it emits the other suites, even if the tests were the last in source order
+## Cross-project coordination
 
-If you want to know more about each testing framework and about their emitting order, please checkout the [frameworks](docs/frameworks.md) document.
+Testing frameworks:
 
-## Cross-Reference Issues
+* [QUnit issue](https://github.com/qunitjs/qunit/issues/531) (Done!)
+* [Mocha issue](https://github.com/visionmedia/mocha/issues/1326) (pending…)
+* [Jasmine issue](https://github.com/pivotal/jasmine/issues/659) (pending…)
+* [Intern issue](https://github.com/theintern/intern/issues/257) (pending…)
+* [Vows issue](https://github.com/flatiron/vows/issues/313) (pending…)
+* [Buster issue](https://github.com/busterjs/buster/issues/419) (Discontinued.)
+* [Nodeunit issue](https://github.com/caolan/nodeunit/issues/276) (Discontinued.)
 
-### Unit Testing Frameworks
+Reporters and proxy layers:
 
-- https://github.com/qunitjs/qunit/issues/531  (original discussion)
-- https://github.com/visionmedia/mocha/issues/1326
-- https://github.com/pivotal/jasmine/issues/659
-- https://github.com/theintern/intern/issues/257
-- https://github.com/busterjs/buster/issues/419
-- https://github.com/caolan/nodeunit/issues/276
-- https://github.com/flatiron/vows/issues/313
-
-### Consuming Services
-
-- https://github.com/browserstack/browserstack-runner/issues/92
-- https://github.com/axemclion/grunt-saucelabs/issues/164
-- https://github.com/karma-runner/karma/issues/1183
-- https://github.com/substack/testling/issues/93
+* [BrowserStack](https://github.com/browserstack/browserstack-runner/issues/92) (Done!)
+* [Karma](https://github.com/karma-runner/karma/issues/1183) (pending…)
+* [grunt-saucelabs](https://github.com/axemclion/grunt-saucelabs/issues/164) (pending…)
+* [Testling](https://github.com/substack/testling/issues/93) (pending…)
