@@ -33,8 +33,6 @@
     "nohook": true,
     "components": [
       "Build",
-      "Changelog",
-      "Readme",
       "Release",
       "Reporter",
       "Test",

@@ -2,57 +2,45 @@
 1.2.3 / 2020-09-07
 ==================
 
-  * Helpers: Correct spelling in `autoRegister()` error message. (P. Roebuck) [#108](https://github.com/js-reporters/js-reporters/issues/108)
-  * Reporter: Align `actual` with `expected` in TapReporter. (Robert Jackson) [#107](https://github.com/js-reporters/js-reporters/pull/107)
-  * Reporter: Revert "Fix YAML output in TAP reporter". [#110](https://github.com/js-reporters/js-reporters/issues/110)
+### Changed
+
+* Reporter: Align `actual` with `expected` in TAP reporter. (Robert Jackson) [#107](https://github.com/js-reporters/js-reporters/pull/107)
+
+### Fixed
+
+* Reporter: Correct spelling in `autoRegister()` error message. (P. Roebuck) [#108](https://github.com/js-reporters/js-reporters/issues/108)
+* Reporter: Revert "Fix YAML output in TAP reporter". [#110](https://github.com/js-reporters/js-reporters/issues/110)
 
 1.2.2 / 2019-05-13
 ==================
 
-  * Reporter: Fix YAML output in TAP reporter. [#110](https://github.com/js-reporters/js-reporters/issues/110)
+### Fixed
+
+* Reporter: Fix YAML output in TAP reporter. (jeberger) [#110](https://github.com/js-reporters/js-reporters/issues/110)
 
 1.2.1 / 2017-07-04
 ==================
 
-  * Reporter: Print "actual:", "expected:" even if they are undefined
-  * Reporter: Drop accidentally committed console.warn()
-  * Readme: Use canonical path to QUnit repository (#99)
-  * Readme: Add note about potential assertion memory leaks
-  * Readme: Improve formatting of bullets
-  * Release: Add documentation for release process
+### Changed
+
+* Reporter: Print "actual:", "expected:" in the TAP reporeter even if undefined. (Martin Olsson)
+
+### Fixed
+
+* Reporter: Drop accidentally committed `console.warn()` statement. (Martin Olsson)
 
 1.2.0 / 2017-03-22
 ==================
 
-  * Testing: Update Node versions on Travis
-  * TapReporter: Further improve information and styling
-  * Deps: Explicitly include webpack to fulfill peerDep
-  * Data: Add todo data and update tests
-  * TapReporter: Update with more information and support todo tests
-  * README: Specify data for todo tests
-  * README: update
-  * Helpers: add create functions
-  * Index.js: add comma
-  * README: update spec with start and end
-  * All: break Suite and Test into start and end objects
-  * Deps: lock Jasmine version
-  * Helpers: update Jasmine adapter instantiation.
-  * Helpers: export each helper function
-  * Testing: use global instead of GLOBAL in helpers
-  * Testing: unit testing also in the browser with help of karma
-  * Docs: update autoRegister description
-  * Docs: add API section
-  * Helpers: change export
-  * Helpers: update error message
-  * Testing: add before and after hooks for helpers
-  * Helpers: add docs to the autoRegister function
-  * Testing: finish unit tests for the autoRegister function
-  * Testing: add unit tests for autoRegister function
-  * Bundling: export autoRegister function
-  * Helpers: add autoregister function
-  * Deps: restore Jasmine to last versions.
-  * Testing: update failing versions
-  * Deps: set jasmine to the last working version
-  * Deps: remove jasmine-core
-  * JasmineAdapter: fix reporter adding
-  * README: add first example
+### Added
+
+* Reporter: Improve TAP information and styling. (Florentin Simion)
+* Reporter: Support todo test in TAP reporter. (Trent Willis)
+* Docs: Add API section about the js-reporters package. (Florentin Simion)
+
+### Changed
+
+* Spec: Split "Suite" and "Test" objects into separate start and end objects. (Florentin Simion)
+* Spec: Define "todo test". (Trent Willis)
+* Test: Finish test coverage of `autoRegister` method. (Florentin Simion)
+* Test: Update to integration with the latest Jasmine version. (Florentin Simion)

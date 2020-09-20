@@ -1,8 +1,6 @@
 /* global QUnit */
 
-// Add dummy assertions in passing tests, because QUnit is checking for at
-// least one assertion, if there is none, then QUnit throws an error and the
-// test fails.
+// Add dummy assertions in passing tests, as QUnit by defaul requires at least one assertion.
 
 QUnit.test('global test', function (assert) {
   assert.ok(true);
