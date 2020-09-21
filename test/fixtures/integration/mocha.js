@@ -36,14 +36,14 @@ describe('suite with tests', function () {
   });
 });
 
-describe('outter suite', function () {
+describe('outer suite', function () {
   describe('inner suite', function () {
     it('inner test', function () {
 
     });
   });
 
-  it('outter test', function () {
+  it('outer test', function () {
 
   });
 });

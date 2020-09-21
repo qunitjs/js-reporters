@@ -36,8 +36,8 @@ describe('suite with tests', function () {
   });
 });
 
-describe('outter suite', function () {
-  it('outter test', function () {
+describe('outer suite', function () {
+  it('outer test', function () {
     expect(true).toBeTruthy();
   });
 

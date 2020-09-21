@@ -19,7 +19,7 @@ function rerequire (file) {
  * against a default test fixture.
  */
 module.exports = {
-  Jasmine: function (attachListeners) {
+  Jasmine: function (collectData) {
     const Jasmine = rerequire('jasmine');
     const jasmine = new Jasmine();
 
@@ -46,45 +46,45 @@ module.exports = {
       jasmine.completionReporter.onComplete(function () {});
     }
     const jasmineRunner = new JsReporters.JasmineAdapter(jasmine);
-    attachListeners(jasmineRunner);
+    collectData(jasmineRunner);
 
     jasmine.execute();
   },
 
-  'QUnit (1.x)': function (attachListeners) {
+  'QUnit (1.x)': function (collectData) {
     // Legacy npm package name
     const QUnit = rerequire('qunitjs');
     global.QUnit = QUnit;
     QUnit.config.autorun = false;
 
     const qunitRunner = new JsReporters.QUnitAdapter(QUnit);
-    attachListeners(qunitRunner);
+    collectData(qunitRunner);
 
     rerequire(path.join(testDir, 'qunit.js'));
 
     QUnit.load();
   },
-  QUnit: function (attachListeners) {
+  QUnit: function (collectData) {
     // Get a reporter context independent of the integration test suite itself
     const QUnit = rerequire('qunit');
     global.QUnit = QUnit;
     QUnit.config.autorun = false;
 
     const qunitRunner = new JsReporters.QUnitAdapter(QUnit);
-    attachListeners(qunitRunner);
+    collectData(qunitRunner);
 
     rerequire(path.join(testDir, 'qunit.js'));
 
     QUnit.start();
   },
-  Mocha: function (attachListeners) {
+  Mocha: function (collectData) {
     const Mocha = rerequire('mocha');
     const mocha = new Mocha();
     mocha.addFile(path.join(testDir, 'mocha.js'));
 
     const mochaRunner = new JsReporters.MochaAdapter(mocha);
 
-    attachListeners(mochaRunner);
+    collectData(mochaRunner);
     mocha.run();
   }
 };

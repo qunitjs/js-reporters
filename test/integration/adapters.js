@@ -2,317 +2,194 @@
 /* eslint-disable no-unused-expressions */
 
 const { test } = QUnit;
-const refData = require('./reference-data.js');
 const runAdapters = require('./adapters-run.js');
 
-// Collecting the adapter's output.
-let collectedData;
-
-function _collectOutput (eventName, done, eventData) {
-  collectedData.push([eventName, eventData]);
-  done();
+function rerequire (file) {
+  const resolved = require.resolve(file);
+  delete require.cache[resolved];
+  return require(resolved);
 }
 
 /**
- * Attaches the event handler for the runner events.
+ * Collect data from an (adapted) runner.
  */
-function _attachListeners (done, runner) {
-  const dummyFunc = function () {};
-
-  runner.on('runStart', _collectOutput.bind(null, 'runStart', dummyFunc));
-  runner.on('suiteStart', _collectOutput.bind(null, 'suiteStart', dummyFunc));
-  runner.on('testStart', _collectOutput.bind(null, 'testStart', dummyFunc));
-  runner.on('testEnd', _collectOutput.bind(null, 'testEnd', dummyFunc));
-  runner.on('suiteEnd', _collectOutput.bind(null, 'suiteEnd', dummyFunc));
-
-  // Only when the runEnd event is emitted we can notify Mocha that we are done.
-  runner.on('runEnd', _collectOutput.bind(null, 'runEnd', done));
-}
-
-/**
- * Recursively iterate over each suite and set their tests runtime to 0ms.
- */
-function _setSuiteTestsRuntime (suite) {
-  suite.tests.forEach(function (test) {
-    if (test.status !== 'skipped') {
-      test.runtime = 0;
-    }
+function collectDataFromRunner (collectedData, done, runner) {
+  runner.on('runStart', (suite) => {
+    collectedData.push(['runStart', suite]);
   });
+  runner.on('suiteStart', (suite) => {
+    collectedData.push(['suiteStart', suite]);
+  });
+  runner.on('suiteEnd', (suite) => {
+    normalizeSuiteEnd(suite);
+    collectedData.push(['suiteEnd', suite]);
+  });
+  runner.on('testStart', (test) => {
+    collectedData.push(['testStart', test]);
+  });
+  runner.on('testEnd', (test) => {
+    normalizeTestEnd(test);
+    collectedData.push(['testEnd', test]);
+  });
+  runner.on('runEnd', (suite) => {
+    normalizeSuiteEnd(suite);
+    collectedData.push(['runEnd', suite]);
 
-  suite.childSuites.forEach(function (childSuite) {
-    _setSuiteTestsRuntime(childSuite);
+    // Notify the integration test to continue, and validate the collected data.
+    done();
   });
 }
 
-/**
- * Set the suites runtime to 0 to match the runtime of the refrence suites.
- */
-function _setSuitesRuntime (suite) {
-  if (suite.status !== 'skipped') {
-    suite.runtime = 0;
+function normalizeTestEnd (test) {
+  // Replace any actual assertion runtime with hardcoded 42s.
+  // Preserve absence or other weird values as-is.
+  if (Number.isFinite(test.runtime)) {
+    test.runtime = 42;
   }
 
-  suite.childSuites.forEach(function (childSuite) {
-    _setSuitesRuntime(childSuite);
-  });
+  // Only check the "passed" and any "todo" property.
+  // Throw away the rest of the actual assertion objects as being framework-specific.
+  if (test.assertions) {
+    test.assertions.forEach(assertion => {
+      assertion.actual = undefined;
+      assertion.expected = undefined;
+      assertion.message = undefined;
+      assertion.stack = undefined;
+    });
+  }
+  if (test.errors) {
+    test.errors.forEach(assertion => {
+      assertion.actual = undefined;
+      assertion.expected = undefined;
+      assertion.message = undefined;
+      assertion.stack = undefined;
+    });
+  }
 }
 
-/**
- * Overwrite test assertions (for test frameworks that provide this) so that
- * they will match match those from the refrence-data file.
- */
-function _overWriteTestAssertions (test) {
-  test.errors.forEach(function (error) {
-    error.actual = undefined;
-    error.expected = undefined;
-    error.message = undefined;
-    error.stack = undefined;
-  });
+function normalizeSuiteEnd (suite) {
+  if (Number.isFinite(suite.runtime)) {
+    suite.runtime = 42;
+  }
 
-  test.assertions.forEach(function (assertion) {
-    assertion.actual = undefined;
-    assertion.expected = undefined;
-    assertion.message = undefined;
-    assertion.stack = undefined;
-  });
+  suite.tests.forEach(normalizeTestEnd);
+  suite.childSuites.forEach(normalizeSuiteEnd);
 }
 
-/**
- * Recursively iterates over suites and overwrites tests assertions. Check
- * also _overWriteTestNormalizedAssertions function.
- */
-function _overWriteSuitesAssertions (suite) {
-  suite.tests.forEach(function (test) {
-    _overWriteTestAssertions(test);
-  });
-
-  suite.childSuites.forEach(function (childSuite) {
-    _overWriteSuitesAssertions(childSuite);
-  });
-}
-
-/**
- * Fills the assertions and error properties with assertions so that they will
- * match with those from the data-refrence file, also as content as also as
- * number of contained assertions.
- */
-function _fillTestAssertions (refTest, test) {
-  test.assertions = [];
-  test.errors = [];
-
-  refTest.assertions.forEach(function (assertion) {
-    test.assertions.push(assertion);
-  });
-
-  refTest.errors.forEach(function (error) {
-    test.errors.push(error);
-  });
-}
-
-/**
- * Recursively iterates over suites and fills with assertions. Check also
- * _fillTestAssertins function.
- */
-function _fillSuiteAssertions (refSuite, suite) {
-  refSuite.tests.forEach(function (refTest, index) {
-    _fillTestAssertions(refTest, suite.tests[index]);
-  });
-
-  refSuite.childSuites.forEach(function (childSuite, index) {
-    _fillSuiteAssertions(childSuite, suite.childSuites[index]);
-  });
-}
-
-/**
- * Counts tests for the "suiteStart" and "runStart" event.
- */
-function getTestCountsStart (refSuite) {
-  const testCounts = {
-    total: refSuite.tests.length
+function fixExpectedData (adapter, expectedData) {
+  const fixTestEnd = (test) => {
+    // Don't expect passed assertion for testing frameworks
+    // that don't record all assertions.
+    if (adapter === 'Mocha' && test.status === 'passed') {
+      test.assertions = [];
+    }
+  };
+  const fixSuiteEnd = (suite) => {
+    if (Number.isFinite(suite.runtime)) {
+      suite.runtime = 42;
+    }
+    suite.tests.forEach(fixTestEnd);
   };
 
-  refSuite.childSuites.forEach(function (childSuite) {
-    testCounts.total += getTestCountsStart(childSuite).total;
+  expectedData.forEach(([eventName, data]) => {
+    if (eventName === 'testEnd') {
+      fixTestEnd(data);
+    }
+    if (eventName === 'suiteEnd' || eventName === 'runEnd') {
+      fixSuiteEnd(data);
+      data.childSuites.forEach(fixSuiteEnd);
+    }
   });
-
-  return testCounts;
-}
-
-/**
- * Counts tests for the "suiteEnd" and "runEnd" event.
- */
-function getTestCountsEnd (refSuite) {
-  const testCounts = {
-    passed: 0,
-    failed: 0,
-    skipped: 0,
-    todo: 0,
-    total: refSuite.tests.length
-  };
-
-  testCounts.passed += refSuite.tests.filter(test => test.status === 'passed').length;
-  testCounts.failed += refSuite.tests.filter(test => test.status === 'failed').length;
-  testCounts.skipped += refSuite.tests.filter(test => test.status === 'skipped').length;
-  testCounts.todo += refSuite.tests.filter(test => test.status === 'todo').length;
-
-  refSuite.childSuites.forEach(function (childSuite) {
-    const childTestCounts = getTestCountsEnd(childSuite);
-
-    testCounts.passed += childTestCounts.passed;
-    testCounts.failed += childTestCounts.failed;
-    testCounts.skipped += childTestCounts.skipped;
-    testCounts.todo += childTestCounts.todo;
-    testCounts.total += childTestCounts.total;
-  });
-
-  return testCounts;
 }
 
 QUnit.module('Adapters integration', function () {
   Object.keys(runAdapters).forEach(function (adapter) {
     QUnit.module(adapter + ' adapter', hooks => {
-      const keys = ['passed', 'actual', 'expected', 'message', 'stack', 'todo'];
+      // Re-require for each adapter because we change the expected data.
+      const expectedData = rerequire('./reference-data.js');
+      fixExpectedData(adapter, expectedData);
+
+      const collectedData = [];
 
       hooks.before(assert => {
         const done = assert.async();
-        collectedData = [];
-        runAdapters[adapter](_attachListeners.bind(null, done));
+        runAdapters[adapter](
+          collectDataFromRunner.bind(null, collectedData, done)
+        );
       });
 
-      test('Event "testEnd" runtime property', assert => {
-        collectedData.forEach(value => {
-          if (value[0] === 'testEnd' && value[1].status !== 'skipped') {
-            assert.equal(typeof value[1].runtime, 'number');
-          }
+      // Fist check that, overall, all expected events were emitted and in order.
+      test('Emitted events names', assert => {
+        assert.propEqual(
+          collectedData.map(pair => pair[0]),
+          expectedData.map(pair => pair[0]),
+          'Event names'
+        );
+      });
+
+      test('Event "testStart" data', assert => {
+        const actuals = collectedData.filter(pair => pair[0] === 'testStart');
+        expectedData.filter(pair => pair[0] === 'testStart').forEach((expected, i) => {
+          assert.propEqual(
+            actuals[i][1],
+            expected[1],
+            `Event data for testStart#${i}`
+          );
         });
       });
 
-      test('Event "testEnd" errors property', assert => {
-        const refTestsEnd = refData.filter(value => value[0] === 'testEnd');
-        const testsEnd = collectedData.filter(value => value[0] === 'testEnd');
-
-        refTestsEnd.forEach((value, index) => {
-          const refTest = value[1];
-          const test = testsEnd[index][1];
-
-          if (refTest.status === 'passed' || refTest.status === 'skipped') {
-            assert.deepEqual(test.errors, refTest.errors);
-          } else {
-            assert.equal(test.errors.length, refTest.errors.length);
-
-            test.errors.forEach(error => {
-              assert.deepEqual(Object.keys(error), keys);
-
-              assert.false(error.passed);
-              assert.strictEqual(typeof error.message, 'string');
-              assert.strictEqual(typeof error.stack, 'string');
-            });
-          }
+      test('Event "testEnd" data', assert => {
+        const actuals = collectedData.filter(pair => pair[0] === 'testEnd');
+        expectedData.filter(pair => pair[0] === 'testEnd').forEach((expected, i) => {
+          assert.propEqual(
+            actuals[i][1],
+            expected[1],
+            `Event data for testEnd#${i}`
+          );
         });
       });
 
-      test('Event "testEnd" assertions property', assert => {
-        const refTestsEnd = refData.filter(value => value[0] === 'testEnd');
-        const testsEnd = collectedData.filter(value => value[0] === 'testEnd');
-
-        refTestsEnd.forEach((value, index) => {
-          const refTest = value[1];
-          const test = testsEnd[index][1];
-
-          // Expect to contain the correct number of assertions, only for
-          // test frameworks that provide all assertions.
-          if (adapter !== 'Mocha') {
-            assert.strictEqual(test.assertions.length, refTest.assertions.length);
-          }
-
-          const passedAssertions = test.assertions.filter(assertion => assertion.passed);
-          const failedAssertions = test.assertions.filter(assertion => !assertion.passed);
-
-          passedAssertions.forEach(assertion => {
-            assert.deepEqual(Object.keys(assertion), keys);
-
-            assert.true(assertion.passed);
-            assert.strictEqual(typeof assertion.message, 'string');
-            assert.strictEqual(assertion.stack, undefined);
-          });
-
-          failedAssertions.forEach(assertion => {
-            assert.deepEqual(Object.keys(assertion), keys);
-
-            assert.false(assertion.passed);
-            assert.strictEqual(typeof assertion.message, 'string');
-            assert.strictEqual(typeof assertion.stack, 'string');
-          });
+      test('Event "suiteStart" data', assert => {
+        const actuals = collectedData.filter(pair => pair[0] === 'suiteStart');
+        expectedData.filter(pair => pair[0] === 'suiteStart').forEach((expected, i) => {
+          assert.propEqual(
+            actuals[i][1],
+            expected[1],
+            `Event data for suiteStart#${i}`
+          );
         });
       });
 
-      refData.forEach((value, index) => {
-        const [refEvent, refTestItem, refTestDescription] = value;
+      test('Event "suiteEnd" data', assert => {
+        const actuals = collectedData.filter(pair => pair[0] === 'suiteEnd');
+        expectedData.filter(pair => pair[0] === 'suiteEnd').forEach((expected, i) => {
+          assert.propEqual(
+            actuals[i][1],
+            expected[1],
+            `Event data for suiteEnd#${i}`
+          );
+        });
+      });
 
-        test(refTestDescription, assert => {
-          const [event, testItem] = collectedData[index];
+      test('Event "runStart" data', assert => {
+        const actuals = collectedData.filter(pair => pair[0] === 'runStart');
+        expectedData.filter(pair => pair[0] === 'runStart').forEach((expected, i) => {
+          assert.propEqual(
+            actuals[i][1],
+            expected[1],
+            `Event data for runStart#${i}`
+          );
+        });
+      });
 
-          // Set tests runtime to 0 to match the reference tests runtime.
-          if (event === 'testEnd' && testItem.status !== 'skipped') {
-            collectedData[index][1].runtime = 0;
-          }
-
-          // Set suite tests runtime to 0, also for the globalSuite.
-          if (event === 'suiteEnd' || event === 'runEnd') {
-            _setSuiteTestsRuntime(collectedData[index][1]);
-          }
-
-          // Set assertions to match those from data-refrence file.
-          if (event === 'testEnd') {
-            if (adapter === 'Mocha') {
-              _fillTestAssertions(refTestItem, testItem);
-            } else {
-              _overWriteTestAssertions(testItem);
-            }
-          }
-
-          // Set assertions to match thos from the data-refrence file.
-          if (event === 'suiteEnd' || event === 'runEnd') {
-            if (adapter === 'Mocha') {
-              _fillSuiteAssertions(refTestItem, testItem);
-            } else {
-              _overWriteSuitesAssertions(testItem);
-            }
-          }
-
-          // Verify suite self-setting props.
-          if (event === 'suiteStart' || event === 'runStart') {
-            assert.strictEqual(testItem.status, undefined);
-            assert.strictEqual(testItem.runtime, undefined);
-
-            assert.deepEqual(testItem.testCounts, getTestCountsStart(refTestItem));
-          }
-
-          // Verify suite self-setting props.
-          if (event === 'suiteEnd' || event === 'runEnd') {
-            const refStatus = value[3];
-
-            assert.strictEqual(testItem.status, refStatus);
-
-            if (testItem.status !== 'skipped') {
-              assert.strictEqual(typeof testItem.runtime, 'number');
-              // Set suites runtime to 0, to pass the deep equal assertion.
-              _setSuitesRuntime(testItem);
-            } else {
-              assert.strictEqual(testItem.runtime, undefined);
-            }
-
-            assert.deepEqual(testItem.testCounts, getTestCountsEnd(refTestItem));
-          }
-
-          assert.strictEqual(event, refEvent);
-
-          // FIXME: Ref data has TestEnd#assertions as plain objects instead of Assertion objects.
-          // > not ok 6 Adapters integration > Jasmine adapter > global test ends
-          // actual  : assertions: [ Assertion { passed: true, … } ]
-          // expected: assertions: [ { passed: true, … } ]
-          // assert.deepEqual(testItem, refTestItem);
-          assert.propEqual(testItem, refTestItem);
+      test('Event "runEnd" data', assert => {
+        const actuals = collectedData.filter(pair => pair[0] === 'runEnd');
+        expectedData.filter(pair => pair[0] === 'runEnd').forEach((expected, i) => {
+          assert.propEqual(
+            actuals[i][1],
+            expected[1],
+            `Event data for runEnd#${i}`
+          );
         });
       });
     });

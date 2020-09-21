@@ -32,14 +32,14 @@ QUnit.test('should fail', function () {
   throw new Error('error');
 });
 
-QUnit.module('outter suite', function () {
+QUnit.module('outer suite', function () {
   QUnit.module('inner suite', function () {
     QUnit.test('inner test', function (assert) {
       assert.ok(true);
     });
   });
 
-  QUnit.test('outter test', function (assert) {
+  QUnit.test('outer test', function (assert) {
     assert.ok(true);
   });
 });

@@ -1,176 +1,507 @@
-const JsReporters = require('../../');
-const SuiteStart = JsReporters.SuiteStart;
-const SuiteEnd = JsReporters.SuiteEnd;
-const TestStart = JsReporters.TestStart;
-const TestEnd = JsReporters.TestEnd;
-
-const noErrors = [];
-const noAssertions = [];
-
-/**
- * All props are undefined, except "passed", because we don't know what they
- * will contain, which is depending from framework to framework. The props are
- * anyway verified one by one, see "adapters.js" file.
- */
-const errors = [{
+const failedAssertion = {
   passed: false,
   actual: undefined,
   expected: undefined,
   message: undefined,
   stack: undefined,
   todo: undefined
-}];
+};
 
-const failedAssertions = [{
-  passed: false,
-  actual: undefined,
-  expected: undefined,
-  message: undefined,
-  stack: undefined,
-  todo: undefined
-}];
-
-const passedAssertions = [{
+const passedAssertion = {
   passed: true,
   actual: undefined,
   expected: undefined,
   message: undefined,
   stack: undefined,
   todo: undefined
-}];
+};
 
-const globalTestStart = new TestStart('global test', undefined, ['global test']);
-const globalTestEnd = new TestEnd('global test', undefined, ['global test'],
-  'passed', 0, noErrors, passedAssertions);
+const globalTestStart = {
+  name: 'global test',
+  suiteName: undefined,
+  fullName: [
+    'global test'
+  ]
+};
+const globalTestEnd = {
+  name: 'global test',
+  suiteName: undefined,
+  fullName: [
+    'global test'
+  ],
+  status: 'passed',
+  runtime: 42,
+  errors: [],
+  assertions: [
+    passedAssertion
+  ]
+};
 
-const passingTestStart1 = new TestStart('should pass', 'suite with passing test',
-  ['suite with passing test', 'should pass']);
-const passingTestEnd1 = new TestEnd('should pass', 'suite with passing test',
-  ['suite with passing test', 'should pass'], 'passed', 0, noErrors,
-  passedAssertions);
+const passingTestStart1 = {
+  name: 'should pass',
+  suiteName: 'suite with passing test',
+  fullName: [
+    'suite with passing test',
+    'should pass'
+  ]
+};
+const passingSuiteStart = {
+  name: 'suite with passing test',
+  fullName: [
+    'suite with passing test'
+  ],
+  tests: [
+    passingTestStart1
+  ],
+  childSuites: [],
+  testCounts: {
+    total: 1
+  }
+};
+const passingTestEnd1 = {
+  name: 'should pass',
+  suiteName: 'suite with passing test',
+  fullName: [
+    'suite with passing test',
+    'should pass'
+  ],
+  status: 'passed',
+  runtime: 42,
+  errors: [],
+  assertions: [
+    passedAssertion
+  ]
+};
+const passingSuiteEnd = {
+  name: 'suite with passing test',
+  fullName: [
+    'suite with passing test'
+  ],
+  tests: [
+    passingTestEnd1
+  ],
+  childSuites: [],
+  status: 'passed',
+  testCounts: {
+    passed: 1,
+    failed: 0,
+    skipped: 0,
+    todo: 0,
+    total: 1
+  },
+  runtime: 42
+};
 
-const passingTestStart2 = new TestStart('should pass', 'suite with tests',
-  ['suite with tests', 'should pass']);
-const passingTestEnd2 = new TestEnd('should pass', 'suite with tests',
-  ['suite with tests', 'should pass'], 'passed', 0, noErrors,
-  passedAssertions);
+const skippedTestStart1 = {
+  name: 'should skip',
+  suiteName: 'suite with skipped test',
+  fullName: [
+    'suite with skipped test',
+    'should skip'
+  ]
+};
+const skippedSuiteStart = {
+  name: 'suite with skipped test',
+  fullName: [
+    'suite with skipped test'
+  ],
+  tests: [
+    skippedTestStart1
+  ],
+  childSuites: [],
+  testCounts: {
+    total: 1
+  }
+};
+const skippedTestEnd1 = {
+  name: 'should skip',
+  suiteName: 'suite with skipped test',
+  fullName: [
+    'suite with skipped test',
+    'should skip'
+  ],
+  status: 'skipped',
+  runtime: undefined,
+  errors: [],
+  assertions: []
+};
+const skippedSuiteEnd = {
+  name: 'suite with skipped test',
+  fullName: [
+    'suite with skipped test'
+  ],
+  tests: [
+    skippedTestEnd1
+  ],
+  childSuites: [],
+  status: 'skipped',
+  runtime: undefined,
+  testCounts: {
+    passed: 0,
+    failed: 0,
+    skipped: 1,
+    todo: 0,
+    total: 1
+  }
+};
 
-const skippedTestStart1 = new TestStart('should skip', 'suite with skipped test',
-  ['suite with skipped test', 'should skip']);
-const skippedTestEnd1 = new TestEnd('should skip', 'suite with skipped test',
-  ['suite with skipped test', 'should skip'], 'skipped', undefined, noErrors,
-  noAssertions);
+const failingTestStart1 = {
+  name: 'should fail',
+  suiteName: 'suite with failing test',
+  fullName: [
+    'suite with failing test',
+    'should fail'
+  ]
+};
+const failingSuiteStart = {
+  name: 'suite with failing test',
+  fullName: [
+    'suite with failing test'
+  ],
+  tests: [
+    failingTestStart1
+  ],
+  childSuites: [],
+  testCounts: {
+    total: 1
+  }
+};
+const failingTestEnd1 = {
+  name: 'should fail',
+  suiteName: 'suite with failing test',
+  fullName: [
+    'suite with failing test',
+    'should fail'
+  ],
+  status: 'failed',
+  runtime: 42,
+  errors: [
+    failedAssertion
+  ],
+  assertions: [
+    failedAssertion
+  ]
+};
+const failingSuiteEnd = {
+  name: 'suite with failing test',
+  fullName: [
+    'suite with failing test'
+  ],
+  tests: [
+    failingTestEnd1
+  ],
+  childSuites: [],
+  status: 'failed',
+  testCounts: {
+    passed: 0,
+    failed: 1,
+    skipped: 0,
+    todo: 0,
+    total: 1
+  },
+  runtime: 42
+};
 
-const skippedTestStart2 = new TestStart('should skip', 'suite with tests',
-  ['suite with tests', 'should skip']);
-const skippedTestEnd2 = new TestEnd('should skip', 'suite with tests',
-  ['suite with tests', 'should skip'], 'skipped', undefined, noErrors,
-  noAssertions);
+const passingTestStart2 = {
+  name: 'should pass',
+  suiteName: 'suite with tests',
+  fullName: [
+    'suite with tests',
+    'should pass'
+  ]
+};
+const passingTestEnd2 = {
+  name: 'should pass',
+  suiteName: 'suite with tests',
+  fullName: [
+    'suite with tests',
+    'should pass'
+  ],
+  status: 'passed',
+  runtime: 42,
+  errors: [],
+  assertions: [
+    passedAssertion
+  ]
+};
+const skippedTestStart2 = {
+  name: 'should skip',
+  suiteName: 'suite with tests',
+  fullName: [
+    'suite with tests',
+    'should skip'
+  ]
+};
+const failingTestStart2 = {
+  name: 'should fail',
+  suiteName: 'suite with tests',
+  fullName: [
+    'suite with tests',
+    'should fail'
+  ]
+};
+const testSuiteStart = {
+  name: 'suite with tests',
+  fullName: [
+    'suite with tests'
+  ],
+  tests: [
+    passingTestStart2,
+    skippedTestStart2,
+    failingTestStart2
+  ],
+  childSuites: [],
+  testCounts: {
+    total: 3
+  }
+};
+const skippedTestEnd2 = {
+  name: 'should skip',
+  suiteName: 'suite with tests',
+  fullName: [
+    'suite with tests',
+    'should skip'
+  ],
+  status: 'skipped',
+  runtime: undefined,
+  errors: [],
+  assertions: []
+};
+const failingTestEnd2 = {
+  name: 'should fail',
+  suiteName: 'suite with tests',
+  fullName: [
+    'suite with tests',
+    'should fail'
+  ],
+  status: 'failed',
+  runtime: 42,
+  errors: [
+    failedAssertion
+  ],
+  assertions: [
+    failedAssertion
+  ]
+};
+const testSuiteEnd = {
+  name: 'suite with tests',
+  fullName: [
+    'suite with tests'
+  ],
+  tests: [
+    passingTestEnd2,
+    skippedTestEnd2,
+    failingTestEnd2
+  ],
+  childSuites: [],
+  status: 'failed',
+  testCounts: {
+    passed: 1,
+    failed: 1,
+    skipped: 1,
+    todo: 0,
+    total: 3
+  },
+  runtime: 84
+};
 
-const failingTestStart1 = new TestStart('should fail', 'suite with failing test',
-  ['suite with failing test', 'should fail']);
-const failingTestEnd1 = new TestEnd('should fail', 'suite with failing test',
-  ['suite with failing test', 'should fail'], 'failed', 0, errors,
-  failedAssertions);
+const outerTestStart = {
+  name: 'outer test',
+  suiteName: 'outer suite',
+  fullName: [
+    'outer suite',
+    'outer test'
+  ]
+};
+const outerTestEnd = {
+  name: 'outer test',
+  suiteName: 'outer suite',
+  fullName: [
+    'outer suite',
+    'outer test'
+  ],
+  status: 'passed',
+  runtime: 42,
+  errors: [],
+  assertions: [
+    passedAssertion
+  ]
+};
+const innerTestStart = {
+  name: 'inner test',
+  suiteName: 'inner suite',
+  fullName: [
+    'outer suite',
+    'inner suite',
+    'inner test'
+  ]
+};
+const innerSuiteStart = {
+  name: 'inner suite',
+  fullName: [
+    'outer suite',
+    'inner suite'
+  ],
+  tests: [
+    innerTestStart
+  ],
+  childSuites: [],
+  testCounts: {
+    total: 1
+  }
+};
+const innerTestEnd = {
+  name: 'inner test',
+  suiteName: 'inner suite',
+  fullName: [
+    'outer suite',
+    'inner suite',
+    'inner test'
+  ],
+  status: 'passed',
+  runtime: 42,
+  errors: [],
+  assertions: [
+    passedAssertion
+  ]
+};
+const innerSuiteEnd = {
+  name: 'inner suite',
+  fullName: [
+    'outer suite',
+    'inner suite'
+  ],
+  tests: [
+    innerTestEnd
+  ],
+  childSuites: [],
+  status: 'passed',
+  testCounts: {
+    passed: 1,
+    failed: 0,
+    skipped: 0,
+    todo: 0,
+    total: 1
+  },
+  runtime: 42
+};
 
-const failingTestStart2 = new TestStart('should fail', 'suite with tests',
-  ['suite with tests', 'should fail']);
-const failingTestEnd2 = new TestEnd('should fail', 'suite with tests',
-  ['suite with tests', 'should fail'], 'failed', 0, errors,
-  failedAssertions);
+const outerSuiteStart = {
+  name: 'outer suite',
+  fullName: [
+    'outer suite'
+  ],
+  tests: [
+    outerTestStart
+  ],
+  childSuites: [
+    innerSuiteStart
+  ],
+  testCounts: {
+    total: 2
+  }
+};
+const outerSuiteEnd = {
+  name: 'outer suite',
+  fullName: [
+    'outer suite'
+  ],
+  tests: [
+    outerTestEnd
+  ],
+  childSuites: [
+    innerSuiteEnd
+  ],
+  status: 'passed',
+  testCounts: {
+    passed: 2,
+    failed: 0,
+    skipped: 0,
+    todo: 0,
+    total: 2
+  },
+  runtime: 84
+};
 
-const innerTestStart = new TestStart('inner test', 'inner suite',
-  ['outter suite', 'inner suite', 'inner test']);
-const innerTestEnd = new TestEnd('inner test', 'inner suite', ['outter suite',
-  'inner suite', 'inner test'], 'passed', 0, noErrors, passedAssertions);
-
-const outterTestStart = new TestStart('outter test', 'outter suite',
-  ['outter suite', 'outter test']);
-const outterTestEnd = new TestEnd('outter test', 'outter suite', ['outter suite',
-  'outter test'], 'passed', 0, noErrors, passedAssertions);
-
-const passingSuiteStart = new SuiteStart('suite with passing test',
-  ['suite with passing test'], [passingTestStart1], []);
-const passingSuiteEnd = new SuiteEnd('suite with passing test',
-  ['suite with passing test'], [passingTestEnd1], []);
-
-const skippedSuiteStart = new SuiteStart('suite with skipped test',
-  ['suite with skipped test'], [skippedTestStart1], []);
-const skippedSuiteEnd = new SuiteEnd('suite with skipped test',
-  ['suite with skipped test'], [skippedTestEnd1], []);
-
-const failingSuiteStart = new SuiteStart('suite with failing test',
-  ['suite with failing test'], [failingTestStart1], []);
-const failingSuiteEnd = new SuiteEnd('suite with failing test',
-  ['suite with failing test'], [failingTestEnd1], []);
-
-const testSuiteStart = new SuiteStart('suite with tests', ['suite with tests'], [
-  passingTestStart2,
-  skippedTestStart2,
-  failingTestStart2
-], []);
-const testSuiteEnd = new SuiteEnd('suite with tests', ['suite with tests'], [
-  passingTestEnd2,
-  skippedTestEnd2,
-  failingTestEnd2
-], []);
-
-const innerSuiteStart = new SuiteStart('inner suite',
-  ['outter suite', 'inner suite'], [innerTestStart], []);
-const innerSuiteEnd = new SuiteEnd('inner suite', ['outter suite', 'inner suite'],
-  [innerTestEnd], []);
-
-const outterSuiteStart = new SuiteStart('outter suite', ['outter suite'],
-  [outterTestStart], [innerSuiteStart]);
-const outterSuiteEnd = new SuiteEnd('outter suite', ['outter suite'],
-  [outterTestEnd], [innerSuiteEnd]);
-
-const globalSuiteStart = new SuiteStart(undefined, [], [globalTestStart], [
-  passingSuiteStart,
-  skippedSuiteStart,
-  failingSuiteStart,
-  testSuiteStart,
-  outterSuiteStart
-]);
-const globalSuiteEnd = new SuiteEnd(undefined, [], [globalTestEnd], [
-  passingSuiteEnd,
-  skippedSuiteEnd,
-  failingSuiteEnd,
-  testSuiteEnd,
-  outterSuiteEnd
-]);
+const globalSuiteStart = {
+  name: undefined,
+  fullName: [],
+  tests: [
+    globalTestStart
+  ],
+  childSuites: [
+    passingSuiteStart,
+    skippedSuiteStart,
+    failingSuiteStart,
+    testSuiteStart,
+    outerSuiteStart
+  ],
+  testCounts: {
+    total: 9
+  }
+};
+const globalSuiteEnd = {
+  name: undefined,
+  fullName: [],
+  tests: [
+    globalTestEnd
+  ],
+  childSuites: [
+    passingSuiteEnd,
+    skippedSuiteEnd,
+    failingSuiteEnd,
+    testSuiteEnd,
+    outerSuiteEnd
+  ],
+  status: 'failed',
+  testCounts: {
+    passed: 5,
+    failed: 2,
+    skipped: 2,
+    todo: 0,
+    total: 9
+  },
+  runtime: 294
+};
 
 module.exports = [
-  ['runStart', globalSuiteStart, 'global suite starts'],
-  ['testStart', globalTestStart, 'global test starts'],
-  ['testEnd', globalTestEnd, 'global test ends'],
-  ['suiteStart', passingSuiteStart, 'suite with one passing test starts'],
-  ['testStart', passingTestStart1, 'passing test starts'],
-  ['testEnd', passingTestEnd1, 'passing test ends'],
-  ['suiteEnd', passingSuiteEnd, 'suite with one passing test ends', 'passed'],
-  ['suiteStart', skippedSuiteStart, 'suite with one skipped test starts'],
-  ['testStart', skippedTestStart1, 'skipped test starts'],
-  ['testEnd', skippedTestEnd1, 'skipped test ends'],
-  ['suiteEnd', skippedSuiteEnd, 'suite with one skipped test ends', 'skipped'],
-  ['suiteStart', failingSuiteStart, 'suite with one failing tests'],
-  ['testStart', failingTestStart1, 'failing test starts'],
-  ['testEnd', failingTestEnd1, 'failing test ends'],
-  ['suiteEnd', failingSuiteEnd, 'suite with one failing test ends', 'failed'],
-  ['suiteStart', testSuiteStart, 'suite with multiple tests starts'],
-  ['testStart', passingTestStart2, 'passing test starts'],
-  ['testEnd', passingTestEnd2, 'passing test ends'],
-  ['testStart', skippedTestStart2, 'skipped test starts'],
-  ['testEnd', skippedTestEnd2, 'skipped test ends'],
-  ['testStart', failingTestStart2, 'failing test starts'],
-  ['testEnd', failingTestEnd2, 'failing test ends'],
-  ['suiteEnd', testSuiteEnd, 'suite with multiple tests ends', 'failed'],
-  ['suiteStart', outterSuiteStart, 'outter suite starts'],
-  ['testStart', outterTestStart, 'outter test starts'],
-  ['testEnd', outterTestEnd, 'outter test ends'],
-  ['suiteStart', innerSuiteStart, 'inner suite starts'],
-  ['testStart', innerTestStart, 'inner test starts'],
-  ['testEnd', innerTestEnd, 'inner test ends'],
-  ['suiteEnd', innerSuiteEnd, 'inner suite ends', 'passed'],
-  ['suiteEnd', outterSuiteEnd, 'outter suite ends', 'passed'],
-  ['runEnd', globalSuiteEnd, 'global suite ends', 'failed']
+  ['runStart', globalSuiteStart],
+
+  ['testStart', globalTestStart],
+  ['testEnd', globalTestEnd],
+
+  ['suiteStart', passingSuiteStart],
+  ['testStart', passingTestStart1],
+  ['testEnd', passingTestEnd1],
+  ['suiteEnd', passingSuiteEnd],
+
+  ['suiteStart', skippedSuiteStart],
+  ['testStart', skippedTestStart1],
+  ['testEnd', skippedTestEnd1],
+  ['suiteEnd', skippedSuiteEnd],
+
+  ['suiteStart', failingSuiteStart],
+  ['testStart', failingTestStart1],
+  ['testEnd', failingTestEnd1],
+  ['suiteEnd', failingSuiteEnd],
+
+  ['suiteStart', testSuiteStart],
+  ['testStart', passingTestStart2],
+  ['testEnd', passingTestEnd2],
+  ['testStart', skippedTestStart2],
+  ['testEnd', skippedTestEnd2],
+  ['testStart', failingTestStart2],
+  ['testEnd', failingTestEnd2],
+  ['suiteEnd', testSuiteEnd],
+
+  ['suiteStart', outerSuiteStart],
+  ['testStart', outerTestStart],
+  ['testEnd', outerTestEnd],
+  ['suiteStart', innerSuiteStart],
+  ['testStart', innerTestStart],
+  ['testEnd', innerTestEnd],
+  ['suiteEnd', innerSuiteEnd],
+  ['suiteEnd', outerSuiteEnd],
+
+  ['runEnd', globalSuiteEnd]
 ];
