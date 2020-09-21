@@ -3,7 +3,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const chalk = require('chalk');
+const kleur = require('kleur');
 const rimraf = require('rimraf');
 const semver = require('semver');
 
@@ -45,14 +45,14 @@ for (const pkg of packages) {
   const workingVersions = [];
   const notWorkingVersions = [];
 
-  console.log(chalk.underline.bold.green(pkg.name));
+  console.log(kleur.green().bold().underline(pkg.name));
   console.log();
 
   versions.forEach(function (version) {
     if (!semver.satisfies(version, pkg.range)) {
       return;
     }
-    process.stdout.write(chalk.dim(`Testing version: ${version}`));
+    process.stdout.write(kleur.dim(`Testing version: ${version}`));
 
     // Install this package in a temporary location rather overriding
     // the main package in our woring copy.
@@ -95,7 +95,7 @@ for (const pkg of packages) {
     if (details.status === 0) {
       workingVersions.push(version);
       logFile = path.join(logDir, `passed--${pkg.name}--${version}.log`);
-      process.stdout.write(chalk.dim('.') + '\n');
+      process.stdout.write(kleur.dim('.') + '\n');
     } else {
       notWorkingVersions.push(version);
       logFile = path.join(logDir, `failed--${pkg.name}--${version}.log`);
@@ -113,7 +113,7 @@ for (const pkg of packages) {
   module.exports[pkg.name] = notWorkingVersions;
 
   console.log();
-  console.log(chalk.green('Working: ' + workingVersions.join(', ') + ';'));
-  console.log(chalk.red('Not working: ' + notWorkingVersions.join(', ') + ';'));
+  console.log(kleur.green('Working: ' + workingVersions.join(', ') + ';'));
+  console.log(kleur.red('Not working: ' + notWorkingVersions.join(', ') + ';'));
   console.log();
 }

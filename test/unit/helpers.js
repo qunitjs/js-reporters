@@ -1,9 +1,7 @@
 /* eslint-env qunit */
-/* eslint-disable no-unused-expressions */
-
 const { test } = QUnit;
 const sinon = require('sinon');
-const JsReporters = require('../../');
+const JsReporters = require('../../index.js');
 const data = require('../fixtures/unit.js');
 
 QUnit.module('Helpers', function () {
@@ -70,25 +68,25 @@ QUnit.module('Helpers', function () {
     test('return a suite start', assert => {
       const startSuite = JsReporters.createSuiteStart(data.startSuite);
 
-      assert.deepEqual(startSuite, data.startSuite);
+      assert.propEqual(startSuite, data.startSuite);
     });
 
     test('return a test start', assert => {
       const startTest = JsReporters.createTestStart(data.startTest);
 
-      assert.deepEqual(startTest, data.startTest);
+      assert.propEqual(startTest, data.startTest);
     });
 
     test('return a test end', assert => {
       const endTest = JsReporters.createTestEnd(data.endTest);
 
-      assert.deepEqual(endTest, data.endTest);
+      assert.propEqual(endTest, data.endTest);
     });
 
     test('return a suite end', assert => {
       const endSuite = JsReporters.createSuiteEnd(data.endSuite);
 
-      assert.deepEqual(endSuite, data.endSuite);
+      assert.propEqual(endSuite, data.endSuite);
     });
   });
 });

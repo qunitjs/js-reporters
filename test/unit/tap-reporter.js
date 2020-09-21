@@ -1,18 +1,15 @@
 /* eslint-env qunit */
-/* eslint-disable no-unused-expressions */
-
 const { test } = QUnit;
-const chalk = require('chalk');
+const kleur = require('kleur');
 const sinon = require('sinon');
-const { EventEmitter } = require('events');
-const JsReporters = require('../../');
+const JsReporters = require('../../index.js');
 const data = require('../fixtures/unit.js');
 
 QUnit.module('Tap reporter', hooks => {
   let emitter, sandbox;
 
   hooks.before(function () {
-    emitter = new EventEmitter();
+    emitter = new JsReporters.EventEmitter();
     JsReporters.TapReporter.init(emitter);
     sandbox = sinon.sandbox.create();
   });
@@ -40,7 +37,7 @@ QUnit.module('Tap reporter', hooks => {
 
   test('output ok for a skipped test', assert => {
     const spy = sandbox.stub(console, 'log');
-    const expected = chalk.yellow('ok 2 # SKIP ' + data.skippedTest.fullName.join(' > '));
+    const expected = kleur.yellow('ok 2 # SKIP ' + data.skippedTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.skippedTest);
 
@@ -49,7 +46,7 @@ QUnit.module('Tap reporter', hooks => {
 
   test('output not ok for a todo test', assert => {
     const spy = sandbox.stub(console, 'log');
-    const expected = chalk.cyan('not ok 3 # TODO ' + data.todoTest.fullName.join(' > '));
+    const expected = kleur.cyan('not ok 3 # TODO ' + data.todoTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.todoTest);
 
@@ -58,7 +55,7 @@ QUnit.module('Tap reporter', hooks => {
 
   test('output not ok for a failing test', assert => {
     const spy = sandbox.stub(console, 'log');
-    const expected = chalk.red('not ok 4 ' + data.failingTest.fullName.join(' > '));
+    const expected = kleur.red('not ok 4 ' + data.failingTest.fullName.join(' > '));
 
     emitter.emit('testEnd', data.failingTest);
 
@@ -110,9 +107,9 @@ QUnit.module('Tap reporter', hooks => {
     const spy = sandbox.stub(console, 'log');
     const summary = '1..6';
     const passCount = '# pass 3';
-    const skipCount = chalk.yellow('# skip 1');
-    const todoCount = chalk.cyan('# todo 0');
-    const failCount = chalk.red('# fail 2');
+    const skipCount = kleur.yellow('# skip 1');
+    const todoCount = kleur.cyan('# todo 0');
+    const failCount = kleur.red('# fail 2');
 
     emitter.emit('runEnd', {
       testCounts: {

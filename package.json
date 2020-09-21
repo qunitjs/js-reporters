@@ -2,30 +2,52 @@
   "name": "js-reporters",
   "version": "1.2.3",
   "description": "Common reporter interface for JavaScript testing frameworks.",
-  "main": "index.js",
+  "main": "dist/js-reporters.js",
+  "files": [
+    "dist/"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/js-reporters/js-reporters.git"
+    "url": "https://github.com/js-reporters/js-reporters.git"
   },
   "engines": {
     "node": ">=10"
   },
   "scripts": {
+    "build": "rollup -c",
+    "prepare": "npm run build",
     "lint": "semistandard",
-    "test": "npm run lint && npm run test-unit && npm run test-integration",
+    "test": "npm run lint && npm run test-unit && npm run test-integration && npm run test-browser",
     "test-unit": "qunit 'test/unit/*.js'",
     "test-integration": "qunit test/integration/adapters.js",
-    "test-versions": "qunit test/versions/versions.js"
+    "test-browser": "karma start",
+    "test-versions": "qunit test/versions/versions.js",
+    "coverage": "nyc qunit 'test/unit/*.js' test/integration/adapters.js",
+    "coveralls": "npm run coverage && cat coverage/lcov.info | coveralls"
   },
   "devDependencies": {
-    "chalk": "^1.1.3",
+    "@babel/core": "7.11.1",
+    "@babel/preset-env": "7.11.0",
+    "@rollup/plugin-babel": "5.2.0",
+    "@rollup/plugin-commonjs": "15.0.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "commitplease": "3.1.0",
+    "coveralls": "^3.1.0",
+    "events": "^3.2.0",
     "jasmine": "3.6.1",
+    "karma": "^5.2.2",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-firefox-launcher": "^1.3.0",
+    "karma-qunit": "^4.1.1",
+    "karma-rollup-preprocessor": "^7.0.5",
+    "kleur": "^4.1.1",
     "mocha": "5.2.0",
+    "nyc": "^15.1.0",
     "qunit": "^2.11.1",
     "qunitjs": "1.23.1",
     "rimraf": "^2.6.3",
+    "rollup": "2.26.0",
     "semistandard": "14.2.3",
     "semver": "^7.3.2",
     "sinon": "^1.17.4"
@@ -40,5 +62,16 @@
       "Spec",
       "Docs"
     ]
+  },
+  "nyc": {
+    "include": [
+      "lib/**"
+    ],
+    "reporter": [
+      "text",
+      "html",
+      "lcovonly"
+    ],
+    "report-dir": "coverage"
   }
 }

@@ -1,5 +1,5 @@
 const path = require('path');
-const JsReporters = require('../../');
+const JsReporters = require('../../index.js');
 
 const testDir = path.join(__dirname, '../fixtures/integration');
 

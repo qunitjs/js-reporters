@@ -3,5 +3,9 @@ node_js:
   - '10' # LTS
   - '12' # LTS
   - '14' # Current
-script:
-  - "npm test"
+jobs:
+  include:
+    - name: Code coverage
+      os: linux
+      node_js: "14"
+      script: npm run coveralls

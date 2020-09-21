@@ -1,3 +1,4 @@
+const EventEmitter = require('events');
 const QUnitAdapter = require('./lib/adapters/QUnitAdapter.js');
 const JasmineAdapter = require('./lib/adapters/JasmineAdapter.js');
 const MochaAdapter = require('./lib/adapters/MochaAdapter.js');
@@ -23,6 +24,7 @@ module.exports = {
   TestEnd,
   SuiteStart,
   SuiteEnd,
+  EventEmitter,
   createSuiteStart,
   createTestStart,
   createTestEnd,
