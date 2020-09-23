@@ -11,7 +11,7 @@
 
 Participate::
   https://github.com/js-reporters[GitHub js-reporters/js-reporters] (https://github.com/js-reporters/issues/new[new issue], https://github.com/js-reporters/issues[open issues]) +
-  https://gitter.im/qunitjs/qunit[Chat room on Gitter]
+  https://gitter.im/js-reporters/js-reporters[Chat room on Gitter]
 
 Last updated::
   19 September 2020

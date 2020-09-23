@@ -1,7 +1,7 @@
 # js-reporters
 
 [![Build Status](https://travis-ci.org/js-reporters/js-reporters.svg?branch=master)](https://travis-ci.org/js-reporters/js-reporters)
-[![Chat on Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/qunitjs/qunit)
+[![Chat on Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/js-reporters/js-reporters)
 [![npm](https://img.shields.io/npm/dm/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
 [![npm](https://img.shields.io/npm/v/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
 [![npm](https://img.shields.io/npm/l/js-reporters.svg?maxAge=2592000)](https://www.npmjs.com/package/js-reporters)
@@ -41,7 +41,7 @@ Our mission is to deliver:
 
 Would _you_ be interested in discussing this with us further? Please join in!
 
-* [Join the Chat room](https://gitter.im/qunitjs/qunit)
+* [Join the Chat room](https://gitter.im/js-reporters/js-reporters)
 * [Browse open issues](https://github.com/js-reporters/js-reporters/issues/)
 * [Help frameworks and runners implement the spec](#cross-project-coordination)
 
