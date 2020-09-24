@@ -5,7 +5,7 @@ This document studies the differencess between various JavaScript testing framew
 ## Mocha
 
 [Mocha](https://github.com/mochajs/mocha) is a testing framework without builtin assertions, this is why it is not checking tests
-for at least one assertion, so in our Mocha specific [test fixture](https://github.com/js-reporters/js-reporters/blob/master/test/fixtures/mocha.js)
+for at least one assertion, so in our Mocha specific [test fixture](../test/fixtures/integration/mocha.js)
 we can have empty tests.
 
 Tests are grouped in `suites`, which can also be `nested`. Tests can be placed also outside of a suite, we call them *global tests*.
