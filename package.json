@@ -32,7 +32,6 @@
     "@rollup/plugin-babel": "5.2.0",
     "@rollup/plugin-commonjs": "15.0.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
-    "commitplease": "3.1.0",
     "coveralls": "^3.1.0",
     "events": "^3.2.0",
     "jasmine": "3.6.1",
@@ -51,17 +50,6 @@
     "semistandard": "14.2.3",
     "semver": "^7.3.2",
     "sinon": "^1.17.4"
-  },
-  "commitplease": {
-    "nohook": true,
-    "components": [
-      "Build",
-      "Release",
-      "Reporter",
-      "Test",
-      "Spec",
-      "Docs"
-    ]
   },
   "nyc": {
     "include": [

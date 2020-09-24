@@ -376,4 +376,4 @@ The editors would like to thank the following people for their contributions to 
 
 This standard is written by Jörn Zaefferer, Timo Tijhof, Franziska Carstens, and Florentin Simion.
 
-Copyright 2014-2020 JS Reporters. This text is licensed under the link:../LICENSE[MIT license].
+Copyright JS Reporters. This text is licensed under the link:../LICENSE[MIT license].
