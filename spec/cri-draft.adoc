@@ -254,7 +254,6 @@ The **Assertion** object contains information about a single <<assertion>>.
 * `Mixed` **expected**: The expected value passed to the assertion, should be similar to `actual` for passed assertions.
 * `string` **message**: Name of the actual value, or description of what the assertion validates.
 * `string|undefined` **stack**: Optional stack trace. For a "passed" assertion, it is always `undefined`.
-* `boolean` **todo**: Whether this assertion was part of a todo test.
 
 It is allowed for additional non-standard properties to be added to am Assertion object, by the testing framework or a reporter.
 

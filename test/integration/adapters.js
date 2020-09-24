@@ -47,7 +47,7 @@ function normalizeTestEnd (test) {
     test.runtime = 42;
   }
 
-  // Only check the "passed" and any "todo" property.
+  // Only check the "passed" property.
   // Throw away the rest of the actual assertion objects as being framework-specific.
   if (test.assertions) {
     test.assertions.forEach(assertion => {

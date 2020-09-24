@@ -3,8 +3,7 @@ const failedAssertion = {
   actual: undefined,
   expected: undefined,
   message: undefined,
-  stack: undefined,
-  todo: undefined
+  stack: undefined
 };
 
 const passedAssertion = {
@@ -12,8 +11,7 @@ const passedAssertion = {
   actual: undefined,
   expected: undefined,
   message: undefined,
-  stack: undefined,
-  todo: undefined
+  stack: undefined
 };
 
 const globalTestStart = {
