@@ -51,18 +51,16 @@ function normalizeTestEnd (test) {
   // Throw away the rest of the actual assertion objects as being framework-specific.
   if (test.assertions) {
     test.assertions.forEach(assertion => {
-      assertion.actual = undefined;
-      assertion.expected = undefined;
-      assertion.message = undefined;
-      assertion.stack = undefined;
+      Object.keys(assertion).forEach(key => {
+        if (key !== 'passed') delete assertion[key];
+      });
     });
   }
   if (test.errors) {
     test.errors.forEach(assertion => {
-      assertion.actual = undefined;
-      assertion.expected = undefined;
-      assertion.message = undefined;
-      assertion.stack = undefined;
+      Object.keys(assertion).forEach(key => {
+        if (key !== 'passed') delete assertion[key];
+      });
     });
   }
 }
@@ -129,7 +127,13 @@ QUnit.module('Adapters integration', function () {
 
       test('Event "testStart" data', assert => {
         const actuals = collectedData.filter(pair => pair[0] === 'testStart');
-        expectedData.filter(pair => pair[0] === 'testStart').forEach((expected, i) => {
+        const expecteds = expectedData.filter(pair => pair[0] === 'testStart');
+        assert.propEqual(
+          actuals.map(expected => expected[1].name),
+          expecteds.map(pair => pair[1].name),
+          'Test names'
+        );
+        expecteds.forEach((expected, i) => {
           assert.propEqual(
             actuals[i][1],
             expected[1],
@@ -140,7 +144,13 @@ QUnit.module('Adapters integration', function () {
 
       test('Event "testEnd" data', assert => {
         const actuals = collectedData.filter(pair => pair[0] === 'testEnd');
-        expectedData.filter(pair => pair[0] === 'testEnd').forEach((expected, i) => {
+        const expecteds = expectedData.filter(pair => pair[0] === 'testEnd');
+        assert.propEqual(
+          actuals.map(expected => expected[1].name),
+          expecteds.map(pair => pair[1].name),
+          'Test names'
+        );
+        expecteds.forEach((expected, i) => {
           assert.propEqual(
             actuals[i][1],
             expected[1],
@@ -151,7 +161,13 @@ QUnit.module('Adapters integration', function () {
 
       test('Event "suiteStart" data', assert => {
         const actuals = collectedData.filter(pair => pair[0] === 'suiteStart');
-        expectedData.filter(pair => pair[0] === 'suiteStart').forEach((expected, i) => {
+        const expecteds = expectedData.filter(pair => pair[0] === 'suiteStart');
+        assert.propEqual(
+          actuals.map(expected => expected[1].name),
+          expecteds.map(pair => pair[1].name),
+          'Suite names'
+        );
+        expecteds.forEach((expected, i) => {
           assert.propEqual(
             actuals[i][1],
             expected[1],
@@ -162,7 +178,13 @@ QUnit.module('Adapters integration', function () {
 
       test('Event "suiteEnd" data', assert => {
         const actuals = collectedData.filter(pair => pair[0] === 'suiteEnd');
-        expectedData.filter(pair => pair[0] === 'suiteEnd').forEach((expected, i) => {
+        const expecteds = expectedData.filter(pair => pair[0] === 'suiteEnd');
+        assert.propEqual(
+          actuals.map(expected => expected[1].name),
+          expecteds.map(pair => pair[1].name),
+          'Suite names'
+        );
+        expecteds.filter(pair => pair[0] === 'suiteEnd').forEach((expected, i) => {
           assert.propEqual(
             actuals[i][1],
             expected[1],
