@@ -28,7 +28,7 @@ QUnit.module('Tap reporter', hooks => {
 
   test('output ok for a passing test', assert => {
     const spy = sandbox.stub(console, 'log');
-    const expected = 'ok 1 ' + data.passingTest.fullName.join(' > ');
+    const expected = 'ok 1 pass';
 
     emitter.emit('testEnd', data.passingTest);
 
@@ -37,7 +37,7 @@ QUnit.module('Tap reporter', hooks => {
 
   test('output ok for a skipped test', assert => {
     const spy = sandbox.stub(console, 'log');
-    const expected = kleur.yellow('ok 2 # SKIP ' + data.skippedTest.fullName.join(' > '));
+    const expected = kleur.yellow('ok 2 # SKIP skip');
 
     emitter.emit('testEnd', data.skippedTest);
 
@@ -46,7 +46,7 @@ QUnit.module('Tap reporter', hooks => {
 
   test('output not ok for a todo test', assert => {
     const spy = sandbox.stub(console, 'log');
-    const expected = kleur.cyan('not ok 3 # TODO ' + data.todoTest.fullName.join(' > '));
+    const expected = kleur.cyan('not ok 3 # TODO todo');
 
     emitter.emit('testEnd', data.todoTest);
 
@@ -55,7 +55,7 @@ QUnit.module('Tap reporter', hooks => {
 
   test('output not ok for a failing test', assert => {
     const spy = sandbox.stub(console, 'log');
-    const expected = kleur.red('not ok 4 ' + data.failingTest.fullName.join(' > '));
+    const expected = kleur.red('not ok 4 fail');
 
     emitter.emit('testEnd', data.failingTest);
 
