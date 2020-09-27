@@ -66,27 +66,17 @@ QUnit.module('Helpers', function () {
 
   QUnit.module('create functions', function () {
     test('return a suite start', assert => {
-      const startSuite = JsReporters.createSuiteStart(data.startSuite);
-
-      assert.propEqual(startSuite, data.startSuite);
+      assert.propEqual(
+        JsReporters.createSuiteStart(data.suiteEnd),
+        data.suiteStart
+      );
     });
 
     test('return a test start', assert => {
-      const startTest = JsReporters.createTestStart(data.startTest);
-
-      assert.propEqual(startTest, data.startTest);
-    });
-
-    test('return a test end', assert => {
-      const endTest = JsReporters.createTestEnd(data.endTest);
-
-      assert.propEqual(endTest, data.endTest);
-    });
-
-    test('return a suite end', assert => {
-      const endSuite = JsReporters.createSuiteEnd(data.endSuite);
-
-      assert.propEqual(endSuite, data.endSuite);
+      assert.propEqual(
+        JsReporters.createTestStart(data.passingTest),
+        data.passingTestStart
+      );
     });
   });
 });
