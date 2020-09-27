@@ -2,8 +2,7 @@ function mockStack (error) {
   error.stack = `    at Object.<anonymous> (/dev/null/test/unit/data.js:6:5)
     at require (internal/modules/cjs/helpers.js:22:18)
     at /dev/null/node_modules/mocha/lib/mocha.js:220:27
-    at startup (internal/bootstrap/node.js:283:19)
-    at bootstrapNodeJSCore (internal/bootstrap/node.js:743:3)`;
+    at startup (internal/bootstrap/node.js:283:19)`;
   return error;
 }
 
@@ -48,7 +47,6 @@ module.exports = {
         at require (internal/modules/cjs/helpers.js:22:18)
         at /dev/null/node_modules/mocha/lib/mocha.js:220:27
         at startup (internal/bootstrap/node.js:283:19)
-        at bootstrapNodeJSCore (internal/bootstrap/node.js:743:3)
   ...`,
     `  ---
   message: second error
@@ -58,7 +56,6 @@ module.exports = {
         at require (internal/modules/cjs/helpers.js:22:18)
         at /dev/null/node_modules/mocha/lib/mocha.js:220:27
         at startup (internal/bootstrap/node.js:283:19)
-        at bootstrapNodeJSCore (internal/bootstrap/node.js:743:3)
   ...`
   ],
   actualUndefinedTest: copyErrors({
