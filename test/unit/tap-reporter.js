@@ -5,7 +5,7 @@ const sinon = require('sinon');
 const JsReporters = require('../../index.js');
 const data = require('../fixtures/unit.js');
 
-QUnit.module('Tap reporter', hooks => {
+QUnit.module('TapReporter', hooks => {
   let emitter, sandbox;
 
   hooks.before(function () {
@@ -71,35 +71,72 @@ QUnit.module('Tap reporter', hooks => {
     }
   });
 
-  test('output actual value for failed assertions even it was undefined', assert => {
+  test('output actual assertion value of undefined', assert => {
     const spy = sandbox.stub(console, 'log');
-
     emitter.emit('testEnd', data.actualUndefinedTest);
-
     assert.true(spy.calledWithMatch(/^ {2}actual {2}: undefined$/m));
   });
 
-  test('output actual value for failed assertions even it was falsy', assert => {
+  test('output actual assertion value of Infinity', assert => {
     const spy = sandbox.stub(console, 'log');
+    emitter.emit('testEnd', data.actualInfinity);
+    assert.true(spy.calledWithMatch(/^ {2}actual {2}: Infinity$/m));
+  });
 
-    emitter.emit('testEnd', data.actualFalsyTest);
+  test('output actual assertion value of "abc"', assert => {
+    const spy = sandbox.stub(console, 'log');
+    emitter.emit('testEnd', data.actualStringChar);
+    // No redundant quotes
+    assert.true(spy.calledWithMatch(/^ {2}actual {2}: abc$/m));
+  });
 
+  test('output actual assertion value of "abc\\n"', assert => {
+    const spy = sandbox.stub(console, 'log');
+    emitter.emit('testEnd', data.actualStringOneTailLn);
+    assert.equal(spy.args[1][0], data.actualStringOneTailLnTap);
+  });
+
+  test('output actual assertion value of "abc\\n\\n"', assert => {
+    const spy = sandbox.stub(console, 'log');
+    emitter.emit('testEnd', data.actualStringTwoTailLn);
+    assert.equal(spy.args[1][0], data.actualStringTwoTailLnTap);
+  });
+
+  test('output actual assertion value of "2"', assert => {
+    const spy = sandbox.stub(console, 'log');
+    emitter.emit('testEnd', data.actualStringNum);
+    // Quotes required to disambiguate YAML value
+    assert.true(spy.calledWithMatch(/^ {2}actual {2}: "2"$/m));
+  });
+
+  test('output actual assertion value of "true"', assert => {
+    const spy = sandbox.stub(console, 'log');
+    emitter.emit('testEnd', data.actualStringBool);
+    // Quotes required to disambiguate YAML value
+    assert.true(spy.calledWithMatch(/^ {2}actual {2}: "true"$/m));
+  });
+
+  test('output actual assertion value of 0', assert => {
+    const spy = sandbox.stub(console, 'log');
+    emitter.emit('testEnd', data.actualZero);
     assert.true(spy.calledWithMatch(/^ {2}actual {2}: 0$/m));
   });
 
-  test('output expected value for failed assertions even it was undefined', assert => {
+  test('output actual assertion value of []', assert => {
     const spy = sandbox.stub(console, 'log');
+    emitter.emit('testEnd', data.actualArray);
+    assert.equal(spy.args[1][0], data.actualArrayTap);
+  });
 
+  test('output expected assertion of undefined', assert => {
+    const spy = sandbox.stub(console, 'log');
     emitter.emit('testEnd', data.expectedUndefinedTest);
-
     assert.true(spy.calledWithMatch(/^ {2}expected: undefined$/m));
   });
 
-  test('output expected value for failed assertions even it was falsy', assert => {
+  test('output expected assertion of 0', assert => {
     const spy = sandbox.stub(console, 'log');
-
     emitter.emit('testEnd', data.expectedFalsyTest);
-
     assert.true(spy.calledWithMatch(/^ {2}expected: 0$/m));
   });
 

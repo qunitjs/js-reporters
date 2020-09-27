@@ -71,7 +71,101 @@ module.exports = {
     }],
     assertions: null
   }),
-  actualFalsyTest: copyErrors({
+  actualInfinity: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: Infinity,
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualStringChar: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: 'abc',
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualStringNum: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: '2',
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualStringBool: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: 'true',
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualStringOneTailLn: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: 'abc\n',
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualStringOneTailLnTap: `  ---
+  message: failed
+  severity: failed
+  actual  : |
+    abc
+  expected: expected
+  ...`,
+  actualStringTwoTailLn: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: 'abc\n\n',
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualStringTwoTailLnTap: `  ---
+  message: failed
+  severity: failed
+  actual  : |+
+    abc
+    
+    
+  expected: expected
+  ...`,
+  actualZero: copyErrors({
     name: 'Failing',
     suiteName: undefined,
     fullName: ['Failing'],
@@ -84,6 +178,25 @@ module.exports = {
     }],
     assertions: null
   }),
+  actualArray: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: [],
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualArrayTap: `  ---
+  message: failed
+  severity: failed
+  actual  : []
+  expected: expected
+  ...`,
   expectedUndefinedTest: copyErrors({
     name: 'fail',
     suiteName: undefined,
