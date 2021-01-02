@@ -4,12 +4,18 @@ const sinon = require('sinon');
 const JsReporters = require('../../index.js');
 
 QUnit.module('ConsoleReporter', hooks => {
-  let emitter, sandbox;
+  let emitter, sandbox, con;
 
-  hooks.before(function () {
+  hooks.beforeEach(function () {
     emitter = new JsReporters.EventEmitter();
-    JsReporters.ConsoleReporter.init(emitter);
     sandbox = sinon.sandbox.create();
+    con = {
+      log: sandbox.stub(),
+      group: sandbox.stub(),
+      groupEnd: sandbox.stub()
+    };
+    // eslint-disable-next-line no-new
+    new JsReporters.ConsoleReporter(emitter, con);
   });
 
   hooks.afterEach(function () {
@@ -17,42 +23,34 @@ QUnit.module('ConsoleReporter', hooks => {
   });
 
   test('Event "runStart"', assert => {
-    const spy = sandbox.stub(console, 'log');
     emitter.emit('runStart', {});
-    assert.equal(1, spy.callCount);
+    assert.equal(con.log.callCount, 1);
   });
 
   test('Event "runEnd"', assert => {
-    const spy = sandbox.stub(console, 'log');
     emitter.emit('runEnd', {});
-    assert.equal(1, spy.callCount);
+    assert.equal(con.log.callCount, 1);
   });
 
   test('Event "suiteStart"', assert => {
-    const log = sandbox.stub(console, 'log');
-    const group = sandbox.stub(console, 'group');
     emitter.emit('suiteStart', {});
-    assert.equal(1, log.callCount);
-    assert.equal(1, group.callCount);
+    assert.equal(con.log.callCount, 1);
+    assert.equal(con.group.callCount, 1);
   });
 
   test('Event "suiteEnd"', assert => {
-    const log = sandbox.stub(console, 'log');
-    const group = sandbox.stub(console, 'groupEnd');
     emitter.emit('suiteEnd', {});
-    assert.equal(1, log.callCount);
-    assert.equal(1, group.callCount);
+    assert.equal(con.log.callCount, 1);
+    assert.equal(con.groupEnd.callCount, 1);
   });
 
   test('Event "testStart"', assert => {
-    const spy = sandbox.stub(console, 'log');
     emitter.emit('testStart', {});
-    assert.equal(1, spy.callCount);
+    assert.equal(con.log.callCount, 1);
   });
 
   test('Event "testEnd"', assert => {
-    const spy = sandbox.stub(console, 'log');
     emitter.emit('testEnd', {});
-    assert.equal(1, spy.callCount);
+    assert.equal(con.log.callCount, 1);
   });
 });
