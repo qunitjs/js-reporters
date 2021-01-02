@@ -8,14 +8,14 @@ const passedAssertion = {
 
 const globalTestStart = {
   name: 'global test',
-  suiteName: undefined,
+  suiteName: null,
   fullName: [
     'global test'
   ]
 };
 const globalTestEnd = {
   name: 'global test',
-  suiteName: undefined,
+  suiteName: null,
   fullName: [
     'global test'
   ],
@@ -111,7 +111,7 @@ const skippedTestEnd1 = {
     'should skip'
   ],
   status: 'skipped',
-  runtime: undefined,
+  runtime: null,
   errors: [],
   assertions: []
 };
@@ -125,7 +125,7 @@ const skippedSuiteEnd = {
   ],
   childSuites: [],
   status: 'skipped',
-  runtime: undefined,
+  runtime: null,
   testCounts: {
     passed: 0,
     failed: 0,
@@ -253,7 +253,7 @@ const skippedTestEnd2 = {
     'should skip'
   ],
   status: 'skipped',
-  runtime: undefined,
+  runtime: null,
   errors: [],
   assertions: []
 };
@@ -414,7 +414,7 @@ const outerSuiteEnd = {
 };
 
 const globalSuiteStart = {
-  name: undefined,
+  name: null,
   fullName: [],
   tests: [
     globalTestStart
@@ -431,7 +431,7 @@ const globalSuiteStart = {
   }
 };
 const globalSuiteEnd = {
-  name: undefined,
+  name: null,
   fullName: [],
   tests: [
     globalTestEnd
