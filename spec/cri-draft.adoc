@@ -185,7 +185,7 @@ A **SuiteStart** is a collection of TestStart and other SuiteStart objects.
 
 `SuiteStart` object:
 
-* `string|undefined` **name**: Name of the suite, or `undefined` for the `globalSuite`.
+* `string|null` **name**: Name of the suite, or `null` for the `globalSuite`.
 * `Array` **fullname**: List of strings containing the name of the suite and the names of all its ancestor suites.
 * `Array<TestStart>` **tests**: List of all tests that belong directly to the suite (not a child suite), as <<teststart>> objects.
 * `Array<SuiteStart>` **childSuites**: List of all direct child suites, as <<suitestart>> objects.
@@ -198,7 +198,7 @@ A **SuiteEnd** is a collection of TestEnd and other SuiteEnd objects, emitted af
 
 `SuiteEnd` object:
 
-* `string|undefined` **name**: Name of the suite, or `undefined` for the `globalSuite`.
+* `string|null` **name**: Name of the suite, or `null` for the `globalSuite`.
 * `Array` **fullname**: List of strings containing the name of the suite and the names of all its ancestor suites.
 * `Array<TestEnd>` **tests**: List of all tests that belong directly to the suite (not a child suite), as <<testend>> objects.
 * `Array<SuiteEnd>` **childSuites**: List of all direct child suites, as <<suiteend>> objects.
@@ -222,7 +222,7 @@ A **TestStart** holds basic information about a <<test>> as it is known before e
 `TestStart` object:
 
 * `string` **name**: Name of the test.
-* `string|undefined` **suiteName**: Name of the suite the test belongs to, or `undefined` for the `globalSuite`.
+* `string|null` **suiteName**: Name of the suite the test belongs to, or `null` for the `globalSuite`.
 * `Array<string>` **fullName**: List of strings containing the name of the test, and the names of all ancestor suites.
 
 === TestEnd
@@ -232,7 +232,7 @@ A **TestEnd** holds information about a <<test>> as captured after any execution
 `TestEnd` object:
 
 * `string` **name**: Name of the test.
-* `string|undefined` **suiteName**: Name of the suite the test belongs to, or `undefined` for the `globalSuite`.
+* `string|null` **suiteName**: Name of the suite the test belongs to, or `null` for the `globalSuite`.
 * `Array<string>` **fullName**: List of strings containing the name of the test, and the names of all ancestor suites.
 * `string` **status**: Result of the test, one of:
 ** **passed**, if all assertions have passed, or if no assertions were recorded.
@@ -253,7 +253,7 @@ The **Assertion** object contains information about a single <<assertion>>.
 * `Mixed` **actual**: The actual value passed to the assertion, should be similar to `expected` for passed assertions.
 * `Mixed` **expected**: The expected value passed to the assertion, should be similar to `actual` for passed assertions.
 * `string` **message**: Name of the actual value, or description of what the assertion validates.
-* `string|undefined` **stack**: Optional stack trace. For a "passed" assertion, it is always `undefined`.
+* `string|null` **stack**: Optional stack trace. For a "passed" assertion, the property must be set to `null`.
 
 It is allowed for additional non-standard properties to be added to am Assertion object, by the testing framework or a reporter.
 
