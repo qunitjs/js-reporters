@@ -14,26 +14,19 @@ function rerequire (file) {
  * Collect data from an (adapted) runner.
  */
 function collectDataFromRunner (collectedData, done, runner) {
-  runner.on('runStart', (suite) => {
-    collectedData.push(['runStart', suite]);
+  runner.on('runStart', (runStart) => {
+    collectedData.push(['runStart', runStart]);
   });
-  runner.on('suiteStart', (suite) => {
-    collectedData.push(['suiteStart', suite]);
+  runner.on('testStart', (testStart) => {
+    collectedData.push(['testStart', testStart]);
   });
-  runner.on('suiteEnd', (suite) => {
-    normalizeSuiteEnd(suite);
-    collectedData.push(['suiteEnd', suite]);
+  runner.on('testEnd', (testEnd) => {
+    normalizeTestEnd(testEnd);
+    collectedData.push(['testEnd', testEnd]);
   });
-  runner.on('testStart', (test) => {
-    collectedData.push(['testStart', test]);
-  });
-  runner.on('testEnd', (test) => {
-    normalizeTestEnd(test);
-    collectedData.push(['testEnd', test]);
-  });
-  runner.on('runEnd', (suite) => {
-    normalizeSuiteEnd(suite);
-    collectedData.push(['runEnd', suite]);
+  runner.on('runEnd', (runEnd) => {
+    normalizeRunEnd(runEnd);
+    collectedData.push(['runEnd', runEnd]);
 
     // Notify the integration test to continue, and validate the collected data.
     done();
@@ -65,37 +58,25 @@ function normalizeTestEnd (test) {
   }
 }
 
-function normalizeSuiteEnd (suite) {
-  if (Number.isFinite(suite.runtime)) {
-    suite.runtime = 42;
+function normalizeRunEnd (runEnd) {
+  if (Number.isFinite(runEnd.runtime)) {
+    runEnd.runtime = 42;
   }
-
-  suite.tests.forEach(normalizeTestEnd);
-  suite.childSuites.forEach(normalizeSuiteEnd);
 }
 
 function fixExpectedData (adapter, expectedData) {
-  const fixTestEnd = (test) => {
-    // Don't expect passed assertion for testing frameworks
-    // that don't record all assertions.
-    if (adapter === 'Mocha' && test.status === 'passed') {
-      test.assertions = [];
-    }
-  };
-  const fixSuiteEnd = (suite) => {
-    if (Number.isFinite(suite.runtime)) {
-      suite.runtime = 42;
-    }
-    suite.tests.forEach(fixTestEnd);
-  };
-
   expectedData.forEach(([eventName, data]) => {
     if (eventName === 'testEnd') {
-      fixTestEnd(data);
+      // Don't expect passed assertion for testing frameworks
+      // that don't record all assertions.
+      if (adapter === 'Mocha' && data.status === 'passed') {
+        data.assertions = [];
+      }
     }
-    if (eventName === 'suiteEnd' || eventName === 'runEnd') {
-      fixSuiteEnd(data);
-      data.childSuites.forEach(fixSuiteEnd);
+    if (eventName === 'testEnd' || eventName === 'runEnd') {
+      if (Number.isFinite(data.runtime)) {
+        data.runtime = 42;
+      }
     }
   });
 }
@@ -155,40 +136,6 @@ QUnit.module('Adapters integration', function () {
             actuals[i][1],
             expected[1],
             `Event data for testEnd#${i}`
-          );
-        });
-      });
-
-      test('Event "suiteStart" data', assert => {
-        const actuals = collectedData.filter(pair => pair[0] === 'suiteStart');
-        const expecteds = expectedData.filter(pair => pair[0] === 'suiteStart');
-        assert.propEqual(
-          actuals.map(expected => expected[1].name),
-          expecteds.map(pair => pair[1].name),
-          'Suite names'
-        );
-        expecteds.forEach((expected, i) => {
-          assert.propEqual(
-            actuals[i][1],
-            expected[1],
-            `Event data for suiteStart#${i}`
-          );
-        });
-      });
-
-      test('Event "suiteEnd" data', assert => {
-        const actuals = collectedData.filter(pair => pair[0] === 'suiteEnd');
-        const expecteds = expectedData.filter(pair => pair[0] === 'suiteEnd');
-        assert.propEqual(
-          actuals.map(expected => expected[1].name),
-          expecteds.map(pair => pair[1].name),
-          'Suite names'
-        );
-        expecteds.filter(pair => pair[0] === 'suiteEnd').forEach((expected, i) => {
-          assert.propEqual(
-            actuals[i][1],
-            expected[1],
-            `Event data for suiteEnd#${i}`
           );
         });
       });

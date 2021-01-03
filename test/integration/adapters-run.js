@@ -65,7 +65,7 @@ module.exports = {
     QUnit.load();
   },
   QUnit: function (collectData) {
-    // Get a reporter context independent of the integration test suite itself
+    // Get a reporter context independent of the current integration test
     const QUnit = rerequire('qunit');
     global.QUnit = QUnit;
     QUnit.config.autorun = false;

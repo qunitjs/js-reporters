@@ -8,14 +8,14 @@ const passedAssertion = {
 
 const globalTestStart = {
   name: 'global test',
-  suiteName: null,
+  parentName: null,
   fullName: [
     'global test'
   ]
 };
 const globalTestEnd = {
   name: 'global test',
-  suiteName: null,
+  parentName: null,
   fullName: [
     'global test'
   ],
@@ -29,7 +29,7 @@ const globalTestEnd = {
 
 const passingTestStart1 = {
   name: 'should pass',
-  suiteName: 'suite with passing test',
+  parentName: 'suite with passing test',
   fullName: [
     'suite with passing test',
     'should pass'
@@ -37,20 +37,14 @@ const passingTestStart1 = {
 };
 const passingSuiteStart = {
   name: 'suite with passing test',
+  parentName: null,
   fullName: [
     'suite with passing test'
-  ],
-  tests: [
-    passingTestStart1
-  ],
-  childSuites: [],
-  testCounts: {
-    total: 1
-  }
+  ]
 };
 const passingTestEnd1 = {
   name: 'should pass',
-  suiteName: 'suite with passing test',
+  parentName: 'suite with passing test',
   fullName: [
     'suite with passing test',
     'should pass'
@@ -64,27 +58,19 @@ const passingTestEnd1 = {
 };
 const passingSuiteEnd = {
   name: 'suite with passing test',
+  parentName: null,
   fullName: [
     'suite with passing test'
   ],
-  tests: [
-    passingTestEnd1
-  ],
-  childSuites: [],
   status: 'passed',
-  testCounts: {
-    passed: 1,
-    failed: 0,
-    skipped: 0,
-    todo: 0,
-    total: 1
-  },
-  runtime: 42
+  runtime: 42,
+  errors: [],
+  assertions: []
 };
 
 const skippedTestStart1 = {
   name: 'should skip',
-  suiteName: 'suite with skipped test',
+  parentName: 'suite with skipped test',
   fullName: [
     'suite with skipped test',
     'should skip'
@@ -92,20 +78,14 @@ const skippedTestStart1 = {
 };
 const skippedSuiteStart = {
   name: 'suite with skipped test',
+  parentName: null,
   fullName: [
     'suite with skipped test'
-  ],
-  tests: [
-    skippedTestStart1
-  ],
-  childSuites: [],
-  testCounts: {
-    total: 1
-  }
+  ]
 };
 const skippedTestEnd1 = {
   name: 'should skip',
-  suiteName: 'suite with skipped test',
+  parentName: 'suite with skipped test',
   fullName: [
     'suite with skipped test',
     'should skip'
@@ -117,27 +97,19 @@ const skippedTestEnd1 = {
 };
 const skippedSuiteEnd = {
   name: 'suite with skipped test',
+  parentName: null,
   fullName: [
     'suite with skipped test'
   ],
-  tests: [
-    skippedTestEnd1
-  ],
-  childSuites: [],
-  status: 'skipped',
-  runtime: null,
-  testCounts: {
-    passed: 0,
-    failed: 0,
-    skipped: 1,
-    todo: 0,
-    total: 1
-  }
+  status: 'passed',
+  runtime: 0,
+  errors: [],
+  assertions: []
 };
 
 const failingTestStart1 = {
   name: 'should fail',
-  suiteName: 'suite with failing test',
+  parentName: 'suite with failing test',
   fullName: [
     'suite with failing test',
     'should fail'
@@ -145,20 +117,14 @@ const failingTestStart1 = {
 };
 const failingSuiteStart = {
   name: 'suite with failing test',
+  parentName: null,
   fullName: [
     'suite with failing test'
-  ],
-  tests: [
-    failingTestStart1
-  ],
-  childSuites: [],
-  testCounts: {
-    total: 1
-  }
+  ]
 };
 const failingTestEnd1 = {
   name: 'should fail',
-  suiteName: 'suite with failing test',
+  parentName: 'suite with failing test',
   fullName: [
     'suite with failing test',
     'should fail'
@@ -174,27 +140,19 @@ const failingTestEnd1 = {
 };
 const failingSuiteEnd = {
   name: 'suite with failing test',
+  parentName: null,
   fullName: [
     'suite with failing test'
   ],
-  tests: [
-    failingTestEnd1
-  ],
-  childSuites: [],
   status: 'failed',
-  testCounts: {
-    passed: 0,
-    failed: 1,
-    skipped: 0,
-    todo: 0,
-    total: 1
-  },
-  runtime: 42
+  runtime: 42,
+  errors: [],
+  assertions: []
 };
 
 const passingTestStart2 = {
   name: 'should pass',
-  suiteName: 'suite with tests',
+  parentName: 'suite with tests',
   fullName: [
     'suite with tests',
     'should pass'
@@ -202,7 +160,7 @@ const passingTestStart2 = {
 };
 const passingTestEnd2 = {
   name: 'should pass',
-  suiteName: 'suite with tests',
+  parentName: 'suite with tests',
   fullName: [
     'suite with tests',
     'should pass'
@@ -216,7 +174,7 @@ const passingTestEnd2 = {
 };
 const skippedTestStart2 = {
   name: 'should skip',
-  suiteName: 'suite with tests',
+  parentName: 'suite with tests',
   fullName: [
     'suite with tests',
     'should skip'
@@ -224,7 +182,7 @@ const skippedTestStart2 = {
 };
 const failingTestStart2 = {
   name: 'should fail',
-  suiteName: 'suite with tests',
+  parentName: 'suite with tests',
   fullName: [
     'suite with tests',
     'should fail'
@@ -232,22 +190,14 @@ const failingTestStart2 = {
 };
 const testSuiteStart = {
   name: 'suite with tests',
+  parentName: null,
   fullName: [
     'suite with tests'
-  ],
-  tests: [
-    passingTestStart2,
-    skippedTestStart2,
-    failingTestStart2
-  ],
-  childSuites: [],
-  testCounts: {
-    total: 3
-  }
+  ]
 };
 const skippedTestEnd2 = {
   name: 'should skip',
-  suiteName: 'suite with tests',
+  parentName: 'suite with tests',
   fullName: [
     'suite with tests',
     'should skip'
@@ -259,7 +209,7 @@ const skippedTestEnd2 = {
 };
 const failingTestEnd2 = {
   name: 'should fail',
-  suiteName: 'suite with tests',
+  parentName: 'suite with tests',
   fullName: [
     'suite with tests',
     'should fail'
@@ -275,29 +225,19 @@ const failingTestEnd2 = {
 };
 const testSuiteEnd = {
   name: 'suite with tests',
+  parentName: null,
   fullName: [
     'suite with tests'
   ],
-  tests: [
-    passingTestEnd2,
-    skippedTestEnd2,
-    failingTestEnd2
-  ],
-  childSuites: [],
   status: 'failed',
-  testCounts: {
-    passed: 1,
-    failed: 1,
-    skipped: 1,
-    todo: 0,
-    total: 3
-  },
-  runtime: 84
+  runtime: 84,
+  errors: [],
+  assertions: []
 };
 
 const outerTestStart = {
   name: 'outer test',
-  suiteName: 'outer suite',
+  parentName: 'outer suite',
   fullName: [
     'outer suite',
     'outer test'
@@ -305,7 +245,7 @@ const outerTestStart = {
 };
 const outerTestEnd = {
   name: 'outer test',
-  suiteName: 'outer suite',
+  parentName: 'outer suite',
   fullName: [
     'outer suite',
     'outer test'
@@ -319,7 +259,7 @@ const outerTestEnd = {
 };
 const innerTestStart = {
   name: 'inner test',
-  suiteName: 'inner suite',
+  parentName: 'inner suite',
   fullName: [
     'outer suite',
     'inner suite',
@@ -328,21 +268,15 @@ const innerTestStart = {
 };
 const innerSuiteStart = {
   name: 'inner suite',
+  parentName: 'outer suite',
   fullName: [
     'outer suite',
     'inner suite'
-  ],
-  tests: [
-    innerTestStart
-  ],
-  childSuites: [],
-  testCounts: {
-    total: 1
-  }
+  ]
 };
 const innerTestEnd = {
   name: 'inner test',
-  suiteName: 'inner suite',
+  parentName: 'inner suite',
   fullName: [
     'outer suite',
     'inner suite',
@@ -357,141 +291,93 @@ const innerTestEnd = {
 };
 const innerSuiteEnd = {
   name: 'inner suite',
+  parentName: 'outer suite',
   fullName: [
     'outer suite',
     'inner suite'
   ],
-  tests: [
-    innerTestEnd
-  ],
-  childSuites: [],
   status: 'passed',
-  testCounts: {
-    passed: 1,
-    failed: 0,
-    skipped: 0,
-    todo: 0,
-    total: 1
-  },
-  runtime: 42
+  runtime: 42,
+  errors: [],
+  assertions: []
 };
 
 const outerSuiteStart = {
   name: 'outer suite',
+  parentName: null,
   fullName: [
     'outer suite'
-  ],
-  tests: [
-    outerTestStart
-  ],
-  childSuites: [
-    innerSuiteStart
-  ],
-  testCounts: {
-    total: 2
-  }
+  ]
 };
 const outerSuiteEnd = {
   name: 'outer suite',
+  parentName: null,
   fullName: [
     'outer suite'
   ],
-  tests: [
-    outerTestEnd
-  ],
-  childSuites: [
-    innerSuiteEnd
-  ],
   status: 'passed',
-  testCounts: {
-    passed: 2,
-    failed: 0,
-    skipped: 0,
-    todo: 0,
-    total: 2
-  },
-  runtime: 84
+  runtime: 84,
+  errors: [],
+  assertions: []
 };
 
-const globalSuiteStart = {
+const runStart = {
   name: null,
-  fullName: [],
-  tests: [
-    globalTestStart
-  ],
-  childSuites: [
-    passingSuiteStart,
-    skippedSuiteStart,
-    failingSuiteStart,
-    testSuiteStart,
-    outerSuiteStart
-  ],
-  testCounts: {
-    total: 9
+  counts: {
+    total: 15
   }
 };
-const globalSuiteEnd = {
+const runEnd = {
   name: null,
-  fullName: [],
-  tests: [
-    globalTestEnd
-  ],
-  childSuites: [
-    passingSuiteEnd,
-    skippedSuiteEnd,
-    failingSuiteEnd,
-    testSuiteEnd,
-    outerSuiteEnd
-  ],
   status: 'failed',
-  testCounts: {
-    passed: 5,
-    failed: 2,
+  counts: {
+    passed: 9,
+    failed: 4,
     skipped: 2,
     todo: 0,
-    total: 9
+    total: 15
   },
   runtime: 294
 };
 
 module.exports = [
-  ['runStart', globalSuiteStart],
+  ['runStart', runStart],
 
   ['testStart', globalTestStart],
   ['testEnd', globalTestEnd],
 
-  ['suiteStart', passingSuiteStart],
+  ['testStart', passingSuiteStart],
   ['testStart', passingTestStart1],
   ['testEnd', passingTestEnd1],
-  ['suiteEnd', passingSuiteEnd],
+  ['testEnd', passingSuiteEnd],
 
-  ['suiteStart', skippedSuiteStart],
+  ['testStart', skippedSuiteStart],
   ['testStart', skippedTestStart1],
   ['testEnd', skippedTestEnd1],
-  ['suiteEnd', skippedSuiteEnd],
+  ['testEnd', skippedSuiteEnd],
 
-  ['suiteStart', failingSuiteStart],
+  ['testStart', failingSuiteStart],
   ['testStart', failingTestStart1],
   ['testEnd', failingTestEnd1],
-  ['suiteEnd', failingSuiteEnd],
+  ['testEnd', failingSuiteEnd],
 
-  ['suiteStart', testSuiteStart],
+  ['testStart', testSuiteStart],
   ['testStart', passingTestStart2],
   ['testEnd', passingTestEnd2],
   ['testStart', skippedTestStart2],
   ['testEnd', skippedTestEnd2],
   ['testStart', failingTestStart2],
   ['testEnd', failingTestEnd2],
-  ['suiteEnd', testSuiteEnd],
+  ['testEnd', testSuiteEnd],
 
-  ['suiteStart', outerSuiteStart],
+  ['testStart', outerSuiteStart],
   ['testStart', outerTestStart],
   ['testEnd', outerTestEnd],
-  ['suiteStart', innerSuiteStart],
+  ['testStart', innerSuiteStart],
   ['testStart', innerTestStart],
   ['testEnd', innerTestEnd],
-  ['suiteEnd', innerSuiteEnd],
-  ['suiteEnd', outerSuiteEnd],
+  ['testEnd', innerSuiteEnd],
+  ['testEnd', outerSuiteEnd],
 
-  ['runEnd', globalSuiteEnd]
+  ['runEnd', runEnd]
 ];
