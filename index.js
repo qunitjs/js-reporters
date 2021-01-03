@@ -4,6 +4,7 @@ const JasmineAdapter = require('./lib/adapters/JasmineAdapter.js');
 const MochaAdapter = require('./lib/adapters/MochaAdapter.js');
 const TapReporter = require('./lib/reporters/TapReporter.js');
 const ConsoleReporter = require('./lib/reporters/ConsoleReporter.js');
+const SummaryReporter = require('./lib/reporters/SummaryReporter.js');
 const {
   collectSuiteStartData,
   collectSuiteEndData,
@@ -18,6 +19,7 @@ module.exports = {
   MochaAdapter,
   TapReporter,
   ConsoleReporter,
+  SummaryReporter,
   EventEmitter,
   collectSuiteStartData,
   collectSuiteEndData,

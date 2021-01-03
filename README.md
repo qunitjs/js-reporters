@@ -52,26 +52,25 @@ Would _you_ be interested in discussing this with us further? Please join in!
 Listen to the events and receive the emitted data:
 
 ```js
-// Attach one of the exiting adapters.
+// Use automatic discovery of the framework adapter.
 const runner = JsReporters.autoRegister();
 
-// Listen to the same events for any testing framework.
-runner.on('testEnd', function (test) {
-  console.log('Test %s has errors:', test.fullname.join(' '), test.errors);
+// Listen to standard events, from any testing framework.
+runner.on('testEnd', (test) => {
+  console.log('Test %s has errors:', test.fullName.join(' '), test.errors);
 });
 
-runner.on('runEnd', function (globalSuite) {
-  const testCounts = globalSuite.testCounts;
+runner.on('runEnd', (run) => {
+  const counts = run.counts;
 
-  console.log('Testsuite status: %s', globalSuite.status);
-
+  console.log('Testsuite status: %s', run.status);
   console.log('Total %d tests: %d passed, %d failed, %d skipped',
-    testCounts.total,
-    testCounts.passed,
-    testCounts.failed,
-    testCounts.skipped);
-
-  console.log('Total duration: %d', globalSuite.runtime);
+    counts.total,
+    counts.passed,
+    counts.failed,
+    counts.skipped
+  );
+  console.log('Total duration: %d', run.runtime);
 });
 
 // Or use one of the built-in reporters.
