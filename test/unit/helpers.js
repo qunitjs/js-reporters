@@ -64,14 +64,7 @@ QUnit.module('Helpers', function () {
     });
   });
 
-  QUnit.module('create functions', function () {
-    test('return a suite start', assert => {
-      assert.propEqual(
-        JsReporters.createSuiteStart(data.suiteEnd),
-        data.suiteStart
-      );
-    });
-
+  QUnit.module('create functions', () => {
     test('return a test start', assert => {
       assert.propEqual(
         JsReporters.createTestStart(data.passingTest),

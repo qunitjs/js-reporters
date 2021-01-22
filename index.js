@@ -6,9 +6,6 @@ const TapReporter = require('./lib/reporters/TapReporter.js');
 const ConsoleReporter = require('./lib/reporters/ConsoleReporter.js');
 const SummaryReporter = require('./lib/reporters/SummaryReporter.js');
 const {
-  collectSuiteStartData,
-  collectSuiteEndData,
-  createSuiteStart,
   createTestStart
 } = require('./lib/helpers.js');
 const { autoRegister } = require('./lib/auto.js');
@@ -21,9 +18,6 @@ module.exports = {
   ConsoleReporter,
   SummaryReporter,
   EventEmitter,
-  collectSuiteStartData,
-  collectSuiteEndData,
-  createSuiteStart,
   createTestStart,
   autoRegister
 };
