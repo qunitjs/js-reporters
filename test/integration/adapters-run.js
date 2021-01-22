@@ -4,11 +4,13 @@ const JsReporters = require('../../index.js');
 const testDir = path.join(__dirname, '../fixtures/integration');
 
 function rerequire (file) {
-  const resolveOptions = process.env.JSREP_TMPDIR ? {
-    // Only consider our temporary install.
-    // Ignore the js-reporters own depDependencies.
-    paths: [process.env.JSREP_TMPDIR]
-  } : {};
+  const resolveOptions = process.env.JSREP_TMPDIR
+    ? {
+        // Only consider our temporary install.
+        // Ignore the js-reporters own depDependencies.
+        paths: [process.env.JSREP_TMPDIR]
+      }
+    : {};
   const resolved = require.resolve(file, resolveOptions);
   delete require.cache[resolved];
   return require(resolved);

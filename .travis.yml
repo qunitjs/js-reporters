@@ -5,7 +5,16 @@ node_js:
   - '14' # Current
 jobs:
   include:
+    # - name: SauceLabs
+    #   if: (fork = false)
+    #   os: linux
+    #   node_js: "14"
+    #   script:
+    #     - npm run lint
+    #     - npm run test-browser-saucelabs
     - name: Code coverage
+      # https://docs.travis-ci.com/user/conditions-v1
+      if: (fork = false)
       os: linux
       node_js: "14"
       script: npm run coveralls

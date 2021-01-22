@@ -130,3 +130,7 @@ Reporters and proxy layers:
 * [Karma](https://github.com/karma-runner/karma/issues/1183) (pending…)
 * [grunt-saucelabs](https://github.com/axemclion/grunt-saucelabs/issues/164) (pending…)
 * [Testling](https://github.com/substack/testling/issues/93) (pending…)
+
+## Credits
+
+[![Testing Powered By SauceLabs](https://opensource.saucelabs.com/images/opensauce/powered-by-saucelabs-badge-gray.png?sanitize=true "Testing Powered By SauceLabs")](https://saucelabs.com)

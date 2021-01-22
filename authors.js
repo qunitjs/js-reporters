@@ -4,7 +4,7 @@ function getAuthors () {
   const orderedAuthors = cp.execFileSync(
     'git',
     ['log', '--format=%aN', '--reverse'],
-    { encoding: 'utf-8' }
+    { encoding: 'utf8' }
   );
   const unique = orderedAuthors
     .trim()
