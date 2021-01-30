@@ -23,7 +23,7 @@ module.exports = {
     commonjs({
       // This makes require() work like in Node.js,
       // instead of wrapped in a {default:…} object.
-      requireReturnsDefault: 'auto'
+      requireReturnsDefault: 'preferred'
     }),
     babel({
       babelHelpers: 'bundled',

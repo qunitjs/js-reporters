@@ -22,15 +22,13 @@ module.exports = function (config) {
         name: 'JsReporters_Test',
         sourcemap: true
       },
+      // See rollup.config.js
       plugins: [
-        // For 'events' and 'kleur'
         nodeResolve({
           preferBuiltins: false
         }),
         commonjs({
-          // This makes require() work like in Node.js,
-          // instead of wrapped in a {default:…} object.
-          requireReturnsDefault: 'auto'
+          requireReturnsDefault: 'preferred'
         }),
         babel({
           babelHelpers: 'bundled',
@@ -46,6 +44,11 @@ module.exports = function (config) {
       ]
     },
     frameworks: ['qunit'],
+    sauceLabs: {
+      username: process.env.SAUCE_USERNAME,
+      accessKey: process.env.SAUCE_ACCESS_KEY,
+      region: process.env.SAUCE_REGION || 'us'
+    },
     customLaunchers: {
       firefox45: {
         base: 'SauceLabs',
@@ -84,17 +87,12 @@ module.exports = function (config) {
         version: '58.0'
       }
     },
-    concurrency: 4,
+    concurrency: 3,
     browsers: [
       'firefox45',
-      // FIXME: IE 9-10 broken due to rollup indirection logic behind require()
-      // relying on "__proto__" not counting in `Object.keys`.
-      // Ref https://github.com/rollup/plugins/issues/773.
-      // 'ie9',
-      // 'ie10',
-      // FIXME: IE 11 broken due to 'kleur' using String#includes and Array#includes
-      // Ref https://github.com/lukeed/kleur/pull/45.
-      // 'ie11',
+      'ie9',
+      'ie10',
+      'ie11',
       'edge15',
       'edge',
       'chrome58'

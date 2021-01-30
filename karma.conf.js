@@ -1,6 +1,7 @@
 module.exports = function (config) {
-  const { nodeResolve } = require('@rollup/plugin-node-resolve');
+  const { babel } = require('@rollup/plugin-babel');
   const commonjs = require('@rollup/plugin-commonjs');
+  const { nodeResolve } = require('@rollup/plugin-node-resolve');
 
   config.set({
     files: [
@@ -21,20 +22,29 @@ module.exports = function (config) {
         name: 'JsReporters_Test',
         sourcemap: true
       },
+      // See rollup.config.js
       plugins: [
-        // For 'events' and 'kleur'
         nodeResolve({
           preferBuiltins: false
         }),
         commonjs({
-          // This makes require() work like in Node.js,
-          // instead of wrapped in a {default:…} object.
-          requireReturnsDefault: 'auto'
+          requireReturnsDefault: 'preferred'
+        }),
+        babel({
+          babelHelpers: 'bundled',
+          babelrc: false,
+          presets: [
+            ['@babel/preset-env', {
+              targets: {
+                ie: 9
+              }
+            }]
+          ]
         })
       ]
     },
     frameworks: ['qunit'],
-    browsers: ['FirefoxHeadless', 'ChromeHeadless'],
+    browsers: ['FirefoxHeadless', process.platform === 'linux' && !process.env.CI ? 'ChromiumHeadless' : 'ChromeHeadless'],
     singleRun: true,
     autoWatch: false
   });
