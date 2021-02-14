@@ -11,6 +11,39 @@ function copyErrors (testEnd) {
   return testEnd;
 }
 
+/**
+ * Creates an object that has a cyclical reference.
+ */
+function createCyclical () {
+  const cyclical = { a: 'example' };
+  cyclical.cycle = cyclical;
+  return cyclical;
+}
+
+/**
+ * Creates an object that has a cyclical reference in a subobject.
+ */
+function createSubobjectCyclical () {
+  const cyclical = { a: 'example', sub: {} };
+  cyclical.sub.cycle = cyclical;
+  return cyclical;
+}
+
+/**
+ * Creates an object that references another object more
+ * than once in an acyclical way.
+ */
+function createDuplicateAcyclical () {
+  const duplicate = {
+    example: 'value'
+  };
+  return {
+    a: duplicate,
+    b: duplicate,
+    c: 'unique'
+  };
+}
+
 module.exports = {
   passingTestStart: {
     name: 'pass',
@@ -197,6 +230,79 @@ module.exports = {
   actual  : []
   expected: expected
   ...`,
+  actualCyclical: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: createCyclical(),
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualCyclicalTap: `  ---
+  message: failed
+  severity: failed
+  actual  : {
+  "a": "example",
+  "cycle": "[Circular]"
+}
+  expected: expected
+  ...`,
+  actualSubobjectCyclical: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: createSubobjectCyclical(),
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualSubobjectCyclicalTap: `  ---
+  message: failed
+  severity: failed
+  actual  : {
+  "a": "example",
+  "sub": {
+    "cycle": "[Circular]"
+  }
+}
+  expected: expected
+  ...`,
+  actualDuplicateAcyclic: copyErrors({
+    name: 'Failing',
+    suiteName: undefined,
+    fullName: ['Failing'],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: createDuplicateAcyclical(),
+      expected: 'expected'
+    }],
+    assertions: null
+  }),
+  actualDuplicateAcyclicTap: `  ---
+  message: failed
+  severity: failed
+  actual  : {
+  "a": {
+    "example": "value"
+  },
+  "b": {
+    "example": "value"
+  },
+  "c": "unique"
+}
+  expected: expected
+  ...`,
   expectedUndefinedTest: copyErrors({
     name: 'fail',
     suiteName: undefined,
@@ -220,6 +326,19 @@ module.exports = {
       passed: false,
       actual: 'actual',
       expected: 0
+    }],
+    assertions: null
+  }),
+  expectedCircularTest: copyErrors({
+    name: 'fail',
+    suiteName: undefined,
+    fullName: [],
+    status: 'failed',
+    runtime: 0,
+    errors: [{
+      passed: false,
+      actual: 'actual',
+      expected: createCyclical()
     }],
     assertions: null
   }),
