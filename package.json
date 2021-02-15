@@ -51,7 +51,8 @@
     "rollup": "2.37.1",
     "semistandard": "16.0.0",
     "semver": "7.3.4",
-    "sinon": "1.17.4"
+    "sinon": "1.17.4",
+    "tape": "^5.1.1"
   },
   "nyc": {
     "include": [

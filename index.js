@@ -2,6 +2,7 @@ const EventEmitter = require('events');
 const QUnitAdapter = require('./lib/adapters/QUnitAdapter.js');
 const JasmineAdapter = require('./lib/adapters/JasmineAdapter.js');
 const MochaAdapter = require('./lib/adapters/MochaAdapter.js');
+const TapeAdapter = require('./lib/adapters/TapeAdapter.js');
 const TapReporter = require('./lib/reporters/TapReporter.js');
 const ConsoleReporter = require('./lib/reporters/ConsoleReporter.js');
 const SummaryReporter = require('./lib/reporters/SummaryReporter.js');
@@ -14,6 +15,7 @@ module.exports = {
   QUnitAdapter,
   JasmineAdapter,
   MochaAdapter,
+  TapeAdapter,
   TapReporter,
   ConsoleReporter,
   SummaryReporter,

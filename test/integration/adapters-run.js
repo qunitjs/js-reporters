@@ -88,5 +88,16 @@ module.exports = {
 
     collectData(mochaRunner);
     mocha.run();
+  },
+  Tape: function (collectData) {
+    // Disable process exit by pretending to be a browser
+    process.browser = true;
+
+    const tape = require('tape');
+    const tapeRunner = new JsReporters.TapeAdapter(tape);
+    rerequire(path.join(testDir, 'tape.js'));
+    collectData(tapeRunner);
+
+    delete process.browser;
   }
 };

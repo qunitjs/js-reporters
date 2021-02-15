@@ -66,9 +66,12 @@ function normalizeRunEnd (runEnd) {
 
 function fixExpectedData (adapter, expectedData) {
   expectedData.forEach(([eventName, data]) => {
+    if (eventName === 'runStart' && adapter === 'Tape') {
+      // Stating test plan is optional, tape doesn't.
+      data.counts.total = null;
+    }
     if (eventName === 'testEnd') {
-      // Don't expect passed assertion for testing frameworks
-      // that don't record all assertions.
+      // Recording passed assertions is optional, Mocha doesn't.
       if (adapter === 'Mocha' && data.status === 'passed') {
         data.assertions = [];
       }
