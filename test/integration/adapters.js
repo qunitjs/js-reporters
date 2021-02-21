@@ -17,6 +17,13 @@ function collectDataFromRunner (collectedData, done, runner) {
   runner.on('runStart', (runStart) => {
     collectedData.push(['runStart', runStart]);
   });
+  runner.on('suiteStart', (suiteStart) => {
+    collectedData.push(['suiteStart', suiteStart]);
+  });
+  runner.on('suiteEnd', (suiteEnd) => {
+    normalizeSuiteEnd(suiteEnd);
+    collectedData.push(['suiteEnd', suiteEnd]);
+  });
   runner.on('testStart', (testStart) => {
     collectedData.push(['testStart', testStart]);
   });
@@ -58,6 +65,12 @@ function normalizeTestEnd (test) {
   }
 }
 
+function normalizeSuiteEnd (suiteEnd) {
+  if (Number.isFinite(suiteEnd.runtime)) {
+    suiteEnd.runtime = 42;
+  }
+}
+
 function normalizeRunEnd (runEnd) {
   if (Number.isFinite(runEnd.runtime)) {
     runEnd.runtime = 42;
@@ -73,7 +86,7 @@ function fixExpectedData (adapter, expectedData) {
         data.assertions = [];
       }
     }
-    if (eventName === 'testEnd' || eventName === 'runEnd') {
+    if (eventName === 'testEnd' || eventName === 'suiteEnd' || eventName === 'runEnd') {
       if (Number.isFinite(data.runtime)) {
         data.runtime = 42;
       }
@@ -136,6 +149,40 @@ QUnit.module('Adapters integration', function () {
             actuals[i][1],
             expected[1],
             `Event data for testEnd#${i}`
+          );
+        });
+      });
+
+      test('Event "suiteStart" data', assert => {
+        const actuals = collectedData.filter(pair => pair[0] === 'suiteStart');
+        const expecteds = expectedData.filter(pair => pair[0] === 'suiteStart');
+        assert.propEqual(
+          actuals.map(expected => expected[1].name),
+          expecteds.map(pair => pair[1].name),
+          'Suite names'
+        );
+        expecteds.forEach((expected, i) => {
+          assert.propEqual(
+            actuals[i][1],
+            expected[1],
+            `Event data for suiteStart#${i}`
+          );
+        });
+      });
+
+      test('Event "suiteEnd" data', assert => {
+        const actuals = collectedData.filter(pair => pair[0] === 'suiteEnd');
+        const expecteds = expectedData.filter(pair => pair[0] === 'suiteEnd');
+        assert.propEqual(
+          actuals.map(expected => expected[1].name),
+          expecteds.map(pair => pair[1].name),
+          'Suite names'
+        );
+        expecteds.forEach((expected, i) => {
+          assert.propEqual(
+            actuals[i][1],
+            expected[1],
+            `Event data for suiteEnd#${i}`
           );
         });
       });

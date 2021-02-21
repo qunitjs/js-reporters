@@ -7,13 +7,13 @@ const JsReporters = require('../../index.js');
 function playUpwardRun (emitter) {
   emitter.emit('runStart', {
     name: null,
-    counts: {
+    testCounts: {
       total: 2
     }
   });
   emitter.emit('testEnd', {
     name: 'foo',
-    parentName: 'Inner suite',
+    suiteName: 'Inner suite',
     fullName: ['Outer suite', 'Inner suite', 'foo'],
     status: 'passed',
     runtime: 42,
@@ -24,7 +24,7 @@ function playUpwardRun (emitter) {
   });
   emitter.emit('testEnd', {
     name: 'bar',
-    parentName: 'Inner suite',
+    suiteName: 'Inner suite',
     fullName: ['Outer suite', 'Inner suite', 'bar'],
     status: 'passed',
     runtime: 42,
@@ -33,28 +33,22 @@ function playUpwardRun (emitter) {
       { passed: true }
     ]
   });
-  emitter.emit('testEnd', {
+  emitter.emit('suiteEnd', {
     name: 'Inner suite',
-    parentName: 'Outer suite',
     fullName: ['Outer suite', 'Inner suite'],
     status: 'passed',
-    runtime: 42,
-    errors: [],
-    assertions: []
+    runtime: 42
   });
-  emitter.emit('testEnd', {
+  emitter.emit('suiteEnd', {
     name: 'Outer suite',
-    parentName: null,
     fullName: ['Outer suite'],
     status: 'passed',
-    runtime: 42,
-    errors: [],
-    assertions: []
+    runtime: 42
   });
   emitter.emit('runEnd', {
     name: null,
     status: 'passed',
-    counts: {
+    testCounts: {
       passed: 4,
       failed: 0,
       skipped: 0,
@@ -70,31 +64,25 @@ function playUpwardRun (emitter) {
 function playDownwardRun (emitter) {
   emitter.emit('runStart', {
     name: null,
-    counts: {
+    testCounts: {
       total: 2
     }
   });
-  emitter.emit('testEnd', {
+  emitter.emit('suiteEnd', {
     name: 'Outer suite',
-    parentName: null,
     fullName: ['Outer suite'],
     status: 'passed',
-    runtime: 42,
-    errors: [],
-    assertions: []
+    runtime: 42
   });
-  emitter.emit('testEnd', {
+  emitter.emit('suiteEnd', {
     name: 'Inner suite',
-    parentName: 'Outer suite',
     fullName: ['Outer suite', 'Inner suite'],
     status: 'passed',
-    runtime: 42,
-    errors: [],
-    assertions: []
+    runtime: 42
   });
   emitter.emit('testEnd', {
     name: 'foo',
-    parentName: 'Inner suite',
+    suiteName: 'Inner suite',
     fullName: ['Outer suite', 'Inner suite', 'foo'],
     status: 'passed',
     runtime: 42,
@@ -105,7 +93,7 @@ function playDownwardRun (emitter) {
   });
   emitter.emit('testEnd', {
     name: 'bar',
-    parentName: 'Inner suite',
+    suiteName: 'Inner suite',
     fullName: ['Outer suite', 'Inner suite', 'bar'],
     status: 'passed',
     runtime: 42,
@@ -117,7 +105,7 @@ function playDownwardRun (emitter) {
   emitter.emit('runEnd', {
     name: null,
     status: 'passed',
-    counts: {
+    testCounts: {
       passed: 4,
       failed: 0,
       skipped: 0,
@@ -133,7 +121,7 @@ const expectedSummary = {
   tests: [
     {
       name: 'Outer suite',
-      parentName: null,
+      suiteName: null,
       fullName: ['Outer suite'],
       status: 'passed',
       runtime: 42,
@@ -142,7 +130,7 @@ const expectedSummary = {
       tests: [
         {
           name: 'Inner suite',
-          parentName: 'Outer suite',
+          suiteName: 'Outer suite',
           fullName: ['Outer suite', 'Inner suite'],
           status: 'passed',
           runtime: 42,
@@ -151,7 +139,7 @@ const expectedSummary = {
           tests: [
             {
               name: 'foo',
-              parentName: 'Inner suite',
+              suiteName: 'Inner suite',
               fullName: ['Outer suite', 'Inner suite', 'foo'],
               status: 'passed',
               runtime: 42,
@@ -163,7 +151,7 @@ const expectedSummary = {
             },
             {
               name: 'bar',
-              parentName: 'Inner suite',
+              suiteName: 'Inner suite',
               fullName: ['Outer suite', 'Inner suite', 'bar'],
               status: 'passed',
               runtime: 42,
@@ -179,7 +167,7 @@ const expectedSummary = {
     }
   ],
   status: 'passed',
-  counts: {
+  testCounts: {
     passed: 4,
     failed: 0,
     skipped: 0,

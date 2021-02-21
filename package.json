@@ -18,7 +18,7 @@
     "build": "rollup -c",
     "prepare": "npm run build",
     "lint": "semistandard",
-    "test": "npm run lint && npm run test-unit && npm run test-integration && npm run test-browser",
+    "test": "npm run test-unit && npm run test-integration && npm run test-browser && npm run lint",
     "test-unit": "qunit 'test/unit/*.js'",
     "test-integration": "qunit test/integration/adapters.js",
     "test-browser": "karma start",

@@ -14,7 +14,7 @@ Participate::
   https://gitter.im/js-reporters/js-reporters[Chat room on Gitter]
 
 Last updated::
-  17 January 2021
+  20 Februrary 2021
 
 Abstract::
   This specification defines JavaScript APIs for reporting progress and results of executing software tests.
@@ -45,15 +45,12 @@ Failed assertion::
   An assertion that has evaluated to boolean false.
 
 [[test]] Test::
-  A test is a named group containing zero or more assertions, and zero or more child tests. +
+  A test is a named group containing zero or more assertions. +
    +
   It is recommended that all tests contain assertions, but this is not required. For example, a testing framework that only records failed assertions (such as a testing framework that is decoupled from an assertion library and uses exceptions to discover failures), might not distinguish between a test with passing assertions and a test with no assertions. If a testing framework is generally aware assertions and if it considers absence of those an error, then it should ensure the test or test [[run]] is marked as failing. For example, by implicitly producing a failed assertion. +
    +
-  A test that contains at least one child test, is also known as a "parent test". +
-   +
-  In QUnit, a test may be defined by calling `QUnit.test()`, and a parent test is known as a "module", defined by calling `QUnit.module()`. +
-  In Mocha and Jasmine BDD, a test is known as a "spec", defined by calling `it()`, with parent tests defined by calling `describe()`. +
-  In JUnit and other xUnit-derivatives, tests are first grouped in a `TestCase` which are then further grouped under a `<testsuite>`. In the CRI standard, both of these are considered a test.
+  In QUnit, a test may be defined by calling `QUnit.test()`. +
+  In Mocha and Jasmine BDD, a test is known as a "spec", defined by calling `it()`. +
   (https://en.wikipedia.org/wiki/Test_case[Learn more]) +
 
 Skipped test::
@@ -66,15 +63,23 @@ Todo test::
    +
   See also the `TODO` directive of the https://testanything.org/tap-version-13-specification.html#directives[TAP specification].
 
+[[suite]] Suite::
+  A suite is a named group representing zero or more tests, and zero or more other suites. A suite that is part of another suite may also be called a "child suite". A suite that holds one or more child suites may also be called an "ancestor suite". +
+  (https://en.wikipedia.org/wiki/Test_case[Learn more]) +
+   +
+  In QUnit, a suite is known as a "module", defined by calling `QUnit.module()`. +
+  In Mocha and Jasmine BDD, a suite is defined by calling `describe()`. +
+  In JUnit and other xUnit-derivatives, tests are first grouped in a `TestCase` which are then further grouped under a `<testsuite>`. In the CRI standard, both of these are considered a suite.
+
 [[run]] Run::
-  A run is a single top-level group representing all tests that a producer is planning to report events about.
+  A run is a single top-level group representing all tests and test suites that a producer is planning to report events about.
 
 Reporter::
   A JavaScript program that consumes information from a <<run>>. For example, to render an HTML graphical user interface, to write command-line output in the https://testanything.org/[TAP] format, write results to a https://llg.cubic.org/docs/junit/[JUnit XML] artifact file, or serialize the information and transfer it over a socket to another server or process.
 
 [TIP]
 =====
-The use of "Test" (and "Parent test") as the main data structure was decided in https://github.com/js-reporters/js-reporters/issues/12[issue #12], and later revised in https://github.com/js-reporters/js-reporters/issues/126[issue #126].
+The use of "Suite" and "Test" as the main two data structues was decided in https://github.com/js-reporters/js-reporters/issues/12[issue #12], and later revised in https://github.com/js-reporters/js-reporters/issues/126[issue #126].
 =====
 
 == Events
@@ -103,7 +108,7 @@ Read https://github.com/js-reporters/js-reporters/issues/62[issue #62] for the d
 
 === `runStart` event
 
-The **runStart** event indicates the beginning of a <<run>>. It must be emitted exactly once, and before any <<event-teststart>>.
+The **runStart** event indicates the beginning of a <<run>>. It must be emitted exactly once, and before any <<suitestart-event>> or <<teststart-event>>.
 
 Callback parameters:
 
@@ -116,7 +121,7 @@ producer.on('runStart', (runStart) => { … });
 
 === `runEnd` event
 
-The **runEnd** event indicates the end of a <<run>>. It must be emitted exactly once, after the last of any <<event-testend>>.
+The **runEnd** event indicates the end of a <<run>>. It must be emitted exactly once, after the last of any <<suiteend-event>> or <<testend-event>>.
 
 Callback parameters:
 
@@ -127,9 +132,35 @@ Callback parameters:
 producer.on('runEnd', (runEnd) => { … });
 ----
 
+=== `suiteStart` event
+
+The **suiteStart** event indicates the beginning of a <<suite>>. It must eventually be followed by a corresponding <<suiteend-event>>.
+
+Callback parameters:
+
+* <<suitestart>> **suiteStart**: Basic information about a suite.
+
+[source,javascript]
+----
+producer.on('suiteStart', (suiteStart) => { … });
+----
+
+=== `suiteEnd` event
+
+The **suiteEnd** event indicates the end of a <<suite>>. It must be emitted after its corresponding <<suitestart-event>>.
+
+Callback parameters:
+
+* <<suiteend>> **suiteEnd**: Basic information about a completed suite.
+
+[source,javascript]
+----
+producer.on('suiteEnd', (suiteEnd) => { … });
+----
+
 === `testStart` event
 
-The **testStart** event indicates the beginning of a <<test>>. It must eventually be followed by a corresponding <<event-testend>>. A producer may emit several <<event-teststart,testStart>> events before any corresponding <<event-testend>>, for example when there are child tests, or tests that run concurrently.
+The **testStart** event indicates the beginning of a <<test>>. It must eventually be followed by a corresponding <<testend-event>>. A producer may emit several <<teststart-event,testStart>> events before any corresponding <<testend-event>>, for example when there are child tests, or tests that run concurrently.
 
 Callback parameters:
 
@@ -147,7 +178,7 @@ If a producer has no real-time information about test execution, it may simply e
 
 === `testEnd` event
 
-The **testEnd** event indicates the end of a <<test>>. It must be emitted after its corresponding <<event-teststart>>.
+The **testEnd** event indicates the end of a <<test>>. It must be emitted after its corresponding <<teststart-event>>.
 
 Callback parameters:
 
@@ -162,6 +193,24 @@ producer.on('testEnd', (testEnd) => { … });
 
 The following data structures must be implemented as objects that have the specified fields as own properties. The objects are not required to be an instance of any specific class. They may be null-inherited objects, plain objects, or an instance of any public or private class.
 
+=== SuiteStart
+
+`SuiteStart` object:
+
+* `string` **name**: Name of the suite.
+* `Array<string>` **fullName**: List of one or more strings, containing (in order) the names of any grandancestor suites, the name of the suite.
+
+=== SuiteEnd
+
+`SuiteEnd` object:
+
+* `string` **name**: Name of the suite.
+* `Array<string>` **fullName**: List of one or more strings, containing (in order) the names of any grandancestor suites, the name of the suite.
+* `string` **status**: Aggregate result of all tests, one of:
+** **failed** if at least one test has failed.
+** **passed**, if there were no failed tests, which means there either were no tests, or tests only had passed, skipped, or todo statuses.
+* `number|null` **runtime**: Optional duration of the suite in milliseconds.
+
 === RunStart
 
 The plan for the <<run>>.
@@ -169,7 +218,7 @@ The plan for the <<run>>.
 `RunStart` object:
 
 * `string|null` **name**: Name of the overall run, or `null` if the producer is unaware of a name.
-* `Object` **counts**: Aggregate counts about tests.
+* `Object` **testCounts**: Aggregate counts about tests.
 ** `number|null` **total**: Total number of tests the producer is expecting to emit events for, e.g. if there would be no unexpected failures. If may be `null` if the total is not known ahead of time.
 
 === RunEnd
@@ -182,7 +231,7 @@ Summary of test results from the completed <<run>>.
 * `string` **status**: Aggregate result of all tests, one of:
 ** **failed** if at least one test has failed.
 ** **passed**, if there were no failed tests, which means there either were no tests, or tests only had passed, skipped, or todo statuses.
-* `Object` **counts**: Aggregate counts about tests.
+* `Object` **testCounts**: Aggregate counts about tests.
 ** `number` **passed**: Number of passed tests.
 ** `number` **failed**: Number of failed tests.
 ** `number` **skipped**: Number of skipped tests.
@@ -197,8 +246,8 @@ Basic information about a <<test>>.
 `TestStart` object:
 
 * `string` **name**: Name of the test.
-* `string|null` **parentName**: Name of the parent test, or `null` if it has no parent.
-* `Array<string>` **fullName**: List of one or more strings, containing (in order) the names of any grand parent tests, the name of any parent test, and the name of the test itself.
+* `string|null` **suiteName**: Name of the suite the test belongs to, or `null` if it has no suite.
+* `Array<string>` **fullName**: List of one or more strings, containing (in order) the names of any grandancestor suites, the name of the suite, and the name of the test itself.
 
 === TestEnd
 
@@ -207,8 +256,8 @@ Result of a completed <<test>>. This is a superset of <<teststart>>.
 `TestEnd` object:
 
 * `string` **name**: Name of the test.
-* `string|null` **parentName**: Name of the parent test, or `null` if it has no parent.
-* `Array<string>` **fullName**: List of one or more strings, containing (in order) the names of any grand parent tests, the name of any parent test, and the name of the test itself.
+* `string|null` **suiteName**: Name of the suite the test belongs to, or `null` if it has no suite.
+* `Array<string>` **fullName**: List of one or more strings, containing (in order) the names of any ancestor suites, the name of the suite, and the name of the test itself.
 * `string` **status**: Result of the test, one of:
 ** **passed**, if all assertions have passed, or if no assertions were recorded.
 ** **failed**, if at least one assertion has failed or if the test is todo and its assertions unexpectedly all passed.

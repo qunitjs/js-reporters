@@ -61,7 +61,7 @@ runner.on('testEnd', (test) => {
 });
 
 runner.on('runEnd', (run) => {
-  const counts = run.counts;
+  const counts = run.testCounts;
 
   console.log('Testsuite status: %s', run.status);
   console.log('Total %d tests: %d passed, %d failed, %d skipped',

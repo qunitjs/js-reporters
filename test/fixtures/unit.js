@@ -14,12 +14,12 @@ function copyErrors (testEnd) {
 module.exports = {
   passingTestStart: {
     name: 'pass',
-    parentName: null,
+    suiteName: null,
     fullName: ['pass']
   },
   passingTest: {
     name: 'pass',
-    parentName: null,
+    suiteName: null,
     fullName: ['pass'],
     status: 'passed',
     runtime: 0,
@@ -59,7 +59,7 @@ module.exports = {
   ],
   actualUndefinedTest: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -72,7 +72,7 @@ module.exports = {
   }),
   actualInfinity: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -85,7 +85,7 @@ module.exports = {
   }),
   actualStringChar: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -98,7 +98,7 @@ module.exports = {
   }),
   actualStringNum: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -111,7 +111,7 @@ module.exports = {
   }),
   actualStringBool: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -124,7 +124,7 @@ module.exports = {
   }),
   actualStringOneTailLn: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -144,7 +144,7 @@ module.exports = {
   ...`,
   actualStringTwoTailLn: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -166,7 +166,7 @@ module.exports = {
   ...`,
   actualZero: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -179,7 +179,7 @@ module.exports = {
   }),
   actualArray: copyErrors({
     name: 'Failing',
-    parentName: null,
+    suiteName: null,
     fullName: ['Failing'],
     status: 'failed',
     runtime: 0,
@@ -198,7 +198,7 @@ module.exports = {
   ...`,
   expectedUndefinedTest: copyErrors({
     name: 'fail',
-    parentName: null,
+    suiteName: null,
     fullName: [],
     status: 'failed',
     runtime: 0,
@@ -211,7 +211,7 @@ module.exports = {
   }),
   expectedFalsyTest: copyErrors({
     name: 'fail',
-    parentName: null,
+    suiteName: null,
     fullName: [],
     status: 'failed',
     runtime: 0,
@@ -224,7 +224,7 @@ module.exports = {
   }),
   skippedTest: {
     name: 'skip',
-    parentName: null,
+    suiteName: null,
     fullName: ['skip'],
     status: 'skipped',
     runtime: 0,
@@ -233,7 +233,7 @@ module.exports = {
   },
   todoTest: {
     name: 'todo',
-    parentName: null,
+    suiteName: null,
     fullName: ['todo'],
     status: 'todo',
     runtime: 0,
