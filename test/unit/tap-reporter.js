@@ -115,6 +115,21 @@ QUnit.module('TapReporter', hooks => {
     assert.equal(spy.args[1][0], data.actualArrayTap);
   });
 
+  test('output actual assertion value of a cyclical structure', assert => {
+    emitter.emit('testEnd', data.actualCyclical);
+    assert.equal(spy.args[1][0], data.actualCyclicalTap);
+  });
+
+  test('output actual assertion value of a subobject cyclical structure', assert => {
+    emitter.emit('testEnd', data.actualSubobjectCyclical);
+    assert.equal(spy.args[1][0], data.actualSubobjectCyclicalTap);
+  });
+
+  test('output actual assertion value of an acyclical structure', assert => {
+    emitter.emit('testEnd', data.actualDuplicateAcyclic);
+    assert.equal(spy.args[1][0], data.actualDuplicateAcyclicTap);
+  });
+
   test('output expected assertion of undefined', assert => {
     emitter.emit('testEnd', data.expectedUndefinedTest);
     assert.true(spy.calledWithMatch(/^ {2}expected: undefined$/m));
@@ -123,6 +138,11 @@ QUnit.module('TapReporter', hooks => {
   test('output expected assertion of 0', assert => {
     emitter.emit('testEnd', data.expectedFalsyTest);
     assert.true(spy.calledWithMatch(/^ {2}expected: 0$/m));
+  });
+
+  test('output expected assertion of a circular structure', assert => {
+    emitter.emit('testEnd', data.expectedCircularTest);
+    assert.true(spy.calledWithMatch(/^ {2}expected: \{\n {2}"a": "example",\n {2}"cycle": "\[Circular\]"\n\}$/m));
   });
 
   test('output the total number of tests', assert => {
