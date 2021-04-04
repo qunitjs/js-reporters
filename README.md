@@ -77,6 +77,16 @@ runner.on('runEnd', (run) => {
 JsReporters.TapReporter.init(runner);
 ```
 
+### Runtime support
+
+* Internet Explorer 9+
+* Edge 15+ (Legacy)
+* Edge 80+ (Chromium-based)
+* Safari 9+
+* Firefox 45+
+* Chrome 58+
+* Node.js 10+
+
 ### Adapter support
 
 | Testing framework | Supported | Last checked | Unresolved
