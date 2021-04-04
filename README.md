@@ -91,9 +91,9 @@ JsReporters.TapReporter.init(runner);
 
 | Testing framework | Supported | Last checked | Unresolved
 |--|--|--|--
-| QUnit | 1.20+ | ✅ `qunit@2.14.0` (Jan 2021) | –
-| Jasmine | 2.1+ | ✅ `jasmine@3.6.4` (Jan 2021) | –
-| Mocha | 1.18+ | ✅ `mocha@8.3.0` (Feb 2021) | –
+| QUnit | 1.20+ | ✅ `qunit@2.14.1` (Apr 2021) | –
+| Jasmine | 2.1+ | ✅ `jasmine@3.7.0` (Apr 2021) | –
+| Mocha | 1.18+ | ✅ `mocha@8.3.2` (Apr 2021) | –
 
 See also [past issues](test/versions/failing-versions.js).
 
