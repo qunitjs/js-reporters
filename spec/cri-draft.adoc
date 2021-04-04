@@ -47,7 +47,7 @@ Failed assertion::
 [[test]] Test::
   A test is a named group containing zero or more assertions. +
    +
-  It is recommended that all tests contain assertions, but this is not required. For example, a testing framework that only records failed assertions (such as a testing framework that is decoupled from an assertion library and uses exceptions to discover failures), might not distinguish between a test with passing assertions and a test with no assertions. If a testing framework is generally aware assertions and if it considers absence of those an error, then it should ensure the test or test [[run]] is marked as failing. For example, by implicitly producing a failed assertion. +
+  It is recommended that all tests contain assertions, but this is not required. For example, a testing framework that only records failed assertions (such as a testing framework that is decoupled from an assertion library and uses exceptions to discover failures), might not distinguish between a test with passing assertions and a test with no assertions. If a testing framework is generally aware of assertions and if it considers absence of those an error, then it should ensure the test or test [[run]] is marked as failing. For example, by implicitly producing a failed assertion. +
    +
   In QUnit, a test may be defined by calling `QUnit.test()`. +
   In Mocha and Jasmine BDD, a test is known as a "spec", defined by calling `it()`. +
@@ -72,7 +72,7 @@ Todo test::
   In JUnit and other xUnit-derivatives, tests are first grouped in a `TestCase` which are then further grouped under a `<testsuite>`. In the CRI standard, both of these are considered a suite.
 
 [[run]] Run::
-  A run is a single top-level group representing all tests and test suites that a producer is planning to report events about.
+  A run is a single top-level group representing all tests and suites that a producer is planning to report events about.
 
 Reporter::
   A JavaScript program that consumes information from a <<run>>. For example, to render an HTML graphical user interface, to write command-line output in the https://testanything.org/[TAP] format, write results to a https://llg.cubic.org/docs/junit/[JUnit XML] artifact file, or serialize the information and transfer it over a socket to another server or process.
@@ -219,7 +219,7 @@ The plan for the <<run>>.
 
 * `string|null` **name**: Name of the overall run, or `null` if the producer is unaware of a name.
 * `Object` **testCounts**: Aggregate counts about tests.
-** `number|null` **total**: Total number of tests the producer is expecting to emit events for, e.g. if there would be no unexpected failures. If may be `null` if the total is not known ahead of time.
+** `number|null` **total**: Total number of tests the producer is expecting to emit events for, e.g. if there would be no unexpected failures. It may be `null` if the total is not known ahead of time.
 
 === RunEnd
 
