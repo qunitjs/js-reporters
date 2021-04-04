@@ -1,4 +1,33 @@
-Changelog for the [js-reporters](https://www.npmjs.com/package/js-reporters) package. See [spec/](../spec) for the CRI standard.
+Changelog for the [js-reporters](https://www.npmjs.com/package/js-reporters) package. See [spec/](./spec/cri-draft.adoc) for the CRI standard.
+
+2.0.0 / 2021-04-04
+==================
+
+This release provides a simplified spec, with various properties and features removed. Overall the new spec is considered narrower than the previous one. Existing reporters that support old producers should naturally support new producers as well. Existing producers can choose to remain unchanged or to remove older portions in a future release.
+
+### Added
+
+* Add SummaryReporter implementation.
+
+### Changed
+
+* Spec: Rewrite current proposal into a formal specification at [spec/](./spec/cri-draft.adoc). (Timo Tijhof)
+* Spec: Remove "todo" from Assertion event data. [#119](https://github.com/js-reporters/js-reporters/pull/119)
+* Spec: Remove "tests" and "childSuites" from SuiteStart and SuiteEnd event data.
+* Spec: Prefer `null` instead of `undefined` for optional fields.
+* TapReporter: Improve formatting of multi-line strings. [#109](https://github.com/js-reporters/js-reporters/issues/109)
+
+### Fixed
+
+* TapReporter: Fix support objects with cycles, avoiding uncaught errors. (Zachary Mulgrew) [#104](https://github.com/js-reporters/js-reporters/issues/104)
+* TapReporter: Defend against mocked `console` object. [#125](https://github.com/js-reporters/js-reporters/issues/125)
+* MochaAdapter: Fix support for Mocha 8, due to changes in `STATE_PENDING`. [#116](https://github.com/js-reporters/js-reporters/issues/116)
+
+### Removed
+
+* Remove support for Node.js 8 and older. This release requires Node.js 10 or later. (Browser support has not changed and remains IE 9+, see [README](./README.md#runtime-support).)
+* Helpers: Remove the `Assertion`, `Test`, and `Suite` classes.
+* Helpers: Remove `collectSuite{Start,StartData,EndData}` methods.
 
 1.2.3 / 2020-09-07
 ==================
