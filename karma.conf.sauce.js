@@ -70,6 +70,20 @@ module.exports = function (config) {
         browserName: 'internet explorer',
         version: '11'
       },
+      safari9: {
+        base: 'SauceLabs',
+        browserName: 'safari',
+        version: '9'
+      },
+      safari10: {
+        base: 'SauceLabs',
+        browserName: 'safari',
+        version: '10'
+      },
+      safari: {
+        base: 'SauceLabs',
+        browserName: 'safari'
+      },
       edge15: {
         // Edge 40 (EdgeHTML 15)
         base: 'SauceLabs',
@@ -93,6 +107,9 @@ module.exports = function (config) {
       'ie9',
       'ie10',
       'ie11',
+      'safari9',
+      'safari10',
+      'safari',
       'edge15',
       'edge',
       'chrome58'
