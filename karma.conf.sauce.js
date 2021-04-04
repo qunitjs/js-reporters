@@ -87,7 +87,7 @@ module.exports = function (config) {
         version: '58.0'
       }
     },
-    concurrency: 3,
+    concurrency: 4,
     browsers: [
       'firefox45',
       'ie9',
