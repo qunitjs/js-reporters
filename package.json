@@ -1,6 +1,6 @@
 {
   "name": "js-reporters",
-  "version": "1.2.3",
+  "version": "2.0.0",
   "description": "Common reporter interface for JavaScript testing frameworks.",
   "main": "dist/js-reporters.js",
   "files": [
