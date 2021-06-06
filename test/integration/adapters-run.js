@@ -20,7 +20,7 @@ function rerequire (file) {
  * Exports a function for each adapter that will run
  * against a default test fixture.
  */
-module.exports = {
+module.exports.main = {
   Jasmine: function (collectData) {
     const Jasmine = rerequire('jasmine');
     const jasmine = new Jasmine();
@@ -88,5 +88,20 @@ module.exports = {
 
     collectData(mochaRunner);
     mocha.run();
+  }
+};
+
+module.exports.todo = {
+  QUnit: function (collectData) {
+    const QUnit = rerequire('qunit');
+    global.QUnit = QUnit;
+    QUnit.config.autorun = false;
+
+    const qunitRunner = new JsReporters.QUnitAdapter(QUnit);
+    collectData(qunitRunner);
+
+    rerequire(path.join(testDir, 'qunit-todo.js'));
+
+    QUnit.start();
   }
 };
