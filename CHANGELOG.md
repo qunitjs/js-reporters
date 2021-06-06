@@ -1,5 +1,12 @@
 Changelog for the [js-reporters](https://www.npmjs.com/package/js-reporters) package. See [spec/](./spec/cri-draft.adoc) for the CRI standard.
 
+2.1.0 / 2021-06-06
+==================
+
+### Added
+
+* QUnitAdapter: Support for `todo` tests. (Timo Tijhof) [#140](https://github.com/js-reporters/js-reporters/pull/140)
+
 2.0.0 / 2021-04-04
 ==================
 
