@@ -189,6 +189,26 @@ Callback parameters:
 producer.on('testEnd', (testEnd) => { … });
 ----
 
+=== `error` event
+
+The **error** event indicates a global failure. It may be emitted at any time, including before a <<runstart-event>> or <<runend-event>>.
+
+Reporters must interpret error events as the <<run>> having failed. Reporters should not wait for or expect other events to be emitted afterwards. For example, any pending <<testend-event>> or <<runend-event>> might not be delivered. If other events do get emitted after this, reporters should doubt their accuracy or ignore the event entirely. For example, if a `runEnd` event is emitted _after_ an `error` event and the `runEnd` reports no failures, then reporters must still consider the run as having failed.
+
+Callback parameters:
+
+* <<error>> **error**.
+
+[source,javascript]
+----
+producer.on('error', (error) => { … });
+----
+
+[TIP]
+=====
+The "error" event is analogous to "Bail out!" lines as defined in https://testanything.org/tap-version-13-specification.html#directives[TAP specification].
+=====
+
 == Event data
 
 The following data structures must be implemented as objects that have the specified fields as own properties. The objects are not required to be an instance of any specific class. They may be null-inherited objects, plain objects, or an instance of any public or private class.
@@ -285,6 +305,16 @@ Producers may set additional (non-standard) properties on `Assertion` objects.
 =====
 The properties of the Assertion object was decided in https://github.com/js-reporters/js-reporters/issues/79[issue #79], and later revised by https://github.com/js-reporters/js-reporters/issues/105[issue #105].
 =====
+
+=== Error
+
+The **Error** value may be any JavaScript value. It is recommended to pass an object, such as an instance of the [ECMAScript Error Constructor](https://github.com/js-reporters/js-reporters/issues/123) (or a subclass of that). But it may also be a non-object, or a plain object with the following properties:
+
+`Error` object:
+
+* `string` **name**: Error class name, or other prefix.
+* `string` **message**: Error message.
+* `string|undefined|null` **stack**: Optional stack trace.
 
 == Producer API
 

@@ -67,6 +67,28 @@ QUnit.module('TapReporter', hooks => {
     }
   });
 
+  test('output global failure (string)', assert => {
+    emitter.emit('error', 'Boo');
+
+    assert.true(spy.calledWith('Bail out! Boo'));
+  });
+
+  test('output global failure (Error)', assert => {
+    const err = new ReferenceError('Boo is not defined');
+    err.stack = `ReferenceError: Boo is not defined
+    at foo (foo.js:1:2)
+    at bar (bar.js:1:2)`;
+    emitter.emit('error', err);
+
+    assert.true(spy.calledWith(`  ---
+  stack: |
+    ReferenceError: Boo is not defined
+        at foo (foo.js:1:2)
+        at bar (bar.js:1:2)
+  ...`));
+    assert.true(spy.calledWith('Bail out! ReferenceError: Boo is not defined'));
+  });
+
   test('output actual assertion value of undefined', assert => {
     emitter.emit('testEnd', data.actualUndefinedTest);
     assert.true(spy.calledWithMatch(/^ {2}actual {2}: undefined$/m));

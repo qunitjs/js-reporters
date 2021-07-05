@@ -39,4 +39,9 @@ QUnit.module('ConsoleReporter', hooks => {
     emitter.emit('testEnd', {});
     assert.equal(con.log.callCount, 1);
   });
+
+  test('Event "error"', assert => {
+    emitter.emit('error', {});
+    assert.equal(con.log.callCount, 1);
+  });
 });

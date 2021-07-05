@@ -210,4 +210,16 @@ QUnit.module('SummaryReporter', hooks => {
       done();
     });
   });
+
+  test('forward "error" event', assert => {
+    const done = assert.async();
+    const obj = { message: 'Boo' };
+
+    reporter.once('error', (err) => {
+      assert.strictEqual(err, obj);
+      done();
+    });
+
+    emitter.emit('error', obj);
+  });
 });
