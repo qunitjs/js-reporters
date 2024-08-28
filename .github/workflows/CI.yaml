@@ -1,0 +1,40 @@
+name: CI
+on:
+  - push
+  - pull_request
+
+jobs:
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - node: 14.x
+          - node: 16.x
+          - node: 18.x
+          - node: 20.x
+
+    name: Node.js ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - run: npm install
+
+      - run: npm test
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: npm install
+
+      - run: npm run coverage

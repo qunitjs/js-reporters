@@ -50,10 +50,10 @@ module.exports = function (config) {
       region: process.env.SAUCE_REGION || 'us'
     },
     customLaunchers: {
-      firefox45: {
+      firefox78: {
         base: 'SauceLabs',
         browserName: 'firefox',
-        version: '45.0'
+        version: '78.0'
       },
       ie9: {
         base: 'SauceLabs',
@@ -93,17 +93,18 @@ module.exports = function (config) {
       edge: {
         // Edge 80+ (Chromium)
         base: 'SauceLabs',
-        browserName: 'MicrosoftEdge'
+        browserName: 'MicrosoftEdge',
+        version: 'latest'
       },
-      chrome58: {
+      chrome80: {
         base: 'SauceLabs',
         browserName: 'chrome',
-        version: '58.0'
+        version: '80.0'
       }
     },
     concurrency: 4,
     browsers: [
-      'firefox45',
+      'firefox78',
       'ie9',
       'ie10',
       'ie11',
@@ -112,7 +113,7 @@ module.exports = function (config) {
       'safari',
       'edge15',
       'edge',
-      'chrome58'
+      'chrome80'
     ],
     logLevel: 'WARN',
     singleRun: true,

@@ -1,0 +1,25 @@
+name: Browsers
+on:
+  push:
+    branches:
+      - main
+  # Or manually
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'js-reporters/js-reporters' }} # skip on forks, needs secret
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: npm install
+
+      - run: npm run lint
+
+      - run: npm run test-browser-sauce
+        env:
+          SAUCE_USERNAME: "${{ secrets.SAUCE_USERNAME }}"
+          SAUCE_REGION: "${{ secrets.SAUCE_REGION }}"
+          SAUCE_ACCESS_KEY: "${{ secrets.SAUCE_ACCESS_KEY }}"

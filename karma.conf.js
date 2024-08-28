@@ -44,7 +44,7 @@ module.exports = function (config) {
       ]
     },
     frameworks: ['qunit'],
-    browsers: ['FirefoxHeadless', process.platform === 'linux' && !process.env.CI ? 'ChromiumHeadless' : 'ChromeHeadless'],
+    browsers: ['FirefoxHeadless'],
     singleRun: true,
     autoWatch: false
   });

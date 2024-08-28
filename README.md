@@ -1,10 +1,9 @@
 # js-reporters
 
 [![Chat on Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/js-reporters/js-reporters)
-[![Build Status](https://travis-ci.com/js-reporters/js-reporters.svg?branch=main)](https://travis-ci.com/js-reporters/js-reporters)
-[![Coverage Status](https://coveralls.io/repos/github/js-reporters/js-reporters/badge.svg?branch=main)](https://coveralls.io/github/js-reporters/js-reporters?branch=main)
-[![npm](https://img.shields.io/npm/dm/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
-[![npm](https://img.shields.io/npm/v/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
+[![Build status](https://github.com/js-reporters/js-reporters/actions/workflows/CI.yaml/badge.svg)](https://github.com/js-reporters/js-reporters/actions/workflows/CI.yaml)
+[![](https://img.shields.io/npm/dm/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
+[![npm package](https://img.shields.io/npm/v/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
 
 The Common Reporter Interface (CRI) for JavaScript Testing Frameworks.
 
