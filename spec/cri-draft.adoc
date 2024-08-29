@@ -79,7 +79,7 @@ Reporter::
 
 [TIP]
 =====
-The use of "Suite" and "Test" as the main two data structues was decided in https://github.com/js-reporters/js-reporters/issues/12[issue #12], and later revised in https://github.com/js-reporters/js-reporters/issues/126[issue #126].
+The use of "Suite" and "Test" as the main two data structues was decided in https://github.com/qunitjs/js-reporters/issues/12[issue #12], and later revised in https://github.com/qunitjs/js-reporters/issues/126[issue #126].
 =====
 
 == Events
@@ -90,7 +90,7 @@ These are the events that a <<producer>> should emit from its <<producer-api>>, 
 =====
 These events were selected as:
 
-- common across known testing frameworks (gathered in https://github.com/js-reporters/js-reporters/issues/1#issuecomment-54841874[issue #1]).
+- common across known testing frameworks (gathered in https://github.com/qunitjs/js-reporters/issues/1#issuecomment-54841874[issue #1]).
 - valid JavaScript identifiers, allowing use as variable name and as object literal key without quotes.
 - not overlapping with existing events in known testing frameworks, for easy adoption within existing APIs.
 =====
@@ -103,7 +103,7 @@ Note that execution order may be different from reporting order. If a testing fr
 
 [TIP]
 =====
-Read https://github.com/js-reporters/js-reporters/issues/62[issue #62] for the discussion about reporting order.
+Read https://github.com/qunitjs/js-reporters/issues/62[issue #62] for the discussion about reporting order.
 =====
 
 === `runStart` event
@@ -283,7 +283,7 @@ Producers may set additional (non-standard) properties on `Assertion` objects.
 
 [TIP]
 =====
-The properties of the Assertion object was decided in https://github.com/js-reporters/js-reporters/issues/79[issue #79], and later revised by https://github.com/js-reporters/js-reporters/issues/105[issue #105].
+The properties of the Assertion object was decided in https://github.com/qunitjs/js-reporters/issues/79[issue #79], and later revised by https://github.com/qunitjs/js-reporters/issues/105[issue #105].
 =====
 
 == Producer API

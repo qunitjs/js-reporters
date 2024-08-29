@@ -1,7 +1,7 @@
 # js-reporters
 
 [![Chat on Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/js-reporters/js-reporters)
-[![Build status](https://github.com/js-reporters/js-reporters/actions/workflows/CI.yaml/badge.svg)](https://github.com/js-reporters/js-reporters/actions/workflows/CI.yaml)
+[![Build status](https://github.com/qunitjs/js-reporters/actions/workflows/CI.yaml/badge.svg)](https://github.com/qunitjs/js-reporters/actions/workflows/CI.yaml)
 [![](https://img.shields.io/npm/dm/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
 [![npm package](https://img.shields.io/npm/v/js-reporters.svg)](https://www.npmjs.com/package/js-reporters)
 
@@ -41,7 +41,7 @@ Our mission is to deliver:
 Would _you_ be interested in discussing this with us further? Please join in!
 
 * [Join the Chat room](https://gitter.im/js-reporters/js-reporters)
-* [Browse open issues](https://github.com/js-reporters/js-reporters/issues/)
+* [Browse open issues](https://github.com/qunitjs/js-reporters/issues/)
 * [Help frameworks and runners implement the spec](#cross-project-coordination)
 
 ## js-reporters Package

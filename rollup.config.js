@@ -13,7 +13,7 @@ module.exports = {
     format: 'umd',
     name: 'JsReporters',
     exports: 'auto',
-    banner: `/*! JsReporters ${version} | Copyright JS Reporters https://github.com/js-reporters/ | https://opensource.org/licenses/MIT */`
+    banner: `/*! JsReporters ${version} | Copyright JS Reporters https://github.com/qunitjs/js-reporters/ | https://opensource.org/licenses/MIT */`
   },
   plugins: [
     // For 'events' and 'kleur'

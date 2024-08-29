@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/js-reporters/js-reporters.git"
+    "url": "https://github.com/qunitjs/js-reporters.git"
   },
   "engines": {
     "node": ">=10"
