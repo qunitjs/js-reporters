@@ -5,30 +5,32 @@ Changelog for the [js-reporters](https://www.npmjs.com/package/js-reporters) pac
 
 ### Added
 
-* QUnitAdapter: Support for `todo` tests. (Timo Tijhof) [#140](https://github.com/js-reporters/js-reporters/pull/140)
+* QUnitAdapter: Support for `todo` tests. (Timo Tijhof) [#140](https://github.com/qunitjs/js-reporters/pull/140)
 
 2.0.0 / 2021-04-04
 ==================
 
 This release provides a simplified spec, with various properties and features removed. Overall the new spec is considered narrower than the previous one. Existing reporters that support old producers should naturally support new producers as well. Existing producers can choose to remain unchanged or to remove older portions in a future release.
 
+This release provides a simplified [spec](https://github.com/qunitjs/js-reporters/blob/v2.0.0/spec/cri-draft.adoc), with various properties and features removed. Overall the new spec is considered narrower than the previous one. Existing reporters that support old producers should naturally support new producers as well. Existing producers can choose to remain unchanged or to remove older portions in a future release.
+
 ### Added
 
-* Add SummaryReporter implementation.
+* Add `SummaryReporter` implementation.
 
 ### Changed
 
-* Spec: Rewrite current proposal into a formal specification at [spec/](./spec/cri-draft.adoc). (Timo Tijhof)
-* Spec: Remove "todo" from Assertion event data. [#119](https://github.com/js-reporters/js-reporters/pull/119)
+* Spec: Rewrite current proposal into a formal [specification](https://github.com/qunitjs/js-reporters/blob/v2.0.0/spec/cri-draft.adoc). (Timo Tijhof)
+* Spec: Remove "todo" from Assertion event data. (Keith Cirkel) [#119](https://github.com/qunitjs/js-reporters/pull/119)
 * Spec: Remove "tests" and "childSuites" from SuiteStart and SuiteEnd event data.
 * Spec: Prefer `null` instead of `undefined` for optional fields.
-* TapReporter: Improve formatting of multi-line strings. [#109](https://github.com/js-reporters/js-reporters/issues/109)
+* TapReporter: Improve formatting of multi-line strings. [#109](https://github.com/qunitjs/js-reporters/issues/109)
 
 ### Fixed
 
-* TapReporter: Fix support objects with cycles, avoiding uncaught errors. (Zachary Mulgrew) [#104](https://github.com/js-reporters/js-reporters/issues/104)
-* TapReporter: Defend against mocked `console` object. [#125](https://github.com/js-reporters/js-reporters/issues/125)
-* MochaAdapter: Fix support for Mocha 8, due to changes in `STATE_PENDING`. [#116](https://github.com/js-reporters/js-reporters/issues/116)
+* TapReporter: Fix support objects with cycles, avoiding uncaught errors. (Zachary Mulgrew) [#104](https://github.com/qunitjs/js-reporters/issues/104)
+* TapReporter: Defend against mocked `console` object. [#125](https://github.com/qunitjs/js-reporters/issues/125)
+* MochaAdapter: Fix support for Mocha 8, due to changes in `STATE_PENDING`. [#116](https://github.com/qunitjs/js-reporters/issues/116)
 
 ### Removed
 
@@ -41,19 +43,19 @@ This release provides a simplified spec, with various properties and features re
 
 ### Changed
 
-* TapReporter: Align `actual` with `expected` in TAP output. (Robert Jackson) [#107](https://github.com/js-reporters/js-reporters/pull/107)
+* TapReporter: Align `actual` with `expected` in TAP output. (Robert Jackson) [#107](https://github.com/qunitjs/js-reporters/pull/107)
 
 ### Fixed
 
-* Helpers: Correct spelling in `autoRegister()` error message. (P. Roebuck) [#108](https://github.com/js-reporters/js-reporters/issues/108)
-* TapReporter: Revert "Fix YAML syntax". [#110](https://github.com/js-reporters/js-reporters/issues/110)
+* Helpers: Correct spelling in `autoRegister()` error message. (P. Roebuck) [#108](https://github.com/qunitjs/js-reporters/issues/108)
+* TapReporter: Revert "Fix YAML syntax". [#110](https://github.com/qunitjs/js-reporters/issues/110)
 
 1.2.2 / 2019-05-13
 ==================
 
 ### Fixed
 
-* TapReporter: Fix YAML syntax. (jeberger) [#110](https://github.com/js-reporters/js-reporters/issues/110)
+* TapReporter: Fix YAML syntax. (jeberger) [#110](https://github.com/qunitjs/js-reporters/issues/110)
 
 1.2.1 / 2017-07-04
 ==================
@@ -74,3 +76,13 @@ This release provides a simplified spec, with various properties and features re
 * TapReporter: Improve TAP information and styling. (Florentin Simion)
 * TapReporter: Support todo test in TAP reporter. (Trent Willis)
 * Docs: Add API docs for the js-reporters package. (Florentin Simion)
+
+1.1.0 / 2016-08-10
+==================
+
+* Fix IE8 support by removing ES5 getters. (Florentin Simion) [#82](https://github.com/qunitjs/js-reporters/pull/82)
+* Add testCounts property for Suites. (Florentin Simion) [#85](https://github.com/qunitjs/js-reporters/pull/85)
+* Add assertions property for tests. (Florentin Simion) [#31](https://github.com/qunitjs/js-reporters/issues/31)
+* Normalize assertions. (Florentin Simion) [#81](https://github.com/qunitjs/js-reporters/pull/81)
+* Change test `testName` property to `name`. (Florentin Simion) [#81](https://github.com/qunitjs/js-reporters/pull/81)
+* Add types to the event data. (Florentin Simion) [#84](https://github.com/qunitjs/js-reporters/pull/84)
