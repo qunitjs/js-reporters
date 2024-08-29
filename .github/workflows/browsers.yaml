@@ -9,6 +9,7 @@ on:
 jobs:
 
   test:
+    name: SauceLabs
     runs-on: ubuntu-latest
     if: ${{ github.repository == 'js-reporters/js-reporters' }} # skip on forks, needs secret
     steps:
